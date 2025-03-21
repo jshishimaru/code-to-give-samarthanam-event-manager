@@ -49,6 +49,28 @@ const LoginForm = ({ onSubmit }) => {
     <section className="login-container">
       <h1 className="login-title" tabIndex="0">Log In</h1>
       
+      <div className="login-role-selection">
+        <button
+          type="button"
+          className={`role-button ${formData.role === 'organiser' ? 'selected' : ''}`}
+          onClick={() => setFormData({ ...formData, role: 'organiser' })}
+          aria-label="Log in as organiser"
+          tabIndex="1"
+        >
+          Organiser
+        </button>
+        <span className="role-separator" aria-hidden="true"></span>
+        <button
+          type="button"
+          className={`role-button ${formData.role === 'volunteer' ? 'selected' : ''}`}
+          onClick={() => setFormData({ ...formData, role: 'volunteer' })}
+          aria-label="Log in as volunteer"
+          tabIndex="2"
+        >
+          Volunteer
+        </button>
+      </div>
+        
       <form onSubmit={handleSubmit} noValidate className="login-form">
         <div className="form-group">
           <label 
@@ -67,7 +89,7 @@ const LoginForm = ({ onSubmit }) => {
             aria-required="true"
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? "email-error" : undefined}
-            tabIndex="1"
+            tabIndex="3"
             autoComplete="email"
           />
           {errors.email && (
@@ -94,7 +116,7 @@ const LoginForm = ({ onSubmit }) => {
             aria-required="true"
             aria-invalid={!!errors.password}
             aria-describedby={errors.password ? "password-error" : undefined}
-            tabIndex="2"
+            tabIndex="4"
             autoComplete="current-password"
           />
           {errors.password && (
@@ -104,7 +126,7 @@ const LoginForm = ({ onSubmit }) => {
           )}
         </div>
 
-        <div className="remember-me">
+        {/* <div className="remember-me">
           <input
             type="checkbox"
             id="remember"
@@ -112,27 +134,33 @@ const LoginForm = ({ onSubmit }) => {
             className="checkbox"
             checked={rememberMe}
             onChange={handleCheckboxChange}
-            tabIndex="3"
+            tabIndex="5"
           />
           <label htmlFor="remember" className="checkbox-label">
             Remember me
           </label>
-        </div>
+        </div> */}
 
         <button
           type="submit"
           className="submit-button"
           aria-label="Sign in to your account"
-          tabIndex="4"
+          tabIndex="5"
         >
           Log In
         </button>
       </form>
       
       <div className="forgot-password">
-        <a href="#" className="forgot-link" tabIndex="5">
-          Forgot your password?
+        <a href="#" className="forgot-link" tabIndex="6">
+          Forgot password?
         </a>
+      </div>
+
+      <div className="sign-up">
+          <a href="#" className="sign-up-link" tabIndex="7">
+            Sign Up
+          </a>
       </div>
     </section>
   );

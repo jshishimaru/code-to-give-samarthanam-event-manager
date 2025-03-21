@@ -212,7 +212,6 @@ const LoginForm = ({ onSubmit }) => {
             </p>
           )} */}
         </div>
-
         <button
           type="submit"
           className="submit-button"
@@ -223,20 +222,26 @@ const LoginForm = ({ onSubmit }) => {
           {isLoading ? 'Logging in...' : 'Log In'}
         </button>
       </form>
-      
-      {formData.role === 'volunteer' && (
-        <div className="sign-up">
-          <a href="#" className="sign-up-link" tabIndex="7">
-            Sign Up
+
+
+      <div className="form-actions-container">
+        {formData.role === 'volunteer' ? (
+          <div className="sign-up">
+            <a href="#" className="sign-up-link" tabIndex="7">
+              Sign Up
+            </a>
+          </div>
+        ) : (
+          <div className="sign-up-placeholder"></div>
+        )}
+        
+        <div className="forgot-password">
+          <a href="#" className="forgot-link" tabIndex="6">
+            Forgot password?
           </a>
         </div>
-      )}
-      
-      <div className="forgot-password">
-        <a href="#" className="forgot-link" tabIndex="6">
-          Forgot password?
-        </a>
       </div>
+        
     </section>
   );
 };

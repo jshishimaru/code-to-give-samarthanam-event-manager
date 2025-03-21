@@ -16,7 +16,7 @@ body {
 	width: 50%;
 	max-width: 35%;
 	margin: 0 auto;
-	padding: 12px;
+	padding: 12px 12px;
 	font-family: 'Inter';
 	margin-top: -8%;
 	/* Center the form on the page */
@@ -24,7 +24,8 @@ body {
 	/* top: 50%; */
 	/* left: 50%; */
 	transform: translate(+0%, +75%);
-
+	position: relative;
+  	min-height: 450px;
 
 
 	background-color: #ffffff;
@@ -95,6 +96,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
+	margin-bottom: 8px;
   }
   
   .form-group {
@@ -178,15 +180,39 @@ body {
 	outline: none;
 	box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3); /* Red focus shadow */
   }
-  
-  .forgot-password {
-	margin-top: 16px;
-	text-align: right; /* Align forgot password link to the right */
+
+  .form-actions-container {
+	margin-top: 40px;
+	margin-bottom: 0px;
+	/* position: absolute; */
+	/* bottom: 20px; */
+	left: 0;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
   }
 
-  .sign-up{
-	margin-bottom: 16px;
-	text-align: left; /* Align forgot password link to the right */
+  .forgot-password {
+	margin-top: 10px;
+	text-align: center; /* Center forgot password link */
+	width: 100%;
+	/* display: flex;
+	flex-direction: column;
+	justify-content: right; */
+  }
+
+  .sign-up {
+	margin-top: 10px;
+	
+	width: 100%;
+	/* padding: 4px 4px; */
+	/* height: 30px;  */
+  }
+
+  .sign-up-placeholder {
+	height: 30px; /* Same height as sign-up section */
+	margin-top: 10px;
   }
 
   .sign-up:hover {
@@ -221,6 +247,60 @@ body {
   
   .create-account:hover {
 	text-decoration: underline;
+  }
+
+  /* Add these styles to your existing CSS file */
+
+/* Toast notifications styling */
+.Toastify__toast-container {
+	width: 320px;
+  }
+  
+  .Toastify__toast {
+	font-family: 'Inter', sans-serif;
+  }
+  
+  .Toastify__toast--error {
+	background-color: #fff2f0;
+	color: #cf1322;
+	border: 1px solid #ffccc7;
+  }
+  
+  .Toastify__toast--success {
+	background-color: #f6ffed;
+	color: #52c41a;
+	border: 1px solid #b7eb8f;
+  }
+  
+  /* General error styling */
+  .general-error {
+	background-color: #fff2f0;
+	color: #cf1322;
+	padding: 10px;
+	border-radius: 4px;
+	margin-bottom: 20px;
+	text-align: left;
+	font-size: 14px;
+	font-weight: 500;
+	border: 1px solid #ffccc7;
+  }
+  
+  /* Button loading state */
+  .submit-button:disabled {
+	opacity: 0.7;
+	cursor: not-allowed;
+  }
+  
+  /* Input error state styling */
+  .input-error {
+	border-color: #ff4d4f !important;
+	background-color: #fff2f0;
+  }
+  
+  /* Active role button styling */
+  .active-role-button {
+	background-color: #ef4444 !important;
+	color: #ffffff !important;
   }
   
   /* Responsive adjustments */

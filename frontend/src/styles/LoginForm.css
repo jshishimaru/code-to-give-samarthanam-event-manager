@@ -1,0 +1,158 @@
+/* Login Form Styles */
+
+.login-container {
+	width: 100%;
+	max-width: 400px;
+	margin: 0 auto;
+	padding: 24px;
+	background-color: #ffffff;
+	border: 1px solid #3b82f6; /* Blue border */
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	text-align: center; /* Center align all text */
+  }
+  
+  .login-title {
+	font-size: 32px;
+	font-weight: 700;
+	color: #ef4444; /* Red color */
+	margin-bottom: 24px;
+	text-transform: uppercase;
+  }
+  
+  .login-form {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+  }
+  
+  .form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	text-align: left; /* Align labels and inputs to the left */
+  }
+  
+  .form-label {
+	font-size: 14px;
+	font-weight: 700;
+	color: #ef4444; /* Red color */
+	text-transform: uppercase;
+  }
+  
+  .form-input {
+	width: 100%;
+	padding: 10px 12px;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	font-size: 16px;
+	transition: border 0.2s, box-shadow 0.2s;
+  }
+  
+  .form-input:focus {
+	outline: none;
+	border-color: #3b82f6; /* Blue focus border */
+	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+  
+  .input-error {
+	border-color: #ef4444; /* Red border for errors */
+  }
+  
+  .error-message {
+	font-size: 12px;
+	color: #ef4444; /* Red color for error messages */
+	margin-top: 4px;
+  }
+  
+  .remember-me {
+	display: flex;
+	align-items: center;
+	justify-content: center; /* Center the checkbox and label */
+	gap: 8px;
+  }
+  
+  .checkbox {
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
+  }
+  
+  .checkbox-label {
+	font-size: 14px;
+	color: #ef4444; /* Red color */
+	cursor: pointer;
+  }
+  
+  .submit-button {
+	width: 100%;
+	padding: 10px 16px;
+	background-color: #ffffff; /* White background */
+	color: #ef4444; /* Red text */
+	font-size: 16px;
+	font-weight: 700;
+	border: 1px solid #ef4444; /* Red border */
+	border-radius: 6px;
+	cursor: pointer;
+	text-transform: uppercase;
+	transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .submit-button:hover {
+	background-color: #ef4444; /* Red background on hover */
+	color: #ffffff; /* White text on hover */
+  }
+  
+  .submit-button:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3); /* Red focus shadow */
+  }
+  
+  .forgot-password {
+	margin-top: 16px;
+	text-align: right; /* Align forgot password link to the right */
+  }
+  
+  .forgot-link {
+	font-size: 14px;
+	color: #ef4444; /* Red color */
+	text-decoration: none;
+  }
+  
+  .forgot-link:hover {
+	text-decoration: underline;
+  }
+  
+  .create-account {
+	margin-top: 16px;
+	font-size: 14px;
+	color: #ef4444; /* Red color */
+	text-decoration: none;
+  }
+  
+  .create-account:hover {
+	text-decoration: underline;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+	.login-container {
+	  padding: 16px;
+	  border-radius: 4px;
+	}
+  
+	.login-title {
+	  font-size: 24px;
+	  margin-bottom: 16px;
+	}
+  
+	.form-input {
+	  padding: 8px 10px;
+	  font-size: 14px;
+	}
+  
+	.submit-button {
+	  padding: 8px 14px;
+	  font-size: 14px;
+	}
+  }

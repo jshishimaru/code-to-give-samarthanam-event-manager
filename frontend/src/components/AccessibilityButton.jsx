@@ -1,5 +1,7 @@
 import { useTheme } from '../context/ThemeContext';
 import '../styles/AccessibilityButton.css';
+import accessibilityIcon from '../assets/accessibility-icon.png';
+
 
 const AccessibilityButton = () => {
   const { theme, handleThemeChange, isThemeSwitcherOpen, toggleThemeSwitcher } = useTheme();
@@ -12,8 +14,9 @@ const AccessibilityButton = () => {
         aria-expanded={isThemeSwitcherOpen}
         aria-label="Accessibility options"
       >
-        <span className="accessibility-icon">⚙️</span>
+        <span className="accessibility-icon" aria-hidden="true"></span>
         <span className="sr-only">Accessibility</span>
+        
       </button>
       
       {isThemeSwitcherOpen && (

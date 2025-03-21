@@ -3,246 +3,156 @@ import "../styles/LoginForm.css";
 import { login, loginHost } from "../apiservice/auth";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import logoImage from "../assets/logo.png"; 
+
 
 const LoginForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    role: 'volunteer' // Default role
+    email: "",
+    password: "",
+    role: "volunteer" // Default role
   });
-  const [errors, setErrors] = useState({});
+  
   const [isLoading, setIsLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-    
-    // Clear error when user types in a field with an error
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: ''
-      });
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
   };
 
   const handleRoleChange = (role) => {
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       role
-    });
-  };
-
-  const handleCheckboxChange = (e) => {
-    setRememberMe(e.target.checked);
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-    
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-   
-    // Validate form before submission
-    // if (!validateForm()) {
-      //   return;
-      // }
-      
-      setIsLoading(true);
+    setIsLoading(true);
     
     try {
-      // Choose the appropriate login function based on role
-      const authFunction = formData.role === 'organiser' ? loginHost : login;
-      const response = await authFunction(formData.email, formData.password);
+      // Determine which login function to use based on role
+      const loginFn = formData.role === 'organiser' ? login : loginHost;
+      const response = await loginFn(formData.email, formData.password);
       
-      if (response && response.success === true) {
-        // Success case
-        console.log("Login successful!");
+      if (response.success) {
         toast.success("Login successful!");
-        
-        // If onSubmit prop is provided, call it with the data
-        if (onSubmit) {
-          onSubmit(response.data);
-        }
-        
-        // Navigate to homepage or next page
-        // Commenting out for now as it was commented in original code
-        // navigate('/homepage/assignments');
+        if (onSubmit) onSubmit(response, formData.role);
       } else {
-        // Error case - the API returned a response but with success = false
-        const errorMessage = response?.data || "Invalid credentials. Please try again.";
-        toast.error(errorMessage);
-        
-        // Set general error that will be displayed at the top
-        setErrors({
-          ...errors,
-          general: errorMessage
-        });
+        toast.error(response.message || "Login failed. Please try again.");
       }
     } catch (error) {
-      // Handle unexpected errors
+      toast.error("An error occurred. Please try again later.");
       console.error("Login error:", error);
-      const errorMessage = "An error occurred during login. Please try again later.";
-      toast.error(errorMessage);
-      
-      setErrors({
-        ...errors,
-        general: errorMessage
-      });
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleForgotPassword = () => {
+    // Implement forgot password functionality
+    toast.info("Password reset link will be sent to your email.");
+  };
+
   return (
-    <section className="login-container">
-      {/* Add ToastContainer for notifications */}
-      <ToastContainer 
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      
-      <h1 className="login-title" tabIndex="0">Log In</h1>
-      
-      {/* Display general error if any */}
-      {/* {errors.general && (
-        <div className="general-error" role="alert">
-          {errors.general}
-        </div>
-      )} */}
-      
-      <div className="login-role-selection">
-        <button
-          type="button"
-          className={`role-button ${formData.role === 'organiser' ? 'active' : ''}`}
-          onClick={() => handleRoleChange('organiser')}
-          aria-label="Log in as organiser"
-          tabIndex="1"
-        >
-          Organiser
-        </button>
-        <span className="role-separator" aria-hidden="true"></span>
-        <button
-          type="button"
-          className={`role-button ${formData.role === 'volunteer' ? 'active' : ''}`}
-          onClick={() => handleRoleChange('volunteer')}
-          aria-label="Log in as volunteer"
-          tabIndex="2"
-        >
-          Volunteer
-        </button>
+    <div className="page-container">
+      <div className="logo-container">
+        <img 
+          src={logoImage} 
+          alt="Company Logo" 
+          className="logo-image"
+        />
+        <h2 className="logo-tagline">Welcome back</h2>
       </div>
+      <main className="login-container">
+        <ToastContainer position="top-right" autoClose={3000} />
         
-      <form onSubmit={handleSubmit} noValidate className="login-form">
-        <div className="form-group">
-          <label 
-            htmlFor="email" 
-            className="form-label"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className={`form-input ${errors.email ? 'input-error' : ''}`}
-            aria-required="true"
-            aria-invalid={!!errors.email}
-            aria-describedby={errors.email ? "email-error" : undefined}
-            tabIndex="3"
-            autoComplete="email"
-          />
-          {/* {errors.email && (
-            <p id="email-error" className="error-message" role="alert">
-              {errors.email}
-            </p>
-          )} */}
-        </div>
+        <section className="login-card">
+          <h1 id="login-heading">Account Login</h1>
+          
+          <form onSubmit={handleSubmit} aria-labelledby="login-heading">
+            <fieldset className="role-selection">
+              <legend className="visually-hidden">Select your role</legend>
+              <div className="role-buttons" role="radiogroup" aria-label="User role">
+                <button 
+                  type="button"
+                  onClick={() => handleRoleChange('organiser')}
+                  className={`role-button ${formData.role === 'organiser' ? 'active' : ''}`}
+                  aria-pressed={formData.role === 'organiser'}
+                  aria-label="Login as organiser"
+                >
+                  Organiser
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => handleRoleChange('volunteer')}
+                  className={`role-button ${formData.role === 'volunteer' ? 'active' : ''}`}
+                  aria-pressed={formData.role === 'volunteer'}
+                  aria-label="Login as volunteer"
+                >
+                  Volunteer
+                </button>
+              </div>
+            </fieldset>
 
-        <div className="form-group">
-          <label 
-            htmlFor="password" 
-            className="form-label"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className={`form-input ${errors.password ? 'input-error' : ''}`}
-            aria-required="true"
-            aria-invalid={!!errors.password}
-            aria-describedby={errors.password ? "password-error" : undefined}
-            tabIndex="4"
-            autoComplete="current-password"
-          />
-          {/* {errors.password && (
-            <p id="password-error" className="error-message" role="alert">
-              {errors.password}
-            </p>
-          )} */}
-        </div>
-        <button
-          type="submit"
-          className="submit-button"
-          aria-label="Sign in to your account"
-          disabled={isLoading}
-          tabIndex="5"
-        >
-          {isLoading ? 'Logging in...' : 'Log In'}
-        </button>
-      </form>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                aria-required="true"
+                placeholder="Enter your email"
+              />
+            </div>
 
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                aria-required="true"
+                placeholder="Enter your password"
+              />
+            </div>
 
-      <div className="form-actions-container">
-        {formData.role === 'volunteer' ? (
-          <div className="sign-up">
-            <a href="#" className="sign-up-link" tabIndex="7">
-              Sign Up
-            </a>
-          </div>
-        ) : (
-          <div className="sign-up-placeholder"></div>
-        )}
-        
-        <div className="forgot-password">
-          <a href="#" className="forgot-link" tabIndex="6">
-            Forgot password?
-          </a>
-        </div>
-      </div>
-        
-    </section>
+            <button 
+              type="submit" 
+              className="login-button" 
+              disabled={isLoading}
+              aria-busy={isLoading}
+            >
+              {isLoading ? "Logging in..." : "Login"}
+            </button>
+
+            {formData.role === 'volunteer' && (
+              <a href="/signup" className="signup-button" role="button">
+                Sign Up
+              </a>
+            )}
+
+            <button 
+              type="button" 
+              className="forgot-password-button" 
+              onClick={handleForgotPassword}
+            >
+              Forgot Password?
+            </button>
+          </form>
+        </section>
+      </main>
+    </div>
   );
 };
 

@@ -1,330 +1,350 @@
-@import url('https://rsms.me/inter/inter.css');
-
-/* Login Form Styles */
-/* body {
-	background-image: url('../assets/loginbg.png'); 
-	background-size: cover;
-
-	background-repeat: no-repeat;
-	font-family: 'Inter';
-
-} */
-  
-
-
-.login-container {
-	width: 50%;
-	max-width: 35%;
-	margin: 0 auto;
-	padding: 12px 12px;
-	font-family: 'Inter';
-	margin-top: -8%;
-	/* Center the form on the page */
-	/* position: absolute; */
-	/* top: 50%; */
-	/* left: 50%; */
-	transform: translate(+0%, +75%);
-	position: relative;
-  	min-height: 450px;
-
-
-	background-color: #ffffff;
-	/* border: 1px solid #3b82f6;  */
-	border-radius: 8px;
-	box-shadow: 0 4px 6px rgba(61, 23, 23, 0.5);
-	text-align: center; /* Center align all text */
-}
-
-.login-title {
-	font-size: 36px;
-	font-weight: 600;
-	font-family: 'Inter';
-	
-	color: #ec5751; /* Red color */
-	margin-bottom: 24px;
-	margin-top: 2px;
-	text-transform: uppercase;
-}
-
-.login-role-selection {
-	display: flex;
-	flex-direction: row;
-	gap: 24px;
-	border : none;
-	/* border: 1px solid #ef4444; */
-	background-color: #ffffff;
-	margin-bottom: 12px;
-	/* box-shadow: 0 4px 6px rgba(61, 23, 23, 0.05); */
-}
-
-.role-separator {
-	width: 4px;
-	font-size: 28px;
-	font-weight: 300;
-	color: #ef4444; /* Red text */
-	background-color: #ef4444;
-}
-
-.role-button {
-	width: 100%;
-	padding: 10px 0px;
-	background-color: #ffffff;
-	border:none;
-	border-radius: 8px;
-	/* border-color: #ef4444; */
-	
-	color: #ef4444; /* Red text */
-	font-size: 32px;
-	font-weight: 700;
-	font-family: 'Inter';
-	cursor: pointer;
-	text-transform: uppercase;
-	/* transition: background-color 0.2s, color 0.2s; */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-secondary);
+    color: var(--text-color);
+    transition: background-color 1s ease, color 0.3s ease;
+    min-height: 100vh;
   }
 
-  .role-button.active {
-	background-color: #ef4444; /* Red background for active role */
-	color: #ffffff; /* White text for active role */
-  }
-  .role-button:hover {
-	background-color: #ef4444; /* Red background on hover */
-	color: #ffffff; /* White text on hover */
-  }
 
-  
-  .login-form {
+.page-container {
 	display: flex;
 	flex-direction: column;
-	gap: 24px;
-	margin-bottom: 8px;
-  }
-  
-  .form-group {
+	min-height: 100vh;
+	background-color: var(--bg-secondary);
+}
+
+.logo-container {
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
-	text-align: left; /* Align labels and inputs to the left */
-  }
-  
-  .form-label {
-	font-size: 14px;
-	font-weight: 700;
-	color: #ec5751;; 
-	text-transform: uppercase;
-  }
-  
-  .form-input {
-	width: 95%;
-	padding: 10px 10px;
-	border: 1px solid #d1d5db;
-	border-radius: 6px;
-	font-size: 16px;
-	transition: border 0.2s, box-shadow 0.2s;
-  }
-  
-  .form-input:focus {
-	outline: none;
-	border-color:  #ec5751;; /* Blue focus border */
-	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-  }
-  
-  .input-error {
-	border-color: #ef4444; /* Red border for errors */
-  }
-  
-  .error-message {
-	font-size: 12px;
-	color: #ef4444; /* Red color for error messages */
-	margin-top: 4px;
-  }
-  
-  .remember-me {
-	display: flex;
 	align-items: center;
-	justify-content: center; /* Center the checkbox and label */
-	gap: 8px;
+	padding: 2rem 1rem;
+	/* background-color: var(--bg-color); */
+
+	text-align: center;
+	animation: fadeIn 0.8s ease-in-out;
+	max-width: 90%;
+	margin-bottom: 2rem;
   }
   
-  .checkbox {
-	width: 16px;
-	height: 16px;
-	cursor: pointer;
-  }
-  
-  .checkbox-label {
-	font-size: 14px;
-	color: #ec5751; /* Red color */
-	cursor: pointer;
-  }
-  
-  .submit-button {
-	width: 100%;
-	padding: 10px 16px;
-	background-color: #ffffff; /* White background */
-	color: #ef4444; /* Red text */
-	font-size: 16px;
-	font-weight: 700;
-	border: 1px solid #ef4444; /* Red border */
-	border-radius: 6px;
-	cursor: pointer;
-	text-transform: uppercase;
-	transition: background-color 0.2s, color 0.2s;
-  }
-  
-  .submit-button:hover {
-	background-color: #ef4444; /* Red background on hover */
-	color: #ffffff; /* White text on hover */
-  }
-  
-  .submit-button:focus {
-	outline: none;
-	box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3); /* Red focus shadow */
+  @keyframes fadeIn {
+	from {
+	  opacity: 0;
+	  transform: translateY(-20px);
+	}
+	to {
+	  opacity: 1;
+	  transform: translateY(0);
+	}
   }
 
-  .form-actions-container {
-	margin-top: 40px;
-	margin-bottom: 0px;
-	/* position: absolute; */
-	/* bottom: 20px; */
+  .logo-image {
+	width: 480px;
+	height: auto;
+	max-width: 90%;
+	margin-bottom: 1.5rem;
+	transition: transform 0.3s ease;
+	filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+  }
+
+  .logo-image:hover {
+	transform: scale(1.05);
+  }
+
+  .logo-tagline {
+	font-size: clamp(1.1rem, 3vw, 1.5rem);
+	color: var(--text-color);
+	font-weight: 600;
+	margin: 0;
+	opacity: 0.9;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+  }
+
+
+/* Login Container */
+.login-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+	width: 100%;
+	padding: 2rem 5%;
+	background-color: var(--bg-secondary);
+	transition: background-color 0.3s ease;
+}
+  
+  /* Login Card */
+  .login-card {
+  background-color: var(--bg-color);
+  border-radius: 0.75rem;
+  box-shadow: 0 0.25rem 1rem var(--shadow-color);
+  padding: 2.5rem 5%;
+  width: 90%;
+  margin-top: -5%;
+  max-width: 26rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+	from {
+	  opacity: 0;
+	  transform: translateY(20px);
+	}
+	to {
+	  opacity: 1;
+	  transform: translateY(0);
+	}
+  }
+
+  .login-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
 	left: 0;
 	width: 100%;
+	height: 0.25rem;
+	background: linear-gradient(to right, var(--primary-color), var(--primary-hover));
+  }
+  
+  /* Heading */
+  #login-heading {
+	font-size: clamp(1.75rem, 5vw, 2.25rem);
+	color: var(--text-color);
+	margin-bottom: 0.75rem;
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+	text-align: center;
+  }
+  
+  /* Role Selection */
+  .role-selection {
+	border: none;
+	padding: 0;
+	margin-bottom: 1.5rem;
+  }
+  
+  .role-buttons {
 	display: flex;
-	flex-direction: row;
-	align-items: center;
-  }
-
-  .forgot-password {
-	margin-top: 10px;
-	text-align: center; /* Center forgot password link */
+	gap: 3%;
+	justify-content: center;
 	width: 100%;
-	/* display: flex;
-	flex-direction: column;
-	justify-content: right; */
   }
-
-  .sign-up {
-	margin-top: 10px;
-	
+  
+  .role-button {
+	flex: 1;
+	padding: 0.75rem;
+	border: 0.125rem solid var(--primary-color);
+	border-radius: 0.25rem;
+	background: transparent;
+	color: var(--primary-color);
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+  }
+  
+  .role-button:hover {
+	background-color: rgba(var(--primary-rgb), 0.1);
+  }
+  
+  .role-button.active {
+	background-color: var(--primary-color);
+	color: white;
+  }
+  
+  /* Form Groups */
+  .form-group {
+	margin-bottom: 1.25rem;
 	width: 100%;
-	/* padding: 4px 4px; */
-	/* height: 30px;  */
-  }
-
-  .sign-up-placeholder {
-	height: 30px; /* Same height as sign-up section */
-	margin-top: 10px;
-  }
-
-  .sign-up:hover {
-	  text-decoration: underline;
-	  color: #ef4444; /* Red color */
-  }
-
-
-  .sign-up-link {
-	font-size: 14px;
-	color: #ef4444; /* Red color */
-	text-decoration: none;
   }
   
-  .forgot-link {
-	font-size: 14px;
-	color: #ef4444; /* Red color */
-	text-decoration: none;
-}
-
-.forgot-link:hover {
-	text-decoration: underline;
-	color: #ef4444; /* Red color */
-  }
-  
-  .create-account {
-	margin-top: 16px;
-	font-size: 14px;
-	color: #ef4444; /* Red color */
-	text-decoration: none;
-  }
-  
-  .create-account:hover {
-	text-decoration: underline;
-  }
-
-  /* Add these styles to your existing CSS file */
-
-/* Toast notifications styling */
-.Toastify__toast-container {
-	width: 320px;
-  }
-  
-  .Toastify__toast {
-	font-family: 'Inter', sans-serif;
-  }
-  
-  .Toastify__toast--error {
-	background-color: #fff2f0;
-	color: #cf1322;
-	border: 1px solid #ffccc7;
-  }
-  
-  .Toastify__toast--success {
-	background-color: #f6ffed;
-	color: #52c41a;
-	border: 1px solid #b7eb8f;
-  }
-  
-  /* General error styling */
-  .general-error {
-	background-color: #fff2f0;
-	color: #cf1322;
-	padding: 10px;
-	border-radius: 4px;
-	margin-bottom: 20px;
-	text-align: left;
-	font-size: 14px;
+  label {
+	display: block;
+	margin-bottom: 0.5rem;
 	font-weight: 500;
-	border: 1px solid #ffccc7;
+	color: var(--text-color);
   }
   
-  /* Button loading state */
-  .submit-button:disabled {
-	opacity: 0.7;
+  input {
+	width: 100%;
+	padding: 0.75rem;
+	border: 0.0625rem solid var(--input-border);
+	border-radius: 0.25rem;
+	background-color: var(--input-bg);
+	color: var(--input-text);
+	font-size: 1rem;
+	transition: all 0.2s ease;
+  }
+  
+  input::placeholder {
+	color: var(--input-placeholder);
+  }
+  
+  input:focus {
+	outline: none;
+	border-color: var(--primary-color);
+	box-shadow: 0 0 0 0.125rem rgba(var(--primary-rgb), 0.2);
+  }
+  
+  /* Buttons */
+  .login-button, 
+  .signup-button {
+	width: 100%;
+	padding: 0.75rem;
+	border: none;
+	border-radius: 0.5rem;
+	background-color: var(--primary-color);
+	color: white;
+	font-size: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	margin-bottom: 0.75rem;
+	text-align: center;
+	height: 2.75rem;
+	line-height: 1.25rem;
+	box-sizing: border-box;
+  }
+  
+  .login-button:hover,
+  .signup-button:hover {
+	background-color: var(--primary-hover);
+	transform: translateY(-2px);
+  }
+
+  .login-button:active,
+	.signup-button:active {
+	transform: translateY(0);
+	}
+  
+  .login-button:focus,
+  .signup-button:focus {
+	outline: none;
+	box-shadow: 0 0 0 0.125rem rgba(var(--primary-rgb), 0.4);
+  }
+  
+  .login-button:disabled {
+	background-color: var(--disabled-bg);
 	cursor: not-allowed;
   }
   
-  /* Input error state styling */
-  .input-error {
-	border-color: #ff4d4f !important;
-	background-color: #fff2f0;
+  .signup-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-decoration: none;
   }
   
-  /* Active role button styling */
-  .active-role-button {
-	background-color: #ef4444 !important;
-	color: #ffffff !important;
+  .forgot-password-button {
+	display: block;
+	width: 100%;
+	background: transparent;
+	border: none;
+	color: var(--primary-color);
+	padding: 0.5rem;
+	margin-top: 0.5rem;
+	cursor: pointer;
+	text-align: center;
+	font-size: 0.9rem;
+	transition: color 0.2s ease;
+  }
+  
+  .forgot-password-button:hover {
+	color: var(--primary-hover);
+	text-decoration: underline;
+  }
+  
+  .forgot-password-button:focus {
+	outline: none;
+	box-shadow: 0 0 0 0.125rem rgba(var(--primary-rgb), 0.4);
+  }
+  
+  /* Accessibility */
+  .visually-hidden {
+	position: absolute;
+	width: 0.0625rem;
+	height: 0.0625rem;
+	padding: 0;
+	margin: -0.0625rem;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
   }
   
   /* Responsive adjustments */
-  @media (max-width: 480px) {
-	.login-container {
-	  padding: 16px;
-	  border-radius: 4px;
+  @media screen and (max-width: 48rem) {
+	.logo-image {
+	  width: 200px;
 	}
-  
-	.login-title {
-	  font-size: 24px;
-	  margin-bottom: 16px;
-	}
-  
-	.form-input {
-	  padding: 8px 10px;
-	  font-size: 14px;
-	}
-  
-	.submit-button {
-	  padding: 8px 14px;
-	  font-size: 14px;
-	}
-
 	
-
+	.logo-tagline {
+	  font-size: 1.3rem;
+	}
+  }
+  
+  @media screen and (max-width: 36rem) {
+	.logo-container {
+	  margin-bottom: 1.5rem;
+	}
+	
+	.logo-image {
+	  width: 160px;
+	  margin-bottom: 1rem;
+	}
+	
+	.logo-tagline {
+	  font-size: 1.1rem;
+	}
+  }
+  
+  @media (max-width: 480px) {
+	.login-card {
+	  padding: 1.5rem;
+	}
+	
+	#login-heading {
+	  font-size: 1.5rem;
+	}
+	
+	.role-buttons {
+	  flex-direction: column;
+	  gap: 0.5rem;
+	}
+  }
+  
+  /* Focus styles for keyboard navigation */
+  *:focus-visible {
+	outline: 0.125rem solid var(--outline-color);
+	outline-offset: 0.125rem;
+  }
+  
+  /* Loading state indicator */
+  .login-button[aria-busy="true"] {
+	position: relative;
+	pointer-events: none;
+  }
+  
+  .login-button[aria-busy="true"]::after {
+	content: "";
+	position: absolute;
+	width: 1rem;
+	height: 1rem;
+	top: 50%;
+	right: 1rem;
+	transform: translateY(-50%);
+	border: 0.125rem solid rgba(255, 255, 255, 0.3);
+	border-radius: 50%;
+	border-top-color: white;
+	animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+	to { transform: translateY(-50%) rotate(360deg); }
   }

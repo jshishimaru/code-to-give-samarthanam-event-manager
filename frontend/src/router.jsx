@@ -9,6 +9,10 @@ const router = createBrowserRouter([
 		path: '/',
 		element: <LoginForm />
 	},
+	{	
+		path: '/login',
+		element: <LoginForm />
+	},
 	{
 		path:'/signup',
 		element: <SignUpForm />

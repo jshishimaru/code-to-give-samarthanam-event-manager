@@ -47,6 +47,11 @@ const LoginForm = ({ onSubmit }) => {
 
       if (response.success) {
         toast.success("Login successful!");
+		if (formData.role === 'volunteer') {
+			setTimeout(() => navigate('/events'), 1000);
+		} else {
+		    setTimeout(() => navigate('/host/events'), 1000);
+		}
         if (onSubmit) onSubmit(response, formData.role);
       } else {
         toast.error(response.data || "Login failed. Please try again.");

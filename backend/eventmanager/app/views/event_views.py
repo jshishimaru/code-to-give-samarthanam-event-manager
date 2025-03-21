@@ -40,12 +40,13 @@ def user_enrolled_events(request):
         
         events = user.enrolled_events.filter(status='Upcoming' or 'In Progress')
         
-        serializer = EventInfoSerializer(events, many=True)
+        # Only get event IDs instead of full serialization
+        event_ids = list(events.values_list('id', flat=True))
         
         return Response({
             'status': 'success',
-            'count': events.count(),
-            'events': serializer.data
+            'count': len(event_ids),
+            'event_ids': event_ids
         })
         
     except User.DoesNotExist:
@@ -79,12 +80,13 @@ def user_past_events(request):
         
         events = user.enrolled_events.filter(status='Completed')
         
-        serializer = EventInfoSerializer(events, many=True)
+        # Only get event IDs instead of full serialization
+        event_ids = list(events.values_list('id', flat=True))
         
         return Response({
             'status': 'success',
-            'count': events.count(),
-            'events': serializer.data
+            'count': len(event_ids),
+            'event_ids': event_ids
         })
         
     except User.DoesNotExist:
@@ -120,13 +122,13 @@ def user_upcoming_events(request):
         # Get upcoming events the user enrolled in
         events = user.enrolled_events.filter(status='Upcoming')
         
-        # Serialize the events
-        serializer = EventInfoSerializer(events, many=True)
+        # Only get event IDs instead of full serialization
+        event_ids = list(events.values_list('id', flat=True))
         
         return Response({
             'status': 'success',
-            'count': events.count(),
-            'events': serializer.data
+            'count': len(event_ids),
+            'event_ids': event_ids
         })
         
     except User.DoesNotExist:
@@ -148,13 +150,13 @@ def all_upcoming_events(request):
         # Get all upcoming events
         events = EventInfo.objects.filter(status='Upcoming')
         
-        # Serialize the events
-        serializer = EventInfoSerializer(events, many=True)
+        # Only get event IDs instead of full serialization
+        event_ids = list(events.values_list('id', flat=True))
         
         return Response({
             'status': 'success',
-            'count': events.count(),
-            'events': serializer.data
+            'count': len(event_ids),
+            'event_ids': event_ids
         })
         
     except Exception as e:
@@ -162,7 +164,7 @@ def all_upcoming_events(request):
             'status': 'error',
             'message': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+    
 @csrf_exempt
 @api_view(['GET', 'POST'])
 def get_event_details(request):
@@ -184,7 +186,7 @@ def get_event_details(request):
         
         # Get event details
         event = EventInfo.objects.get(id=event_id)
-        serializer = EventInfoSerializer(event)
+        serializer = EventInfoSerializer(event, context={'request': request})
         
         return Response({
             'status': 'success',
@@ -378,7 +380,7 @@ def update_event(request):
         event.save()
         
         # Return updated event data
-        serializer = EventInfoSerializer(event)
+        serializer = EventInfoSerializer(event, context={'request': request})
         return Response({
             'status': 'success',
             'message': 'Event updated successfully',
@@ -495,7 +497,7 @@ def create_event(request):
             event.save()
         
         # Return the created event
-        serializer = EventInfoSerializer(event)
+        serializer = EventInfoSerializer(event, context={'request': request})
         return Response({
             'status': 'success',
             'message': 'Event created successfully',

@@ -4,6 +4,7 @@ from ..models import EventInfo, Host, User
 class EventInfoSerializer(serializers.ModelSerializer):
     host_name = serializers.SerializerMethodField()
     enrolled_count = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
     
     class Meta:
         model = EventInfo
@@ -14,3 +15,11 @@ class EventInfoSerializer(serializers.ModelSerializer):
     
     def get_enrolled_count(self, obj):
         return obj.volunteer_enrolled.count()
+    
+    def get_image_url(self, obj):
+        if obj.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image.url)
+            return obj.image.url
+        return None

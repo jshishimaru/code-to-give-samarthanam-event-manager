@@ -3,7 +3,7 @@ import qs from 'qs';
 import Cookies from 'js-cookie';
 
 const API_URL = 'http://127.0.0.1:8000/api/';
-const APP_API_URL = 'http://127.0.0.1:8000/api/';
+const APP_API_URL = 'http://127.0.0.1:8000/api/app/';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';

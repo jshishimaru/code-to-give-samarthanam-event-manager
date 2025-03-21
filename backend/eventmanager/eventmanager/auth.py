@@ -1,5 +1,5 @@
-from eventmanager.app.models import User
-from eventmanager.app.models import Host
+from app.models import User
+from app.models import Host
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -56,37 +56,38 @@ def validate_contact(contact):
 def user_signup(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            name = data.get('name', '')
-            password = data.get('password', '')
-            email = data.get('email', '')
-            contact = data.get('contact', '')
-            role = data.get('role', '')
-            skills = data.get('skills', '')
-            age = data.get('age', 0)
-            location = data.get('location', '')
-            organization = data.get('organization', '')
-            
+            # Use request.POST to handle x-www-form-urlencoded data
+            name = request.POST.get('name', '')
+            password = request.POST.get('password', '')
+            email = request.POST.get('email', '')
+            contact = request.POST.get('contact', '')
+            # role = request.POST.get('role', '')
+            skills = request.POST.get('skills', '')
+            age = int(request.POST.get('age', 0))
+            location = request.POST.get('location', '')
+            organization = request.POST.get('organization', '')
+
+            # Validate inputs
             name_valid, name_msg = validate_name(name)
             if not name_valid:
                 return JsonResponse({'status': 'error', 'message': name_msg}, status=400)
-            
+
             password_valid, password_msg = validate_password(password)
             if not password_valid:
                 return JsonResponse({'status': 'error', 'message': password_msg}, status=400)
-            
+
             contact_valid, contact_msg = validate_contact(contact)
             if not contact_valid:
                 return JsonResponse({'status': 'error', 'message': contact_msg}, status=400)
-            
+
             # Check if email already exists
             if User.objects.filter(email=email).exists():
                 return JsonResponse({'status': 'error', 'message': 'Email already registered'}, status=400)
-            
+
             # Check if contact already exists
             if User.objects.filter(contact=contact).exists():
                 return JsonResponse({'status': 'error', 'message': 'Contact number already registered'}, status=400)
-            
+
             # Create user with hashed password
             hashed_password = make_password(password)
             user = User.objects.create(
@@ -94,86 +95,31 @@ def user_signup(request):
                 password=hashed_password,
                 email=email,
                 contact=contact,
-                role=role,
+                # role=role,
                 skills=skills,
                 age=age,
                 location=location,
                 organization=organization
             )
-            
+
             return JsonResponse({
                 'status': 'success',
                 'message': 'User registered successfully',
                 'user_id': user.id
             })
-            
-        except json.JSONDecodeError:
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-    
-    return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
 
-# @csrf_exempt
-# def host_signup(request):
-#     if request.method == 'POST':
-#         try:
-#             data = json.loads(request.body)
-#             name = data.get('name', '')
-#             password = data.get('password', '')
-#             email = data.get('email', '')
-#             contact = data.get('contact', '')
-            
-#             # Validate inputs
-#             name_valid, name_msg = validate_name(name)
-#             if not name_valid:
-#                 return JsonResponse({'status': 'error', 'message': name_msg}, status=400)
-            
-#             password_valid, password_msg = validate_password(password)
-#             if not password_valid:
-#                 return JsonResponse({'status': 'error', 'message': password_msg}, status=400)
-            
-#             contact_valid, contact_msg = validate_contact(contact)
-#             if not contact_valid:
-#                 return JsonResponse({'status': 'error', 'message': contact_msg}, status=400)
-            
-#             # Check if email already exists
-#             if Host.objects.filter(email=email).exists():
-#                 return JsonResponse({'status': 'error', 'message': 'Email already registered'}, status=400)
-            
-#             # Check if contact already exists
-#             if Host.objects.filter(contact=contact).exists():
-#                 return JsonResponse({'status': 'error', 'message': 'Contact number already registered'}, status=400)
-            
-#             # Create host with hashed password
-#             hashed_password = make_password(password)
-#             host = Host.objects.create(
-#                 name=name,
-#                 password=hashed_password,
-#                 email=email,
-#                 contact=contact
-#             )
-            
-#             return JsonResponse({
-#                 'status': 'success',
-#                 'message': 'Host registered successfully',
-#                 'host_id': host.id
-#             })
-            
-#         except json.JSONDecodeError:
-#             return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
-#         except Exception as e:
-#             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-    
-#     return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
+    return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
 
 @csrf_exempt
 def user_login(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            email = data.get('email', '')
-            password = data.get('password', '')
+            # data = json.loads(request.body)
+            email = request.POST.get('email', '')
+            password = request.POST.get('password', '')
             
             try:
                 user = User.objects.get(email=email)
@@ -189,8 +135,6 @@ def user_login(request):
                 'user_id': user.id,
                 'name': user.name,
                 'email': user.email,
-                'role': user.role,
-                'points': user.points
             })
             
         except json.JSONDecodeError:
@@ -204,9 +148,8 @@ def user_login(request):
 def host_login(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            email = data.get('email', '')
-            password = data.get('password', '')
+            email = request.POST.get('email', '')
+            password = request.POST.get('password', '')
             
             try:
                 host = Host.objects.get(email=email)

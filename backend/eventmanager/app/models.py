@@ -14,12 +14,12 @@ class User(models.Model):
     password = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     contact = models.CharField(max_length=15, unique=True)
-    role = models.CharField(max_length=100)
+    # role = models.CharField(max_length=100)
     skills = models.TextField()
     age = models.IntegerField()
     location = models.CharField(max_length=255)
     organization = models.CharField(max_length=255)
-    points = models.IntegerField(default=0)
+    # points = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -33,7 +33,7 @@ class EventInfo(models.Model):
     host = models.ForeignKey(Host, on_delete=models.CASCADE)
     volunteer_enrolled = models.ManyToManyField(User, related_name='enrolled_events')
     required_volunteers = models.IntegerField()
-    points_for_volunteers = models.IntegerField()
+    # points_for_volunteers = models.IntegerField()
     status = models.CharField(max_length=50)
     volunteer_efficiency = models.FloatField()
     task_analysis = models.TextField()

@@ -117,18 +117,44 @@ def user_signup(request):
 def user_login(request):
     if request.method == 'POST':
         try:
-            # data = json.loads(request.body)
+            # Try both POST form data and JSON body
             email = request.POST.get('email', '')
             password = request.POST.get('password', '')
             
+            # If POST data is empty, try to parse from JSON body
+            if not email or not password:
+                try:
+                    data = json.loads(request.body)
+                    email = data.get('email', '')
+                    password = data.get('password', '')
+                except json.JSONDecodeError:
+                    pass
+            
+            print(f"Login attempt for user with email: {email}")
+            
             try:
                 user = User.objects.get(email=email)
+                print(f"User found: {user.id}")
             except User.DoesNotExist:
+                print("User not found")
                 return JsonResponse({'status': 'error', 'message': 'Invalid email or password'}, status=401)
             
-            if not check_password(password, user.password):
-                return JsonResponse({'status': 'error', 'message': 'Invalid email or password'}, status=401)
+            # Add debug prints
+            print(f"Input password: {password}")
+            print(f"Stored hashed password: {user.password}")
             
+            # Check if this is a plaintext password (for admin-created users)
+            if user.password == password:
+                print("Matched with direct comparison (for admin-created users)")
+                # Rehash the password to secure it properly
+                user.password = make_password(password)
+                user.save()
+            # Try the normal password check
+            elif not check_password(password, user.password):
+                print("Password check failed")
+                return JsonResponse({'status': 'error', 'message': 'Invalid email or password'}, status=401)
+
+            print("Login successful")
             return JsonResponse({
                 'status': 'success',
                 'message': 'Login successful',
@@ -137,30 +163,55 @@ def user_login(request):
                 'email': user.email,
             })
             
-        except json.JSONDecodeError:
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
         except Exception as e:
+            import traceback
+            print(f"Exception in user_login: {str(e)}")
+            print(traceback.format_exc())
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     
     return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
-
 @csrf_exempt
 def host_login(request):
     if request.method == 'POST':
         try:
+            # Try both POST form data and JSON body
             email = request.POST.get('email', '')
             password = request.POST.get('password', '')
             
+            # If POST data is empty, try to parse from JSON body
+            if not email or not password:
+                try:
+                    data = json.loads(request.body)
+                    email = data.get('email', '')
+                    password = data.get('password', '')
+                except json.JSONDecodeError:
+                    pass
+            
+            print(f"Login attempt for host with email: {email}")
+            
             try:
                 host = Host.objects.get(email=email)
+                print(f"Host found: {host.id}")
             except Host.DoesNotExist:
+                print("Host not found")
                 return JsonResponse({'status': 'error', 'message': 'Invalid email or password'}, status=401)
             
-            # Check password
-            if not check_password(password, host.password):
+            # Add debug prints to see what's happening
+            print(f"Input password: {password}")
+            print(f"Stored hashed password: {host.password}")
+            
+            # Check if this is a Django admin created password (raw password stored for testing)
+            if host.password == password:
+                print("Matched with direct comparison (for admin-created hosts)")
+                # Consider rehashing the password to secure it properly
+                host.password = make_password(password)
+                host.save()
+            # Try the normal password check
+            elif not check_password(password, host.password):
+                print("Password check failed")
                 return JsonResponse({'status': 'error', 'message': 'Invalid email or password'}, status=401)
             
-            # Login successful
+            print("Login successful")
             return JsonResponse({
                 'status': 'success',
                 'message': 'Login successful',
@@ -169,9 +220,10 @@ def host_login(request):
                 'email': host.email
             })
             
-        except json.JSONDecodeError:
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
         except Exception as e:
+            import traceback
+            print(f"Exception in host_login: {str(e)}")
+            print(traceback.format_exc())
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     
     return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)

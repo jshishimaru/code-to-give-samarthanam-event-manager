@@ -36,14 +36,20 @@ const LoginForm = ({ onSubmit }) => {
     
     try {
       // Determine which login function to use based on role
-      const loginFn = formData.role === 'organiser' ? login : loginHost;
-      const response = await loginFn(formData.email, formData.password);
+      // Fix: 'volunteer' should use login and 'organiser' should use loginHost
+      const loginFn = formData.role === 'volunteer' ? login : loginHost;
       
+      console.log(`Using ${formData.role === 'volunteer' ? 'login' : 'loginHost'} function for role: ${formData.role}`);
+      
+      const response = await loginFn(formData.email, formData.password);
+    
+      console.log('Login response:', response);
+
       if (response.success) {
         toast.success("Login successful!");
         if (onSubmit) onSubmit(response, formData.role);
       } else {
-        toast.error(response.message || "Login failed. Please try again.");
+        toast.error(response.data || "Login failed. Please try again.");
       }
     } catch (error) {
       toast.error("An error occurred. Please try again later.");
@@ -80,21 +86,21 @@ const LoginForm = ({ onSubmit }) => {
               <div className="role-buttons" role="radiogroup" aria-label="User role">
                 <button 
                   type="button"
-                  onClick={() => handleRoleChange('organiser')}
-                  className={`role-button ${formData.role === 'organiser' ? 'active' : ''}`}
-                  aria-pressed={formData.role === 'organiser'}
-                  aria-label="Login as organiser"
-                >
-                  Organiser
-                </button>
-                <button 
-                  type="button"
                   onClick={() => handleRoleChange('volunteer')}
                   className={`role-button ${formData.role === 'volunteer' ? 'active' : ''}`}
                   aria-pressed={formData.role === 'volunteer'}
                   aria-label="Login as volunteer"
                 >
                   Volunteer
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => handleRoleChange('organiser')}
+                  className={`role-button ${formData.role === 'organiser' ? 'active' : ''}`}
+                  aria-pressed={formData.role === 'organiser'}
+                  aria-label="Login as organiser"
+                >
+                  Organiser
                 </button>
               </div>
             </fieldset>

@@ -1,3 +1,4 @@
+import os
 """
 Django settings for eventmanager project.
 
@@ -141,6 +142,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+MEDIA_URL = '/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'app/media')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

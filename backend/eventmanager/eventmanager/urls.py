@@ -7,6 +7,5 @@ urlpatterns = [
     path('api/auth/user/signup/', user_signup, name='user_signup'),
     path('api/auth/user/login/', user_login, name='user_login'),
     path('api/auth/host/login/', host_login, name='host_login'),
-    # Add other app URLs here
-    # path('api/', include('app.urls')),
+	path('api/app/', include('app.urls')),
 ]

@@ -60,9 +60,7 @@ const LoginForm = ({ onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log("button pressed");
-    
+   
     // Validate form before submission
     // if (!validateForm()) {
       //   return;

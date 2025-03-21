@@ -10,7 +10,6 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 axios.defaults.withCredentials = true;
 
 export const login = async (email, password ) => {
-	console.log("login attempted");
 	try{
 	const data = qs.stringify({email, password});
     const response = await axios.post(`${API_URL}auth/user/login/`, data , {

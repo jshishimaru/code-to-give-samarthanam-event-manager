@@ -49,3 +49,8 @@ class EventViewSet(viewsets.ModelViewSet):
         tasks = TaskInfo.objects.filter(event=event)
         serializer = TaskInfoSerializer(tasks, many=True)
         return Response(serializer.data)
+    
+def enrolled_events(request):
+	user = request.user
+	events = user.enrolled_events.all()
+    

@@ -10,3 +10,4 @@ class EventInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventInfo
         fields = ['id', 'event_name', 'overview', 'description', 'start_time', 'end_time', 'host', 'volunteer_enrolled', 'required_volunteers', 'points_for_volunteers', 'status', 'volunteer_efficiency', 'task_analysis']
+

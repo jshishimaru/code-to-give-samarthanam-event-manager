@@ -1,14 +1,14 @@
 @import url('https://rsms.me/inter/inter.css');
 
 /* Login Form Styles */
-body {
-	background-image: url('../assets/loginbg.png'); /* Replace with the actual path to your image */
+/* body {
+	background-image: url('../assets/loginbg.png'); 
 	background-size: cover;
-	/* background-position: center; */
+
 	background-repeat: no-repeat;
 	font-family: 'Inter';
 
-}
+} */
   
 
 

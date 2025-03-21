@@ -1,0 +1,119 @@
+@import url('https://rsms.me/inter/inter.css');
+/* Theme variables */
+:root {
+  /* Light theme (default) with coral/red primary color */
+  --bg-color: #ffffff;
+  --bg-secondary: #f5f7fa;
+  --text-color: #333333;
+  --text-secondary: #666666;
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --input-text: #333333;
+  --input-placeholder: #9ca3af;
+  
+  /* New coral/red color palette */
+  --primary-color: #ec5751; /* Main coral color */
+  --primary-hover: #d83a34; /* Darker coral for hover states */
+  --primary-rgb: 236, 87, 81; /* RGB values for rgba() functions */
+  
+  /* Error states with complementary colors */
+  --error-color: #e74c3c;
+  --error-rgb: 231, 76, 60;
+  --error-bg: #fdedec;
+  --error-text: #922b21;
+  
+  /* Success states with complementary colors */
+  --success-bg: #edf7ef;
+  --success-text: #27ae60;
+  
+  --disabled-bg: #bdc3c7;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --outline-color: #ec5751;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --bg-color: #1f2937;
+  --bg-secondary: #111827;
+  --text-color: #f9fafb;
+  --text-secondary: #d1d5db;
+  --input-bg: #374151;
+  --input-border: #4b5563;
+  --input-text: #f9fafb;
+  --input-placeholder: #9ca3af;
+  
+  /* Dark theme coral/red color palette */
+  --primary-color: #f26b66; /* Lighter coral for dark theme */
+  --primary-hover: #ec5751; /* Regular coral for hover states */
+  --primary-rgb: 242, 107, 102;
+  
+  --error-color: #ff6b5b;
+  --error-rgb: 255, 107, 91;
+  --error-bg: #541e16;
+  --error-text: #f9d0c4;
+  
+  --success-bg: #0f3724;
+  --success-text: #78e2a0;
+  
+  --disabled-bg: #6b7280;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --outline-color: #f26b66;
+}
+
+/* High Contrast Light theme */
+[data-theme="high-contrast-light"] {
+  --bg-color: #ffffff;
+  --bg-secondary: #f0f0f0;
+  --text-color: #000000;
+  --text-secondary: #000000;
+  --input-bg: #ffffff;
+  --input-border: #000000;
+  --input-text: #000000;
+  --input-placeholder: #555555;
+  
+  /* High contrast light theme coral/red color palette */
+  --primary-color: #d83a34; /* Darker coral for better contrast on white */
+  --primary-hover: #b42c27; /* Very dark coral for hover states */
+  --primary-rgb: 216, 58, 52;
+  
+  --error-color: #cc0000;
+  --error-rgb: 204, 0, 0;
+  --error-bg: #ffffff;
+  --error-text: #cc0000;
+  
+  --success-bg: #ffffff;
+  --success-text: #008000;
+  
+  --disabled-bg: #777777;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --outline-color: #d83a34;
+}
+
+/* High Contrast Dark theme */
+[data-theme="high-contrast-dark"] {
+  --bg-color: #000000;
+  --bg-secondary: #121212;
+  --text-color: #ffffff;
+  --text-secondary: #ffffff;
+  --input-bg: #000000;
+  --input-border: #ffffff;
+  --input-text: #ffffff;
+  --input-placeholder: #cccccc;
+  
+  /* High contrast dark theme coral/red color palette */
+  --primary-color: #ff7b76; /* Very bright coral for maximum contrast on black */
+  --primary-hover: #ff9d99; /* Even brighter coral for hover states */
+  --primary-rgb: 255, 123, 118;
+  
+  --error-color: #ff0000;
+  --error-rgb: 255, 0, 0;
+  --error-bg: #000000;
+  --error-text: #ff0000;
+  
+  --success-bg: #000000;
+  --success-text: #00ff00;
+  
+  --disabled-bg: #666666;
+  --shadow-color: rgba(255, 255, 255, 0.2);
+  --outline-color: #ff7b76;
+}

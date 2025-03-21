@@ -52,27 +52,38 @@ export const loginHost = async (email, password ) => {
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 axios.defaults.withCredentials = true;
-export const signup = async ( name , password , email , contact , skills , age , location , organization ) => {
-
+export const signup = async (name, password, email, contact, skills, age, location, organization) => {
 	try {
-	const data = qs.stringify({username, password, email, first_name, last_name});
-	const response = await axios.post(`${API_URL}auth/user/signup/`, data , {
-			  headers: {
-		'Content-Type': 'application/x-www-form-urlencoded',
-	  },
-	});
-	const return_data = {
+	  const data = qs.stringify({
+		name,
+		password,
+		email,
+		contact,
+		skills,
+		age,
+		location,
+		organization
+	  });
+	  
+	  const response = await axios.post(`${API_URL}auth/user/signup/`, data, {
+		headers: {
+		  'Content-Type': 'application/x-www-form-urlencoded',
+		},
+	  });
+	  
+	  const return_data = {
 		'status': response.data.status,
 		'user_id': response.data.user_id,
 		'message': response.data.message,
-	}
-	if( return_data.error ){
+	  }
+	  
+	  if (response.data.error) {
 		return {success: false, data: return_data};
+	  }
+	  
+	  return {success: true, data: return_data};
+	} catch (error) {
+	  console.error('Error signing up:', error);
+	  throw error;
 	}
-	return {success: true, data: return_data};
-    }
-	catch (error) {
-		console.error('Error signing up:', error);
-		throw error;
-	}	
-};
+  };

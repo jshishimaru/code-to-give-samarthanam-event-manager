@@ -63,6 +63,8 @@
     right: 1.5rem;
     width: 20rem;
     max-width: 90vw;
+    max-height: 80vh; 
+    overflow-y: auto;
     background-color: var(--bg-color);
     border-radius: 0.5rem;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
@@ -89,6 +91,10 @@
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--input-border);
+    position: sticky; /* Keep header visible when scrolling */
+    top: 0;
+    background-color: var(--bg-color);
+    z-index: 2;
   }
   
   .panel-title {
@@ -110,6 +116,14 @@
   
   .panel-section {
     margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--input-border);
+  }
+
+  .panel-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
   }
   
   .section-title {
@@ -137,10 +151,18 @@
     font-size: 0.875rem;
     cursor: pointer;
     transition: all 0.2s ease;
+    min-width: 5rem; 
+    justify-content: center;
   }
   
   .theme-button:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(var(--primary-rgb), 0.1);
+    border-color: var(--primary-color);
+  }
+  
+  .theme-button:focus {
+    outline: 2px solid var(--outline-color);
+    outline-offset: 2px;
   }
   
   .theme-button.active {
@@ -149,9 +171,43 @@
     border-color: var(--primary-color);
   }
   
-  .theme-icon {
-    font-size: 1rem;
-  }
+
+.theme-icon {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+  /* Font size option buttons */
+.theme-button[aria-label*="font size"] .theme-icon {
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Font weight option buttons */
+.theme-button[aria-label*="font weight"] .theme-label {
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Text contrast option buttons */
+.theme-button[aria-label*="contrast"] {
+  position: relative;
+}
+
+.theme-button[aria-pressed="true"][aria-label*="High contrast black text"] .theme-label {
+  color: white;
+}
+
+.theme-button[aria-pressed="true"][aria-label*="High contrast white text"] .theme-label {
+  color: white;
+}
+
+.theme-button[aria-pressed="true"][aria-label*="Yellow text on black"] .theme-label {
+  color: yellow;
+}
   
   .backdrop {
     position: fixed;
@@ -164,20 +220,73 @@
   }
   
   /* Responsive adjustments */
-  @media screen and (max-width: 48rem) {
-    .accessibility-container {
-      bottom: 1rem;
-      right: 1rem;
-    }
-    
-    .accessibility-button {
-      width: 3rem;
-      height: 3rem;
-      padding: 0.5rem;
-    }
-    
-    .accessibility-panel {
-      bottom: 4.5rem;
-      right: 1rem;
-    }
+@media screen and (max-width: 48rem) {
+  .accessibility-container {
+    bottom: 1rem;
+    right: 1rem;
   }
+  
+  .accessibility-button {
+    width: 3rem;
+    height: 3rem;
+    padding: 0.5rem;
+  }
+  
+  .accessibility-panel {
+    bottom: 4.5rem;
+    right: 1rem;
+    width: calc(100vw - 2rem);
+    max-height: 70vh;
+  }
+  
+  .theme-switcher {
+    gap: 0.4rem;
+  }
+  
+  .theme-button {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+    min-width: 4.5rem;
+  }
+}
+
+/* Small screens */
+@media screen and (max-width: 30rem) {
+  .theme-button {
+    padding: 0.4rem;
+    min-width: calc(50% - 0.25rem);
+    margin-bottom: 0.25rem;
+  }
+  
+  .panel-section {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+}
+
+/* Make sure contrast changes are visible in buttons */
+.theme-button[aria-label*="Default text contrast"] {
+  color: var(--text-color);
+  background-color: var(--bg-secondary);
+}
+
+.theme-button[aria-label*="High contrast black text"] {
+  color: black;
+  background-color: white;
+}
+
+.theme-button[aria-label*="High contrast white text"] {
+  color: white;
+  background-color: #333;
+}
+
+.theme-button[aria-label*="Yellow text on black"] {
+  color: yellow;
+  background-color: black;
+}
+
+/* Active state overrides */
+.theme-button.active {
+  border-width: 2px;
+  box-shadow: 0 0 0 1px var(--primary-color);
+}

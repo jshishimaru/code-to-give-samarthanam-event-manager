@@ -7,9 +7,12 @@ import Layout from './components/Layout'
 import './styles/root.css'
 import './index.css' 
 
-
-// Apply theme from localStorage at app startup
 const savedTheme = localStorage.getItem('preferred-theme');
+const savedFontSize = localStorage.getItem('preferred-font-size');
+const savedFontWeight = localStorage.getItem('preferred-font-weight');
+const savedTextContrast = localStorage.getItem('preferred-text-contrast');
+
+
 if (savedTheme) {
   document.documentElement.setAttribute('data-theme', savedTheme);
   
@@ -19,6 +22,22 @@ if (savedTheme) {
   }
 } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
   document.documentElement.setAttribute('data-theme', 'dark');
+}
+
+
+// Apply saved font size
+if (savedFontSize) {
+  document.documentElement.setAttribute('data-font-size', savedFontSize);
+}
+
+// Apply saved font weight
+if (savedFontWeight) {
+  document.documentElement.setAttribute('data-font-weight', savedFontWeight);
+}
+
+// Apply saved text contrast
+if (savedTextContrast) {
+  document.documentElement.setAttribute('data-text-contrast', savedTextContrast);
 }
 
 const rootElement = document.getElementById('root')

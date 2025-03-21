@@ -6,6 +6,7 @@ body {
     color: var(--text-color);
     transition: background-color 1s ease, color 0.3s ease;
     min-height: 100vh;
+    font-weight: calc(400 * var(--font-weight-scale));
   }
   
   /* Page container - new */
@@ -59,7 +60,7 @@ body {
   .logo-tagline {
     font-size: clamp(1.1rem, 3vw, 1.5rem);
     color: var(--text-color);
-    font-weight: 600;
+    font-weight: calc(600 * var(--font-weight-scale));
     margin: 0;
     opacity: 0.9;
     text-transform: uppercase;
@@ -108,7 +109,7 @@ body {
     font-size: clamp(1.75rem, 5vw, 2.25rem);
     color: var(--text-color);
     margin-bottom: 0.75rem;
-    font-weight: 700;
+    font-weight: calc(700 * var(--font-weight-scale));
     line-height: 1.2;
     letter-spacing: -0.02em;
   }
@@ -118,6 +119,7 @@ body {
     color: var(--text-secondary);
     margin-bottom: 2rem;
     line-height: 1.6;
+    font-weight: calc(400 * var(--font-weight-scale));
   }
   
   /* Theme switcher styling */
@@ -139,6 +141,7 @@ body {
     border-radius: 0.375rem;
     color: var(--text-color);
     font-size: 0.875rem;
+    font-weight: calc(400 * var(--font-weight-scale));
     cursor: pointer;
     transition: all 0.2s ease;
   }
@@ -151,6 +154,7 @@ body {
     background-color: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+    font-weight: calc(500 * var(--font-weight-scale));
   }
   
   .theme-icon {
@@ -179,7 +183,7 @@ body {
   
   .form-label {
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: calc(600 * var(--font-weight-scale));
     color: var(--text-color);
     transition: color 0.3s ease;
   }
@@ -190,6 +194,7 @@ body {
     border: 1px solid var(--input-border);
     border-radius: 0.5rem;
     font-size: 1rem;
+    font-weight: calc(400 * var(--font-weight-scale));
     line-height: 1.5;
     background-color: var(--input-bg);
     color: var(--input-text);
@@ -219,6 +224,7 @@ body {
   .error-message {
     color: var(--error-color);
     font-size: 0.8rem;
+    font-weight: calc(500 * var(--font-weight-scale));
     margin-top: 0.25rem;
     display: flex;
     align-items: center;
@@ -245,7 +251,7 @@ body {
     border: none;
     border-radius: 0.5rem;
     font-size: 1.05rem;
-    font-weight: 600;
+    font-weight: calc(600 * var(--font-weight-scale));
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
     position: relative;

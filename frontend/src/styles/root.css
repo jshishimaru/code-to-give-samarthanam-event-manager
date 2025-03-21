@@ -29,6 +29,18 @@
   --disabled-bg: #bdc3c7;
   --shadow-color: rgba(0, 0, 0, 0.1);
   --outline-color: #ec5751;
+
+  /* Font accessibility variables */
+  --font-scale: 1;
+  --font-weight-scale: 1;
+  --body-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+
+}
+
+html {
+  font-family: var(--body-font-family);
+  font-size: calc(16px * var(--font-scale));
+  font-weight: calc(400 * var(--font-weight-scale));
 }
 
 /* Dark theme */
@@ -116,4 +128,57 @@
   --disabled-bg: #666666;
   --shadow-color: rgba(255, 255, 255, 0.2);
   --outline-color: #ff7b76;
+}
+
+
+
+/* Font size variations based on data attributes */
+[data-font-size="small"] {
+  --font-scale: 0.85;
+}
+
+[data-font-size="medium"] {
+  --font-scale: 1;
+}
+
+[data-font-size="large"] {
+  --font-scale: 1.15;
+}
+
+[data-font-size="x-large"] {
+  --font-scale: 1.3;
+}
+
+/* Font weight variations based on data attributes */
+[data-font-weight="normal"] {
+  --font-weight-scale: 1;
+}
+
+[data-font-weight="bold"] {
+  --font-weight-scale: 1.25;
+}
+
+[data-font-weight="bolder"] {
+  --font-weight-scale: 1.5;
+}
+
+
+/* [data-text-contrast="default"] { */
+  /* Uses theme default */
+/* } */
+
+[data-text-contrast="high-black"] {
+  --text-color: #000000;
+  --text-secondary: #222222;
+}
+
+[data-text-contrast="high-white"] {
+  --text-color: #ffffff;
+  --text-secondary: #eeeeee;
+}
+
+[data-text-contrast="yellow-black"] {
+  --text-color: #ffff00;
+  --bg-color: #000000;
+  --bg-secondary: #222222;
 }

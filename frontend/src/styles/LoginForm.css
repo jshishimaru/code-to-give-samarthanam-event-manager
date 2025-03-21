@@ -81,6 +81,10 @@ body {
 	/* transition: background-color 0.2s, color 0.2s; */
   }
 
+  .role-button.active {
+	background-color: #ef4444; /* Red background for active role */
+	color: #ffffff; /* White text for active role */
+  }
   .role-button:hover {
 	background-color: #ef4444; /* Red background on hover */
 	color: #ffffff; /* White text on hover */

@@ -2,7 +2,7 @@ import axios from 'axios';
 import qs from 'qs';
 import Cookies from 'js-cookie';
 
-const API_URL = 'http://127.0.0.1:8000/';
+const API_URL = 'http://127.0.0.1:8000/api/';
 const APP_API_URL = 'http://127.0.0.1:8000/api/';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -10,7 +10,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 axios.defaults.withCredentials = true;
 
 export const login = async (email, password ) => {
-
+	console.log("login attempted");
 	try{
 	const data = qs.stringify({email, password});
     const response = await axios.post(`${API_URL}auth/user/login/`, data , {

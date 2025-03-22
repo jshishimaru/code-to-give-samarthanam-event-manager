@@ -138,6 +138,35 @@ class TaskInfo(models.Model):
     def __str__(self):
         return f"{self.event.event_name} - {self.task_name}"
 
+
+# class SubTask(models.Model):
+#     """A simpler model for subtasks linked to a main task"""
+#     STATUS_CHOICES = [
+#         ('Pending', 'Pending'),
+#         ('In Progress', 'In Progress'),
+#         ('Completed', 'Completed'),
+#     ]
+    
+#     # Link to the parent task
+#     parent_task = models.ForeignKey(TaskInfo, on_delete=models.CASCADE, related_name='subtasks')
+    
+#     # Basic fields
+#     title = models.CharField(max_length=255)
+#     description = models.TextField(blank=True)
+#     start_time = models.DateTimeField()
+#     end_time = models.DateTimeField()
+#     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Pending')
+    
+#     # Tracking
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+
+#     def __str__(self):
+#         return f"{self.parent_task.task_name} - {self.title}"
+    
+#     class Meta:
+#         ordering = ['start_time']
+
 class Feedback(models.Model):
     RATING_CHOICES = [(i, i) for i in range(1, 11)]  # 1-10 rating scale
     

@@ -115,3 +115,35 @@ export const signup = async (name, password, email, contact, skills, age, locati
     throw error;
   }
 };
+
+
+export const checkAuth = async () => {
+  try {
+    const response = await axios.get(`${API_URL}auth/check/`);
+    
+    return { 
+      success: true, 
+      data: response.data 
+    };
+  } catch (error) {
+    console.error('Check auth error:', error);
+    
+    if (error.response) {
+      return { 
+        success: false, 
+        data: { 
+          authenticated: false,
+          message: error.response.data.message || 'Authentication check failed'
+        }
+      };
+    } else {
+      return { 
+        success: false, 
+        data: { 
+          authenticated: false,
+          message: 'Network error occurred'
+        }
+      };
+    }
+  }
+};

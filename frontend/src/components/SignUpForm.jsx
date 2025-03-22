@@ -31,8 +31,8 @@ const SignUpForm = ({ onSubmit }) => {
   const [skillInput, setSkillInput] = useState("");
   const [filteredSkills, setFilteredSkills] = useState([]);
   const [showSkillDropdown, setShowSkillDropdown] = useState(false);
-
   const navigate = useNavigate();
+
 
   // Filter available skills based on input
   useEffect(() => {

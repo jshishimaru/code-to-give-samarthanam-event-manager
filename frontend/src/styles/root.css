@@ -182,3 +182,38 @@ html {
   --bg-color: #000000;
   --bg-secondary: #222222;
 }
+
+body, html {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Make sure images respect container width */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ensure content stays within its container */
+#main-content {
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  overflow-x: hidden;
+}
+
+/* Fix positioning for sticky navbar */
+body {
+  padding-top: 80px; /* Match navbar height */
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-top: 60px; /* Smaller padding for mobile */
+  }
+}
+
+#main-content:focus {
+  outline: none; /* Remove default focus outline */
+}

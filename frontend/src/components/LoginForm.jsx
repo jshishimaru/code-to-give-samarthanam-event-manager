@@ -32,13 +32,14 @@ const LoginForm = ({ onSubmit }) => {
     }));
   };
 
+  // Update the handleSubmit function in LoginForm.jsx
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
       // Determine which login function to use based on role
-      // Fix: 'volunteer' should use login and 'organiser' should use loginHost
       const loginFn = formData.role === 'volunteer' ? login : loginHost;
       
       console.log(`Using ${formData.role === 'volunteer' ? 'login' : 'loginHost'} function for role: ${formData.role}`);
@@ -48,12 +49,21 @@ const LoginForm = ({ onSubmit }) => {
       console.log('Login response:', response);
 
       if (response.success) {
+        // Store token in localStorage
+        localStorage.setItem('token', 'authenticated');
+        localStorage.setItem('userRole', formData.role);
+        if (response.data.user_id) {
+          localStorage.setItem('userId', response.data.user_id);
+        }
+        
         toast.success("Login successful!");
-		if (formData.role === 'volunteer') {
-			setTimeout(() => navigate('/events'), 1000);
-		} else {
-		    setTimeout(() => navigate('/host/events'), 1000);
-		}
+        
+        if (formData.role === 'volunteer') {
+          setTimeout(() => navigate('/events'), 1000);
+        } else {
+          setTimeout(() => navigate('/host/events'), 1000);
+        }
+        
         if (onSubmit) onSubmit(response, formData.role);
       } else {
         toast.error(response.data || "Login failed. Please try again.");

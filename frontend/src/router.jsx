@@ -4,27 +4,29 @@ import SignUpForm from './components/SignUpForm';
 import EventPage from './components/EventPage';
 import EventDetails from './components/EventDetails';
 
+import Layout from './components/Layout'
 const router = createBrowserRouter([
 	
 	{	
 		path: '/',
-		element: <LoginForm />
+		element: <Layout><LoginForm /></Layout>
 	},
 	{	
 		path: '/login',
-		element: <LoginForm />
+		element: <Layout><LoginForm /></Layout>
 	},
 	{
 		path:'/signup',
-		element: <SignUpForm />
+		element: <Layout><SignUpForm /></Layout>
 	},
-	{
-		path:'events',
-		element: <EventPage />
-	},
+	
 	{
 		path:'events/:eventId',
-		element: <EventDetails />
+		element: <Layout><EventDetails /></Layout>
+	},
+	{
+		path:'/events',
+		element: <Layout><EventPage /></Layout>
 	}
 
 ]);

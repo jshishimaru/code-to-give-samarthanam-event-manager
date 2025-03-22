@@ -2,8 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import router from './router'
 import { RouterProvider } from 'react-router-dom'
-import { ThemeProvider } from './context/ThemeContext'
-import Layout from './components/Layout'
+import { ThemeProvider } from './context/ThemeContext' 
 import './styles/root.css'
 import './index.css' 
 
@@ -45,9 +44,7 @@ if (!rootElement) throw new Error('Failed to find the root element')
 createRoot(rootElement).render(
   <StrictMode>
     <ThemeProvider>
-      <Layout>
-        <RouterProvider router={router} />
-      </Layout>
+      <RouterProvider router={router} />
     </ThemeProvider>
   </StrictMode>
 )

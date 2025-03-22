@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { getUserEnrolledEvents, allUpcomingEvents, getUserPastEvents } from '../apiservice/event';
 import EventCard from './EventCard';
-import '../styles/EventPage.css'; // We'll create this file next
+import '../styles/EventPage.css';
+import Navbar from './Navbar';
 
-/**
- * EventPage component that displays various event categories
- */
+
 const EventPage = () => {
   // User ID - in a real app, this would come from auth context
   const [userId, setUserId] = useState('1'); // Placeholder user ID
@@ -125,7 +124,9 @@ const EventPage = () => {
   );
 
   return (
-    <main className="event-page-container">
+  <>
+    <Navbar />
+    <main id="main-content" className="event-page-container">
       <h1 className="page-title">Events</h1>
       
       {renderEventSection(
@@ -152,6 +153,7 @@ const EventPage = () => {
         'No past events found.'
       )}
     </main>
+  </>
   );
 };
 

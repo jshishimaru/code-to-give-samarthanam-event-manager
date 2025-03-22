@@ -70,7 +70,6 @@ export const getEventDetails = async (eventId) => {
     const response = await axios.get(`${APP_API_URL}events/details/`, {
       params: { event_id: eventId }
     });
-	console.log(response.data);
     return { success: true, data: response.data };
   } catch (error) {
     console.log(error);

@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import event_views
+from .views import feeback_views
 
 # router = DefaultRouter()
 # router.register(r'events', event_views.EventViewSet, basename='events')
@@ -23,4 +24,11 @@ urlpatterns = [
     path('host/events/', event_views.HostEventsView.as_view(), name='host_events'),
     path('host/events/create/', event_views.CreateEventView.as_view(), name='create_event'),
     path('host/events/update/', event_views.UpdateEventView.as_view(), name='update_event'),
+
+	path('feedback/event/', feeback_views.EventFeedbackListView.as_view(), name='event_feedback_list'),
+	path('feedback/detail/', feeback_views.FeedbackDetailView.as_view(), name='feedback_detail'),
+	path('feedback/submit/', feeback_views.SubmitFeedbackView.as_view(), name='submit_feedback'),
+	path('feedback/user/', feeback_views.UserFeedbackListView.as_view(), name='user_feedback_list'),
+	path('feedback/eligibility/', feeback_views.CheckFeedbackEligibilityView.as_view(), name='check_feedback_eligibility'),
+	
 ]

@@ -1,99 +1,523 @@
+/* Main container with a subtle entrance animation */
 .event-page-container {
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 2rem 1rem;
 	color: var(--text-color);
+	animation: fadeIn 0.8s ease-in-out;
+	position: relative;
+	overflow: hidden;
   }
   
+  @keyframes fadeIn {
+	from {
+	  opacity: 0;
+	  transform: translateY(20px);
+	}
+	to {
+	  opacity: 1;
+	  transform: translateY(0);
+	}
+  }
+  
+  /* Animated page title with gradient underline effect */
   .page-title {
-	font-size: 2rem;
-	font-weight: 700;
-	margin-bottom: 2rem;
+	font-size: 2.5rem;
+	font-weight: calc(700 * var(--font-weight-scale));
+	margin-bottom: 2.5rem;
 	color: var(--text-color);
-  }
-  
-  .section-title {
-	font-size: 1.5rem;
-	font-weight: 600;
-	margin-bottom: 1.5rem;
-	color: var(--text-color);
-	border-bottom: 2px solid var(--primary-color);
+	position: relative;
+	display: inline-block;
 	padding-bottom: 0.5rem;
+	animation: slideInFromLeft 0.6s ease-out;
   }
   
+  .page-title::after {
+	content: '';
+	position: absolute;
+	width: 100%;
+	height: 4px;
+	bottom: 0;
+	left: 0;
+	background: linear-gradient(to right, var(--primary-color), transparent);
+	border-radius: 2px;
+	animation: expandWidth 1s ease-out forwards;
+  }
+  
+  @keyframes slideInFromLeft {
+	from {
+	  opacity: 0;
+	  transform: translateX(-30px);
+	}
+	to {
+	  opacity: 1;
+	  transform: translateX(0);
+	}
+  }
+  
+  @keyframes expandWidth {
+	from {
+	  width: 0;
+	}
+	to {
+	  width: 100%;
+	}
+  }
+  
+  /* Section title with animated highlight effect */
+  .section-title {
+	font-size: 1.75rem;
+	font-weight: calc(600 * var(--font-weight-scale));
+	margin-bottom: 1.75rem;
+	color: var(--text-color);
+	border-bottom: none;
+	padding-bottom: 0.5rem;
+	position: relative;
+	display: inline-block;
+	animation: fadeInUp 0.5s ease-out;
+  }
+  
+  .section-title::before {
+	content: '';
+	position: absolute;
+	width: 40px;
+	height: 3px;
+	background-color: var(--primary-color);
+	bottom: 0;
+	left: 0;
+	transition: width 0.3s ease;
+  }
+  
+  .section-title:hover::before {
+	width: 100%;
+  }
+  
+  @keyframes fadeInUp {
+	from {
+	  opacity: 0;
+	  transform: translateY(15px);
+	}
+	to {
+	  opacity: 1;
+	  transform: translateY(0);
+	}
+  }
+  
+  /* Event sections with decorative dividers */
   .event-section {
-	margin-bottom: 3rem;
+	margin-bottom: 4rem;
+	position: relative;
+	padding-bottom: 2rem;
+	animation: fadeIn 0.8s ease-in-out;
+	animation-fill-mode: both;
   }
   
+  /* Staggered animation for multiple sections */
+  .event-section:nth-child(2) {
+	animation-delay: 0.2s;
+  }
+  
+  .event-section:nth-child(3) {
+	animation-delay: 0.4s;
+  }
+  
+  .event-section:nth-child(4) {
+	animation-delay: 0.6s;
+  }
+  
+  /* Decorative section divider */
+  .event-section:not(:last-child)::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 80%;
+	height: 1px;
+	background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+  }
+  
+  /* Event grid with card animation on hover */
   .event-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-	gap: 1.5rem;
+	gap: 2rem;
+	opacity: 0;
+	animation: fadeInStagger 0.8s ease-out forwards;
+	animation-delay: 0.3s;
   }
   
+  @keyframes fadeInStagger {
+	from {
+	  opacity: 0;
+	  transform: translateY(20px);
+	}
+	to {
+	  opacity: 1;
+	  transform: translateY(0);
+	}
+  }
+  
+  /* Event card styling */
+  .event-card {
+	background-color: var(--bg-color);
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	transition: all 0.3s ease;
+	transform: translateY(0);
+	position: relative;
+	z-index: 1;
+  }
+  
+  .event-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Card image effects */
+  .event-card img {
+	width: 100%;
+	height: 180px;
+	object-fit: cover;
+	transition: transform 0.5s ease;
+  }
+  
+  .event-card:hover img {
+	transform: scale(1.05);
+  }
+  
+  /* Card content styling */
+  .event-card-content {
+	padding: 1.5rem;
+  }
+  
+  .event-card-title {
+	font-size: 1.2rem;
+	font-weight: calc(600 * var(--font-weight-scale));
+	margin-bottom: 0.5rem;
+	color: var(--text-color);
+  }
+  
+  .event-card-date {
+	font-size: 0.875rem;
+	color: var(--primary-color);
+	margin-bottom: 0.5rem;
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-weight: calc(500 * var(--font-weight-scale));
+  }
+  
+  .event-card-description {
+	font-size: 0.9rem;
+	color: var(--text-secondary);
+	margin-bottom: 1rem;
+	line-height: 1.5;
+	font-weight: calc(400 * var(--font-weight-scale));
+  }
+  
+  /* Animated button styling */
+  .event-card-button {
+	padding: 0.5rem 1rem;
+	background-color: var(--primary-color);
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 0.9rem;
+	font-weight: calc(500 * var(--font-weight-scale));
+	cursor: pointer;
+	transition: all 0.3s ease;
+	position: relative;
+	overflow: hidden;
+	z-index: 1;
+  }
+  
+  .event-card-button::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+	transition: left 0.7s ease;
+	z-index: -1;
+  }
+  
+  .event-card-button:hover {
+	background-color: var(--primary-hover);
+	transform: translateY(-2px);
+  }
+  
+  .event-card-button:hover::before {
+	left: 100%;
+  }
+  
+  /* Empty state styling with animation */
+  .empty-state {
+	text-align: center;
+	padding: 3rem 1rem;
+	animation: pulse 2s infinite ease-in-out;
+  }
+  
+  @keyframes pulse {
+	0% {
+	  opacity: 1;
+	}
+	50% {
+	  opacity: 0.7;
+	}
+	100% {
+	  opacity: 1;
+	}
+  }
+  
+  .empty-state-icon {
+	font-size: 3rem;
+	color: var(--text-secondary);
+	margin-bottom: 1rem;
+	opacity: 0.5;
+  }
+  
+  .empty-state-text {
+	font-size: 1.2rem;
+	color: var(--text-secondary);
+	font-weight: calc(500 * var(--font-weight-scale));
+  }
+  
+  /* Filters section with animated appearance */
+  .filters-section {
+	margin-bottom: 2rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	animation: fadeInFromTop 0.6s ease-out;
+  }
+  
+  @keyframes fadeInFromTop {
+	from {
+	  opacity: 0;
+	  transform: translateY(-20px);
+	}
+	to {
+	  opacity: 1;
+	  transform: translateY(0);
+	}
+  }
+  
+  .filter-item {
+	padding: 0.5rem 1rem;
+	background-color: var(--bg-secondary);
+	border-radius: 20px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-weight: calc(400 * var(--font-weight-scale));
+  }
+  
+  .filter-item:hover {
+	background-color: rgba(var(--primary-rgb), 0.1);
+  }
+  
+  .filter-item.active {
+	background-color: var(--primary-color);
+	color: white;
+	font-weight: calc(500 * var(--font-weight-scale));
+  }
+  
+  /* Loading state animation */
   .loading-container {
 	display: flex;
-	flex-direction: column;
-	align-items: center;
 	justify-content: center;
-	padding: 2rem;
-	background-color: var(--bg-secondary);
-	border-radius: 8px;
-	text-align: center;
+	align-items: center;
+	height: 200px;
   }
   
   .loading-spinner {
-	width: 40px;
-	height: 40px;
+	width: 50px;
+	height: 50px;
 	border: 4px solid rgba(var(--primary-rgb), 0.3);
 	border-radius: 50%;
 	border-top-color: var(--primary-color);
-	animation: spin 1s ease-in-out infinite;
-	margin-bottom: 1rem;
+	animation: spin 1s linear infinite;
   }
   
   @keyframes spin {
-	to { transform: rotate(360deg); }
-  }
-  
-  .error-container {
-	padding: 1rem;
-	background-color: var(--error-bg);
-	border-radius: 8px;
-	color: var(--error-text);
-	text-align: center;
-  }
-  
-  .error-message {
-	font-weight: 500;
-  }
-  
-  .empty-container {
-	padding: 2rem;
-	background-color: var(--bg-secondary);
-	border-radius: 8px;
-	text-align: center;
-	color: var(--text-secondary);
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-	.event-grid {
-	  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-	  gap: 1rem;
+	0% {
+	  transform: rotate(0deg);
+	}
+	100% {
+	  transform: rotate(360deg);
 	}
   }
   
-  @media (max-width: 480px) {
+  /* Enhanced pagination */
+  .pagination {
+	display: flex;
+	justify-content: center;
+	gap: 0.5rem;
+	margin-top: 2rem;
+	animation: fadeIn 0.8s ease-in-out;
+  }
+  
+  .pagination-button {
+	padding: 0.5rem 1rem;
+	background-color: var(--bg-secondary);
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-weight: calc(500 * var(--font-weight-scale));
+  }
+  
+  .pagination-button:hover {
+	background-color: rgba(var(--primary-rgb), 0.1);
+  }
+  
+  .pagination-button.active {
+	background-color: var(--primary-color);
+	color: white;
+  }
+  
+  /* Scroll-to-top button with animation */
+  .scroll-to-top {
+	position: fixed;
+	bottom: 2rem;
+	right: 2rem;
+	width: 3rem;
+	height: 3rem;
+	background-color: var(--primary-color);
+	color: white;
+	border: none;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	opacity: 0;
+	visibility: hidden;
+	transition: all 0.3s ease;
+	z-index: 99;
+	animation: bounce 2s infinite;
+  }
+  
+  .scroll-to-top.visible {
+	opacity: 1;
+	visibility: visible;
+  }
+  
+  @keyframes bounce {
+	0%, 20%, 50%, 80%, 100% {
+	  transform: translateY(0);
+	}
+	40% {
+	  transform: translateY(-5px);
+	}
+	60% {
+	  transform: translateY(-3px);
+	}
+  }
+  
+  /* Enhanced responsiveness */
+  @media screen and (max-width: 992px) {
 	.event-grid {
-	  grid-template-columns: 1fr;
+	  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	  gap: 1.5rem;
 	}
 	
 	.page-title {
-	  font-size: 1.75rem;
+	  font-size: 2.2rem;
 	}
 	
 	.section-title {
-	  font-size: 1.25rem;
+	  font-size: 1.5rem;
 	}
+  }
+  
+  @media screen and (max-width: 768px) {
+	.event-page-container {
+	  padding: 1.5rem 1rem;
+	}
+	
+	.event-grid {
+	  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	  gap: 1.2rem;
+	}
+	
+	.page-title {
+	  font-size: 2rem;
+	  margin-bottom: 2rem;
+	}
+	
+	.section-title {
+	  font-size: 1.3rem;
+	  margin-bottom: 1.5rem;
+	}
+	
+	.event-section {
+	  margin-bottom: 3rem;
+	}
+  }
+  
+  @media screen and (max-width: 576px) {
+	.event-grid {
+	  grid-template-columns: 1fr;
+	  gap: 1.5rem;
+	}
+	
+	.page-title {
+	  font-size: 1.8rem;
+	  margin-bottom: 1.5rem;
+	}
+	
+	.event-card img {
+	  height: 200px;
+	}
+	
+	.filters-section {
+	  justify-content: center;
+	}
+	
+	.scroll-to-top {
+	  bottom: 5.5rem;
+	  right: 1.5rem;
+	  width: 2.5rem;
+	  height: 2.5rem;
+	}
+  }
+  
+  /* Accessibility enhancements */
+  @media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+	  animation-duration: 0.01ms !important;
+	  animation-iteration-count: 1 !important;
+	  transition-duration: 0.01ms !important;
+	  scroll-behavior: auto !important;
+	}
+  }
+  
+  /* Dark mode specific enhancements */
+  [data-theme="dark"] .event-card {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  [data-theme="dark"] .event-card:hover {
+	box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* High contrast enhancements */
+  [data-theme="high-contrast-light"] .event-card,
+  [data-theme="high-contrast-dark"] .event-card {
+	border: 2px solid var(--text-color);
+  }
+  
+  /* Font size adjustments based on accessibility settings */
+  [data-font-size="large"] .event-card-title,
+  [data-font-size="x-large"] .event-card-title {
+	line-height: 1.3;
+  }
+  
+  [data-font-size="large"] .event-card-description,
+  [data-font-size="x-large"] .event-card-description {
+	line-height: 1.6;
   }

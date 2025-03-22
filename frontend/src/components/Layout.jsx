@@ -10,7 +10,14 @@ const Layout = ({ children }) => {
   return (
     <>
       <Navbar />
-      <main id="main-content" style={{ marginTop: '10px' }}>
+      <main 
+        id="main-content" 
+        tabIndex="-1"
+        style={{ 
+          marginTop: '10px',
+          outline: 'none' // Remove focus outline
+        }}
+      >
         {children || <div>No content to display</div>}
       </main>
       <AccessibilityButton />

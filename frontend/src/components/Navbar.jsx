@@ -107,6 +107,19 @@ const Navbar = () => {
     }
   };
 
+  const handleSkipToMainContent = (e) => {
+    e.preventDefault();
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) {
+      mainContent.setAttribute('tabindex', '-1');
+      mainContent.focus();
+      window.scrollTo({
+        top: mainContent.offsetTop - 100,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
@@ -117,18 +130,7 @@ const Navbar = () => {
         <a 
           href="#main-content" 
           className="skip-link" 
-          onClick={(e) => {
-            e.preventDefault();
-            const mainContent = document.getElementById('main-content');
-            if (mainContent) {
-              mainContent.setAttribute('tabindex', '-1');
-              mainContent.focus();
-              window.scrollTo({
-                top: mainContent.offsetTop - 100,
-                behavior: 'smooth'
-              });
-            }
-          }}
+          onClick={handleSkipToMainContent}
           aria-label="Skip to main content"
         >  
           Skip to main content
@@ -192,14 +194,16 @@ const Navbar = () => {
               </a>
             </li>
             <li role="none">
-              <Link 
-                to="/contact"
+              <a 
+                href="https://samarthanam.org/contact-us/" 
+                target="_blank" 
+                rel="noopener noreferrer"
                 onClick={closeMenu}
                 role="menuitem"
-                aria-current={location.pathname === '/contact' ? 'page' : undefined}
+                aria-label="Contact Us - Opens in a new tab"
               >
                 Contact
-              </Link>
+              </a>
             </li>
           </ul>
 

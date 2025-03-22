@@ -26,7 +26,7 @@ export const allUpcomingEvents = async () => {
 // returns a list of event_ids
 export const getUserEnrolledEvents = async (userId) => {
   try {
-    const response = await axios.get(`${APP_API_URL}events/enrolled/`, {
+    const response = await axios.get(`${APP_API_URL}user/events/enrolled/`, {
       params: { user_id: userId }
     });
     return { success: true, data: response.data };
@@ -40,7 +40,7 @@ export const getUserEnrolledEvents = async (userId) => {
 // returns a list of event_ids
 export const getUserPastEvents = async (userId) => {
   try {
-    const response = await axios.get(`${APP_API_URL}events/past/`, {
+    const response = await axios.get(`${APP_API_URL}user/events/past/`, {
       params: { user_id: userId }
     });
     return { success: true, data: response.data };
@@ -54,7 +54,7 @@ export const getUserPastEvents = async (userId) => {
 // returns a list of event_ids
 export const getUserUpcomingEvents = async (userId) => {
   try {
-    const response = await axios.get(`${APP_API_URL}events/user/upcoming/`, {
+    const response = await axios.get(`${APP_API_URL}user/events/upcoming/`, {
       params: { user_id: userId }
     });
     return { success: true, data: response.data };

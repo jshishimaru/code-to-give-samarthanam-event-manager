@@ -1,229 +1,391 @@
-from app.models import User
-from app.models import Host
-from django.http import JsonResponse
+from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.views import View
+from django.utils.decorators import method_decorator
 import json
-import re
-from django.contrib.auth.hashers import make_password, check_password
+from app.models import User
+import traceback
 
-def validate_password(password):
-    """
-    Validate that the password meets requirements:
-    - At least 8 characters
-    - Contains at least one digit
-    - Contains at least one uppercase letter
-    - Contains at least one lowercase letter
-    - Contains at least one special character
-    """
-    if len(password) < 8:
-        return False, "Password must be at least 8 characters long"
-    
-    if not re.search(r'\d', password):
-        return False, "Password must contain at least one digit"
-    
-    if not re.search(r'[A-Z]', password):
-        return False, "Password must contain at least one uppercase letter"
-    
-    if not re.search(r'[a-z]', password):
-        return False, "Password must contain at least one lowercase letter"
-    
-    if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
-        return False, "Password must contain at least one special character"
-    
-    return True, "Password is valid"
+@method_decorator(csrf_exempt, name='dispatch')
+class LoginView(View):
+    """Base login view with common functionality"""
+    def get(self, request):
+        """Handle GET requests - for checking login status"""
+        if request.user.is_authenticated:
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Already logged in',
+                'user_id': request.user.id,
+                'email': request.user.email,
+                'name': request.user.name,
+                'isHost': request.user.isHost
+            })
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Not authenticated'}, status=401)
 
-def validate_name(name):
-    """Validate that name is not empty and has reasonable length"""
-    if not name:
-        return False, "Name cannot be empty"
-    
-    if len(name) < 2:
-        return False, "Name is too short"
-    
-    if len(name) > 255:
-        return False, "Name is too long"
-    
-    return True, "Name is valid"
 
-def validate_contact(contact):
-    """Validate that contact number has proper format"""
-    if not re.match(r'^\+?[0-9]{10,15}$', contact):
-        return False, "Contact number must contain 10-15 digits"
-    
-    return True, "Contact is valid"
-
-@csrf_exempt
-def user_signup(request):
-    if request.method == 'POST':
+@method_decorator(csrf_exempt, name='dispatch')
+class UserLoginView(View):
+    """Login endpoint specifically for regular users (volunteers)"""
+    def post(self, request):
         try:
-            # Use request.POST to handle x-www-form-urlencoded data
-            name = request.POST.get('name', '')
-            password = request.POST.get('password', '')
-            email = request.POST.get('email', '')
-            contact = request.POST.get('contact', '')
-            # role = request.POST.get('role', '')
-            skills = request.POST.get('skills', '')
-            age = int(request.POST.get('age', 0))
-            location = request.POST.get('location', '')
-            organization = request.POST.get('organization', '')
+            # Get credentials from request
+            data = request.POST if request.POST else json.loads(request.body)
+            email = data.get('email', '')
+            password = data.get('password', '')
+            
+            if not email or not password:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Email and password are required'
+                }, status=400)
+            
+            # Authenticate user
+            user = authenticate(request, username=email, password=password)
+            
+            if user is not None:
+                # Check if the user is a regular user (not a host)
+                if user.isHost:
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'Invalid user credentials. This account is registered as a host.'
+                    }, status=401)
+                
+                login(request, user)
+                
+                # Return user info
+                return JsonResponse({
+                    'status': 'success',
+                    'message': 'Login successful',
+                    'user_id': user.id,
+                    'email': user.email,
+                    'name': user.name,
+                    'isHost': False,
+                    'skills': user.skills,
+                    'age': user.age,
+                    'location': user.location,
+                    'organization': user.organization
+                })
+            else:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Invalid email or password'
+                }, status=401)
+                
+        except Exception as e:
+            print(f"Error in user login: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    
+    def get(self, request):
+        """Handle GET requests"""
+        # Check if there's a 'next' parameter in the query string
+        next_url = request.GET.get('next', '/api/auth/profile/')
+        
+        # If user is already authenticated, return success
+        if request.user.is_authenticated:
+            if request.user.isHost:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'You are logged in as a host. Please use the host login endpoint.'
+                }, status=403)
+            
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Already logged in',
+                'user_id': request.user.id,
+                'email': request.user.email,
+                'name': request.user.name,
+                'isHost': False
+            })
+        
+        # For API usage - return a response explaining authentication is required
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Authentication required',
+            'login_required': True,
+            'next': next_url
+        }, status=401)
 
-            # Validate inputs
-            name_valid, name_msg = validate_name(name)
-            if not name_valid:
-                return JsonResponse({'status': 'error', 'message': name_msg}, status=400)
 
-            password_valid, password_msg = validate_password(password)
-            if not password_valid:
-                return JsonResponse({'status': 'error', 'message': password_msg}, status=400)
+@method_decorator(csrf_exempt, name='dispatch')
+class HostLoginView(View):
+    """Login endpoint specifically for hosts"""
+    def post(self, request):
+        try:
+            # Get credentials from request
+            data = request.POST if request.POST else json.loads(request.body)
+            email = data.get('email', '')
+            password = data.get('password', '')
+            
+            if not email or not password:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Email and password are required'
+                }, status=400)
+            
+            # Authenticate user
+            user = authenticate(request, username=email, password=password)
+            
+            if user is not None:
+                # Check if the user is a host
+                if not user.isHost:
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'Invalid host credentials. This account is registered as a regular user.'
+                    }, status=401)
+                
+                login(request, user)
+                
+                # Return host info
+                return JsonResponse({
+                    'status': 'success',
+                    'message': 'Login successful',
+                    'host_id': user.id,
+                    'email': user.email,
+                    'name': user.name,
+                    'isHost': True
+                })
+            else:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Invalid email or password'
+                }, status=401)
+                
+        except Exception as e:
+            print(f"Error in host login: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    
+    def get(self, request):
+        """Handle GET requests"""
+        # Check if there's a 'next' parameter in the query string
+        next_url = request.GET.get('next', '/api/auth/profile/')
+        
+        # If user is already authenticated, return success
+        if request.user.is_authenticated:
+            if not request.user.isHost:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'You are logged in as a regular user. Please use the user login endpoint.'
+                }, status=403)
+            
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Already logged in',
+                'host_id': request.user.id,
+                'email': request.user.email,
+                'name': request.user.name,
+                'isHost': True
+            })
+        
+        # For API usage - return a response explaining authentication is required
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Authentication required',
+            'login_required': True,
+            'next': next_url
+        }, status=401)
 
-            contact_valid, contact_msg = validate_contact(contact)
-            if not contact_valid:
-                return JsonResponse({'status': 'error', 'message': contact_msg}, status=400)
 
+@method_decorator(csrf_exempt, name='dispatch')
+class UserSignupView(View):
+    """Signup endpoint for regular users (volunteers)"""
+    def post(self, request):
+        try:
+            # Get data from request
+            data = request.POST if request.POST else json.loads(request.body)
+            
+            email = data.get('email', '')
+            password = data.get('password', '')
+            name = data.get('name', '')
+            contact = data.get('contact', '')
+            
+            # Additional fields for regular users
+            skills = data.get('skills', '')
+            age = data.get('age')
+            location = data.get('location', '')
+            organization = data.get('organization', '')
+            
+            # Validate required fields
+            if not email or not password or not name or not contact:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Email, password, name, and contact are required'
+                }, status=400)
+            
             # Check if email already exists
             if User.objects.filter(email=email).exists():
-                return JsonResponse({'status': 'error', 'message': 'Email already registered'}, status=400)
-
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Email already registered'
+                }, status=400)
+            
             # Check if contact already exists
             if User.objects.filter(contact=contact).exists():
-                return JsonResponse({'status': 'error', 'message': 'Contact number already registered'}, status=400)
-
-            # Create user with hashed password
-            hashed_password = make_password(password)
-            user = User.objects.create(
-                name=name,
-                password=hashed_password,
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Contact already registered'
+                }, status=400)
+            
+            # Create user (as a regular user, not a host)
+            user = User.objects.create_user(
                 email=email,
+                password=password,
+                name=name,
                 contact=contact,
-                # role=role,
+                isHost=False,
                 skills=skills,
                 age=age,
                 location=location,
                 organization=organization
             )
-
+            
+            # Log the user in
+            login(request, user)
+            
             return JsonResponse({
                 'status': 'success',
-                'message': 'User registered successfully',
-                'user_id': user.id
-            })
-
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-
-    return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
-
-@csrf_exempt
-def user_login(request):
-    if request.method == 'POST':
-        try:
-            # Try both POST form data and JSON body
-            email = request.POST.get('email', '')
-            password = request.POST.get('password', '')
-            
-            # If POST data is empty, try to parse from JSON body
-            if not email or not password:
-                try:
-                    data = json.loads(request.body)
-                    email = data.get('email', '')
-                    password = data.get('password', '')
-                except json.JSONDecodeError:
-                    pass
-            
-            print(f"Login attempt for user with email: {email}")
-            
-            try:
-                user = User.objects.get(email=email)
-                print(f"User found: {user.id}")
-            except User.DoesNotExist:
-                print("User not found")
-                return JsonResponse({'status': 'error', 'message': 'Invalid email or password'}, status=401)
-            
-            # Add debug prints
-            print(f"Input password: {password}")
-            print(f"Stored hashed password: {user.password}")
-            
-            # Check if this is a plaintext password (for admin-created users)
-            if user.password == password:
-                print("Matched with direct comparison (for admin-created users)")
-                # Rehash the password to secure it properly
-                user.password = make_password(password)
-                user.save()
-            # Try the normal password check
-            elif not check_password(password, user.password):
-                print("Password check failed")
-                return JsonResponse({'status': 'error', 'message': 'Invalid email or password'}, status=401)
-
-            print("Login successful")
-            return JsonResponse({
-                'status': 'success',
-                'message': 'Login successful',
+                'message': 'User created successfully',
                 'user_id': user.id,
-                'name': user.name,
                 'email': user.email,
+                'name': user.name,
+                'isHost': False
             })
             
         except Exception as e:
-            import traceback
-            print(f"Exception in user_login: {str(e)}")
+            print(f"Error in user signup: {str(e)}")
             print(traceback.format_exc())
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
     
-    return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
-@csrf_exempt
-def host_login(request):
-    if request.method == 'POST':
-        try:
-            # Try both POST form data and JSON body
-            email = request.POST.get('email', '')
-            password = request.POST.get('password', '')
-            
-            # If POST data is empty, try to parse from JSON body
-            if not email or not password:
-                try:
-                    data = json.loads(request.body)
-                    email = data.get('email', '')
-                    password = data.get('password', '')
-                except json.JSONDecodeError:
-                    pass
-            
-            print(f"Login attempt for host with email: {email}")
-            
-            try:
-                host = Host.objects.get(email=email)
-                print(f"Host found: {host.id}")
-            except Host.DoesNotExist:
-                print("Host not found")
-                return JsonResponse({'status': 'error', 'message': 'Invalid email or password'}, status=401)
-            
-            # Add debug prints to see what's happening
-            print(f"Input password: {password}")
-            print(f"Stored hashed password: {host.password}")
-            
-            # Check if this is a Django admin created password (raw password stored for testing)
-            if host.password == password:
-                print("Matched with direct comparison (for admin-created hosts)")
-                # Consider rehashing the password to secure it properly
-                host.password = make_password(password)
-                host.save()
-            # Try the normal password check
-            elif not check_password(password, host.password):
-                print("Password check failed")
-                return JsonResponse({'status': 'error', 'message': 'Invalid email or password'}, status=401)
-            
-            print("Login successful")
+    def get(self, request):
+        """Handle GET requests to signup page"""
+        return JsonResponse({
+            'status': 'info',
+            'message': 'Please use POST method to sign up'
+        })
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class LogoutView(View):
+    """Logout the current user"""
+    def post(self, request):
+        if request.user.is_authenticated:
+            logout(request)
             return JsonResponse({
                 'status': 'success',
-                'message': 'Login successful',
-                'host_id': host.id,
-                'name': host.name,
-                'email': host.email
+                'message': 'Logged out successfully'
             })
-            
-        except Exception as e:
-            import traceback
-            print(f"Exception in host_login: {str(e)}")
-            print(traceback.format_exc())
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+        else:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Not logged in'
+            }, status=401)
     
-    return JsonResponse({'status': 'error', 'message': 'Method not allowed'}, status=405)
+    def get(self, request):
+        """Handle GET requests - explain that POST is required"""
+        return JsonResponse({
+            'status': 'info',
+            'message': 'Please use POST method to logout'
+        })
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ProfileView(View):
+    """Get the current user's profile"""
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Authentication required'
+            }, status=401)
+        
+        user = request.user
+        
+        profile_data = {
+            'id': user.id,
+            'email': user.email,
+            'name': user.name,
+            'contact': user.contact,
+            'isHost': user.isHost,
+            'date_joined': user.date_joined,
+        }
+        
+        # Add regular user fields if not a host
+        if not user.isHost:
+            profile_data.update({
+                'skills': user.skills,
+                'age': user.age,
+                'location': user.location,
+                'organization': user.organization,
+            })
+        
+        return JsonResponse({
+            'status': 'success',
+            'profile': profile_data
+        })
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CheckAuthView(View):
+    """Check if the user is authenticated and return their session info"""
+    def get(self, request):
+        if request.user.is_authenticated:
+            return JsonResponse({
+                'status': 'success',
+                'authenticated': True,
+                'user': {
+                    'id': request.user.id,
+                    'email': request.user.email,
+                    'name': request.user.name,
+                    'isHost': request.user.isHost,
+                }
+            })
+        else:
+            return JsonResponse({
+                'status': 'error',
+                'authenticated': False,
+                'message': 'User is not authenticated'
+            }, status=401)
+
+
+# For backwards compatibility - these functions call the class-based views
+def user_login(request):
+    """Compatibility function for user_login"""
+    view = UserLoginView.as_view()
+    return view(request)
+
+def host_login(request):
+    """Compatibility function for host_login"""
+    view = HostLoginView.as_view()
+    return view(request)
+
+def user_signup(request):
+    """Compatibility function for user_signup"""
+    view = UserSignupView.as_view()
+    return view(request)
+
+def logout_view(request):
+    """Compatibility function for logout_view"""
+    view = LogoutView.as_view()
+    return view(request)
+
+def profile(request):
+    """Compatibility function for profile"""
+    view = ProfileView.as_view()
+    return view(request)
+
+def check_auth(request):
+    """Compatibility function for check_auth"""
+    view = CheckAuthView.as_view()
+    return view(request)

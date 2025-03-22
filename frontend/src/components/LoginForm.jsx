@@ -4,6 +4,7 @@ import { login, loginHost } from "../apiservice/auth";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import logoImage from "../assets/logo.png"; 
+import { useNavigate } from 'react-router-dom';
 
 
 const LoginForm = ({ onSubmit }) => {
@@ -14,6 +15,7 @@ const LoginForm = ({ onSubmit }) => {
   });
   
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;

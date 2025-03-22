@@ -4,6 +4,7 @@ from ..models import Chat, User, TaskInfo
 class ChatSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()
     task_name = serializers.SerializerMethodField()
+    is_host = serializers.SerializerMethodField()
     
     class Meta:
         model = Chat
@@ -14,3 +15,6 @@ class ChatSerializer(serializers.ModelSerializer):
     
     def get_task_name(self, obj):
         return obj.task.task_name if obj.task else None
+        
+    def get_is_host(self, obj):
+        return obj.user.isHost if obj.user else None

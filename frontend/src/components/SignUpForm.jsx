@@ -4,6 +4,7 @@ import { signup } from "../apiservice/auth";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import logoImage from "../assets/logo.png";
+import { useNavigate } from 'react-router-dom';
 
 // Predefined list of skills that users can select from
 const AVAILABLE_SKILLS = [
@@ -30,6 +31,8 @@ const SignUpForm = ({ onSubmit }) => {
   const [skillInput, setSkillInput] = useState("");
   const [filteredSkills, setFilteredSkills] = useState([]);
   const [showSkillDropdown, setShowSkillDropdown] = useState(false);
+
+  const navigate = useNavigate();
 
   // Filter available skills based on input
   useEffect(() => {
@@ -170,9 +173,7 @@ const SignUpForm = ({ onSubmit }) => {
           skills: []
         });
         setErrors({});
-		setTimeout(() => {
-		   navigate('/login');
-		}, 2000);
+     	navigate('/login');
       } else {
         toast.error(response?.data?.message || "Failed to sign up. Please try again.");
       }

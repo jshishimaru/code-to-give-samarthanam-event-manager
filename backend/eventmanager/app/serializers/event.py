@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import EventInfo, Host, User
+from ..models import EventInfo, User
 
 class EventInfoSerializer(serializers.ModelSerializer):
     host_name = serializers.SerializerMethodField()

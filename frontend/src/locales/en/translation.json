@@ -178,15 +178,32 @@
 	  },
 	  "actions": {
 		"join": {
-		  "label": "Join",
-		  "ariaLabel": "Join this event"
+			"label": "Join",
+			"labelEnrolled": "Joined",
+			"labelLoading": "Joining...",
+			"ariaLabel": "Join this event",
+			"ariaLabelEnrolled": "You are enrolled in this event",
+			"loginPrompt": "You need to login to join this event. Would you like to login now?",
+			"success": "Successfully joined the event!",
+			"failure": "Failed to join the event. Please try again.",
+			"error": "An error occurred. Please try again later.",
+			"alreadyEnrolled": "You are already enrolled in this event."
 		},
+		"unenroll": {
+			"label": "Unenroll",
+			"ariaLabel": "Unenroll from this event",
+			"success": "Successfully unenrolled from the event!",
+			"failure": "Failed to unenroll from the event. Please try again.",
+			"error": "An error occurred. Please try again later."
+		  },
 		"share": {
-		  "label": "Share",
-		  "ariaLabel": "Share this event",
-		  "defaultTitle": "Event Details",
-		  "text": "Check out this event: {{title}}",
-		  "copyMessage": "Share link copied to clipboard!"
+			"label": "Share",
+			"ariaLabel": "Share this event",
+			"defaultTitle": "Event Details",
+			"text": "Check out this event: {{title}}",
+			"copyMessage": "Event link copied to clipboard!",
+			"copyError": "Failed to copy link. Please try again.",
+			"success": "Event shared successfully!"
 		}
 	  },
 	  "loading": {

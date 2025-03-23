@@ -321,3 +321,150 @@
 	  background-position: 100% 0;
 	}
   }
+
+  /* ... existing styles ... */
+
+/* Notification Popup Styles */
+.notification-popup {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	max-width: 400px;
+	min-width: 320px;
+	padding: 0;
+	border-radius: 8px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+	animation: slideIn 0.3s ease-out forwards;
+  }
+  
+  @keyframes slideIn {
+	from {
+	  transform: translateX(100%);
+	  opacity: 0;
+	}
+	to {
+	  transform: translateX(0);
+	  opacity: 1;
+	}
+  }
+  
+  .notification-popup.success {
+	background-color: #ebf7ee;
+	border-left: 4px solid #34c759;
+  }
+  
+  .notification-popup.error {
+	background-color: #feeae9;
+	border-left: 4px solid #ff3b30;
+  }
+  
+  .notification-content {
+	display: flex;
+	align-items: center;
+	padding: 16px;
+	position: relative;
+  }
+  
+  .notification-content svg {
+	margin-right: 12px;
+	flex-shrink: 0;
+  }
+  
+  .notification-popup.success svg {
+	color: #34c759;
+  }
+  
+  .notification-popup.error svg {
+	color: #ff3b30;
+  }
+  
+  .notification-content p {
+	margin: 0;
+	font-size: 16px;
+	color: #333;
+	flex-grow: 1;
+  }
+  
+  .close-button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 4px;
+	margin-left: 8px;
+	color: #777;
+	opacity: 0.7;
+	transition: opacity 0.2s;
+  }
+  
+  .close-button:hover {
+	opacity: 1;
+  }
+  
+  /* Button Styles */
+  .event-action-btn {
+	padding: 10px 20px;
+	border-radius: 4px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	border: none;
+	outline: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 100px;
+  }
+  
+   .join-btn {
+	background-color: var(--primary-color);
+	color: white;
+  }
+  
+  .join-btn:hover:not(:disabled) {
+	background-color: var(--primary-hover);
+  }
+  
+  .unenroll-btn {
+	background-color: var(--error-color);
+	color: white;
+  }
+  
+  .unenroll-btn:hover:not(:disabled) {
+	background-color: var(--error-text);
+  }
+  
+  .event-action-btn.loading {
+	opacity: 0.8;
+	cursor: not-allowed;
+  }
+  
+  .event-action-btn.loading::after {
+	content: '';
+	width: 16px;
+	height: 16px;
+	margin-left: 8px;
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	border-radius: 50%;
+	border-top-color: white;
+	animation: spin 1s ease infinite;
+	display: inline-block;
+  }
+  
+  @keyframes spin {
+	to {
+	  transform: rotate(360deg);
+	}
+  }
+  
+  .share-btn {
+	background-color: var(--primary-color);
+	color: white;
+	margin-left: 10px;
+	opacity: 0.9; /* Slightly lighter than the join button */
+  }
+  
+  .share-btn:hover {
+	background-color: var(--primary-hover);
+	opacity: 1;
+  }

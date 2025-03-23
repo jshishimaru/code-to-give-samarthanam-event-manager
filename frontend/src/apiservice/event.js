@@ -8,22 +8,20 @@ axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 axios.defaults.withCredentials = true;
 
-
-// returns a list of event_ids
+// Returns a list of event_ids
 export const allUpcomingEvents = async () => {
-    try{
-    const response = await axios.get(`${APP_API_URL}events/upcoming/`);
-    return { success: true, data: response.data };
+    try {
+        const response = await axios.get(`${APP_API_URL}events/upcoming/`);
+        return { success: true, data: response.data };
     }
-    catch(error){
-        console.log(error)
+    catch(error) {
+        console.error('Error fetching upcoming events:', error);
         return { success: false, error: error.message };
     }
-}
-
+};
 
 // Get user enrolled events
-// returns a list of event_ids
+// Returns a list of event_ids
 export const getUserEnrolledEvents = async (userId) => {
   try {
     const response = await axios.get(`${APP_API_URL}user/events/enrolled/`, {
@@ -31,13 +29,13 @@ export const getUserEnrolledEvents = async (userId) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    console.log(error);
+    console.error('Error fetching enrolled events:', error);
     return { success: false, error: error.message };
   }
 };
 
 // Get user past events
-// returns a list of event_ids
+// Returns a list of event_ids
 export const getUserPastEvents = async (userId) => {
   try {
     const response = await axios.get(`${APP_API_URL}user/events/past/`, {
@@ -45,13 +43,13 @@ export const getUserPastEvents = async (userId) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    console.log(error);
+    console.error('Error fetching past events:', error);
     return { success: false, error: error.message };
   }
 };
 
 // Get user upcoming events
-// returns a list of event_ids
+// Returns a list of event_ids
 export const getUserUpcomingEvents = async (userId) => {
   try {
     const response = await axios.get(`${APP_API_URL}user/events/upcoming/`, {
@@ -59,7 +57,7 @@ export const getUserUpcomingEvents = async (userId) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    console.log(error);
+    console.error('Error fetching upcoming user events:', error);
     return { success: false, error: error.message };
   }
 };
@@ -72,7 +70,7 @@ export const getEventDetails = async (eventId) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    console.log(error);
+    console.error('Error fetching event details:', error);
     return { success: false, error: error.message };
   }
 };
@@ -80,21 +78,39 @@ export const getEventDetails = async (eventId) => {
 // Enroll user in event
 export const enrollUserInEvent = async (eventId, userId) => {
   try {
-    const response = await axios.post(`${APP_API_URL}events/enroll/`, {
+    // Updated to match the URL in urls.py
+    const response = await axios.post(`${APP_API_URL}user/events/enroll/`, {
       event_id: eventId,
       user_id: userId
     });
     return { success: true, data: response.data };
   } catch (error) {
-    console.log(error);
+    console.error('Error enrolling user in event:', error);
     return { success: false, error: error.message };
+  }
+};
+
+// Unenroll user from event
+export const unenrollUserFromEvent = async (eventId) => {
+  try {
+    const response = await axios.post(`${APP_API_URL}user/events/unenroll/`, {
+      event_id: eventId
+    });
+    
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error unenrolling from event:', error);
+    return { 
+      success: false, 
+      error: error.response?.data?.message || error.message 
+    };
   }
 };
 
 // Update event
 export const updateEvent = async (eventData) => {
   try {
-    // Use FormData if there are files to upload
+    // Updated to match the URL in urls.py
     let formData = new FormData();
     
     // Add all event data to the formData
@@ -106,7 +122,7 @@ export const updateEvent = async (eventData) => {
       }
     });
     
-    const response = await axios.post(`${APP_API_URL}events/update/`, formData, {
+    const response = await axios.post(`${APP_API_URL}host/events/update/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -114,7 +130,7 @@ export const updateEvent = async (eventData) => {
     
     return { success: true, data: response.data };
   } catch (error) {
-    console.log(error);
+    console.error('Error updating event:', error);
     return { success: false, error: error.message };
   }
 };
@@ -122,7 +138,7 @@ export const updateEvent = async (eventData) => {
 // Create event
 export const createEvent = async (eventData) => {
   try {
-    // Use FormData to handle file uploads
+    // Updated to match the URL in urls.py
     let formData = new FormData();
     
     // Add all event data to the formData
@@ -134,7 +150,7 @@ export const createEvent = async (eventData) => {
       }
     });
     
-    const response = await axios.post(`${APP_API_URL}events/create/`, formData, {
+    const response = await axios.post(`${APP_API_URL}host/events/create/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -142,11 +158,21 @@ export const createEvent = async (eventData) => {
     
     return { success: true, data: response.data };
   } catch (error) {
-    console.log(error);
+    console.error('Error creating event:', error);
     return { success: false, error: error.message };
   }
 };
 
+// Get host events
+export const getHostEvents = async () => {
+  try {
+    const response = await axios.get(`${APP_API_URL}host/events/`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error fetching host events:', error);
+    return { success: false, error: error.message };
+  }
+};
 
 /**
  * Check if a user is enrolled in a specific event
@@ -154,48 +180,47 @@ export const createEvent = async (eventData) => {
  * @returns {Promise<Object>} Response with success status and enrollment information
  */
 export const checkUserEnrollment = async (eventId) => {
-	try {
-	  const response = await axios.get(`${APP_API_URL}events/check-enrollment/`, {
-		params: { event_id: eventId }
-	  });
-	  
-	  return { 
-		success: true, 
-		data: {
-		  enrolled: response.data.enrolled,
-		  eventName: response.data.event_name,
-		  eventId: response.data.event_id,
-		  message: response.data.message
-		}
-	  };
-	} catch (error) {
-	  console.error('Error checking enrollment status:', error);
-	  
-	  // More detailed error handling
-	  if (error.response) {
-		// The request was made and the server responded with a status code
-		// that falls out of the range of 2xx
-		return { 
-		  success: false, 
-		  error: error.response.data.message || 'Error checking enrollment status',
-		  data: { enrolled: false }
-		};
-	  } else if (error.request) {
-		// The request was made but no response was received
-		return { 
-		  success: false, 
-		  error: 'No response from server',
-		  data: { enrolled: false }
-		};
-	  } else {
-		// Something happened in setting up the request that triggered an Error
-		return { 
-		  success: false, 
-		  error: error.message,
-		  data: { enrolled: false }
-		};
-	  }
-	}
-  };
-
-  
+  try {
+    // Updated to match the URL in urls.py
+    const response = await axios.get(`${APP_API_URL}user/events/check-enrollment/`, {
+      params: { event_id: eventId }
+    });
+    
+    return { 
+      success: true, 
+      data: {
+        enrolled: response.data.enrolled,
+        eventName: response.data.event_name,
+        eventId: response.data.event_id,
+        message: response.data.message
+      }
+    };
+  } catch (error) {
+    console.error('Error checking enrollment status:', error);
+    
+    // More detailed error handling
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      return { 
+        success: false, 
+        error: error.response.data.message || 'Error checking enrollment status',
+        data: { enrolled: false }
+      };
+    } else if (error.request) {
+      // The request was made but no response was received
+      return { 
+        success: false, 
+        error: 'No response from server',
+        data: { enrolled: false }
+      };
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      return { 
+        success: false, 
+        error: error.message,
+        data: { enrolled: false }
+      };
+    }
+  }
+};

@@ -4,6 +4,8 @@ import { useTheme } from '../context/ThemeContext';
 import '../styles/Navbar.css';
 import logoImage from '../assets/logo.png';
 import { checkAuth } from '../apiservice/auth';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,6 +15,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, fontSize, fontWeight, textContrast } = useTheme();
+  const { t } = useTranslation();
 
   // Check authentication status when component mounts
   useEffect(() => {
@@ -131,16 +134,16 @@ const Navbar = () => {
           href="#main-content" 
           className="skip-link" 
           onClick={handleSkipToMainContent}
-          aria-label="Skip to main content"
+          aria-label={t('navbar.skipToMainContent')}
         >  
-          Skip to main content
+          {t('navbar.skipToMainContent')}
         </a>
       </div>
       
       <div className="navbar-container">
         <div className={`navbar-logo ${scrolled ? 'small' : ''}`}>
-          <Link to="/events" aria-label="Samarthanam Trust homepage">
-            <img src={logoImage} alt="Samarthanam Trust Logo" />
+          <Link to="/events" aria-label={t('navbar.logoAlt')}>
+            <img src={logoImage} alt={t('navbar.logoAlt')} />
           </Link>
         </div>
 
@@ -149,10 +152,10 @@ const Navbar = () => {
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-expanded={isMenuOpen}
           aria-controls="primary-navigation"
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-label={isMenuOpen ? t('navbar.menuClose') : t('navbar.menuOpen')}
           aria-haspopup="menu"
         >
-          <span className="sr-only">Menu</span>
+          <span className="sr-only">{t('navbar.menu')}</span>
           <div className="hamburger-icon" aria-hidden="true">
             <span></span>
             <span></span>
@@ -178,9 +181,19 @@ const Navbar = () => {
                 role="menuitem"
                 aria-current={location.pathname.includes('/events') ? 'page' : undefined}
               >
-                Events
+                {t('navbar.events')}
               </Link>
             </li>
+            {/* <li role="none">
+              <Link 
+                to="/my-events"
+                onClick={closeMenu}
+                role="menuitem"
+                aria-current={location.pathname.includes('/my-events') ? 'page' : undefined}
+              >
+                {t('navbar.myEvents')}
+              </Link>
+            </li> */}
             <li role="none">
               <a 
                 href="https://samarthanam.org/about-us/" 
@@ -190,8 +203,16 @@ const Navbar = () => {
                 role="menuitem"
                 aria-label="About Us - Opens in a new tab"
               >
-                About Us
+                {t('navbar.about')}
               </a>
+              {/* <Link
+                to="/about"
+                onClick={closeMenu}
+                role="menuitem"
+                aria-current={location.pathname.includes('/about') ? 'page' : undefined}
+              >
+                {t('navbar.about')}
+              </Link> */}
             </li>
             <li role="none">
               <a 
@@ -202,9 +223,19 @@ const Navbar = () => {
                 role="menuitem"
                 aria-label="Contact Us - Opens in a new tab"
               >
-                Contact
+                {t('navbar.contact')}
               </a>
             </li>
+            {/* <li role="none">
+              <Link
+                to="/contact"
+                onClick={closeMenu}
+                role="menuitem"
+                aria-current={location.pathname.includes('/contact') ? 'page' : undefined}
+              >
+                {t('navbar.contact')}
+              </Link>
+            </li> */}
           </ul>
 
           <div 
@@ -214,28 +245,42 @@ const Navbar = () => {
           >
             {isLoggedIn ? (
               <>
-                <span className="user-greeting">Hello, {userInfo?.name?.split(' ')[0] || 'User'}</span>
+                <span className="user-greeting">Hello, { userInfo?.name?.split(' ')[0] }</span>
                 <button 
                   className="btn btn-logout" 
                   onClick={handleLogout}
-                  aria-label="Log out of your account"
+                  aria-label={t('navbar.logoutAria')}
                   type="button"
                 >
-                  Logout
+                  {t('navbar.logout')}
                 </button>
               </>
             ) : (
-              <Link 
-                to="/login" 
-                className="btn btn-login"
-                onClick={closeMenu}
-                aria-label="Log in to your account"
-                role="button"
-              >
-                Login
-              </Link>
+              <>
+                <Link 
+                  to="/login" 
+                  className="btn btn-login"
+                  onClick={closeMenu}
+                  aria-label={t('navbar.loginAria')}
+                  role="button"
+                >
+                  {t('navbar.login')}
+                </Link>
+                <Link 
+                  to="/signup" 
+                  className="btn btn-primary"
+                  onClick={closeMenu}
+                  aria-label={t('navbar.registerAria')}
+                  role="button"
+                >
+                  {t('navbar.register')}
+                </Link>
+              </>
             )}
           </div>
+          
+          {/* Language Switcher Component */}
+          <LanguageSwitcher />
         </nav>
       </div>
     </header>

@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import '../styles/AccessibilityButton.css';
+import { useTranslation } from 'react-i18next';
 
 const AccessibilityButton = () => {
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
@@ -54,10 +56,10 @@ const AccessibilityButton = () => {
         aria-expanded={isMenuOpen}
         aria-haspopup="menu"
         onClick={handleToggleMenu}
-        aria-label="Accessibility options"
+        aria-label={t('accessibility.accessibilityOptions')}
       >
         <span className="accessibility-icon" aria-hidden="true">💀</span>
-        <span className="sr-only">Accessibility</span>
+        <span className="sr-only">{t('accessibility.accessibility')}</span>
       </button>
       
       {isMenuOpen && (
@@ -66,158 +68,158 @@ const AccessibilityButton = () => {
             ref={menuRef}
             className="accessibility-panel" 
             role="menu"
-            aria-label="Accessibility options menu"
+            aria-label={t('accessibility.accessibilityOptionsMenu')}
           >
             <div className="panel-header">
-              <h2 className="panel-title">Accessibility Options</h2>
+              <h2 className="panel-title">{t('accessibility.accessibilityOptions')}</h2>
               <button 
                 className="close-button" 
                 onClick={() => setIsMenuOpen(false)}
-                aria-label="Close accessibility menu"
+                aria-label={t('accessibility.closeAccessibilityMenu')}
               >
                 ×
               </button>
             </div>
             
             <div className="panel-section">
-              <h3 className="section-title">Theme</h3>
+              <h3 className="section-title">{t('accessibility.theme')}</h3>
               <div className="theme-switcher">
                 <button 
                   className={`theme-button ${theme === 'light' ? 'active' : ''}`}
                   onClick={() => toggleTheme('light')}
                   aria-pressed={theme === 'light'}
-                  aria-label="Light theme"
+                  aria-label={t('accessibility.lightTheme')}
                 >
                   <span className="theme-icon">☀️</span>
-                  <span className="theme-label">Light</span>
+                  <span className="theme-label">{t('accessibility.light')}</span>
                 </button>
                 <button 
                   className={`theme-button ${theme === 'dark' ? 'active' : ''}`}
                   onClick={() => toggleTheme('dark')}
                   aria-pressed={theme === 'dark'}
-                  aria-label="Dark theme"
+                  aria-label={t('accessibility.darkTheme')}
                 >
                   <span className="theme-icon">🌙</span>
-                  <span className="theme-label">Dark</span>
+                  <span className="theme-label">{t('accessibility.dark')}</span>
                 </button>
                 <button 
                   className={`theme-button ${theme === 'high-contrast-light' ? 'active' : ''}`}
                   onClick={() => toggleTheme('high-contrast-light')}
                   aria-pressed={theme === 'high-contrast-light'}
-                  aria-label="High contrast light theme"
+                  aria-label={t('accessibility.highContrastLightTheme')}
                 >
                   <span className="theme-icon">🔆</span>
-                  <span className="theme-label">High Contrast Light</span>
+                  <span className="theme-label">{t('accessibility.highContrastLight')}</span>
                 </button>
                 <button 
                   className={`theme-button ${theme === 'high-contrast-dark' ? 'active' : ''}`}
                   onClick={() => toggleTheme('high-contrast-dark')}
                   aria-pressed={theme === 'high-contrast-dark'}
-                  aria-label="High contrast dark theme"
+                  aria-label={t('accessibility.highContrastDarkTheme')}
                 >
                   <span className="theme-icon">🔅</span>
-                  <span className="theme-label">High Contrast Dark</span>
+                  <span className="theme-label">{t('accessibility.highContrastDark')}</span>
                 </button>
               </div>
             </div>
             
             <div className="panel-section">
-              <h3 className="section-title">Font Size</h3>
+              <h3 className="section-title">{t('accessibility.fontSize')}</h3>
               <div className="theme-switcher">
                 <button 
                   className={`theme-button ${fontSize === 'normal' ? 'active' : ''}`}
                   onClick={() => changeFontSize('normal')}
                   aria-pressed={fontSize === 'normal'}
-                  aria-label="Normal font size"
+                  aria-label={t('accessibility.normalFontSize')}
                 >
                   <span className="theme-icon">A</span>
-                  <span className="theme-label">Normal</span>
+                  <span className="theme-label">{t('accessibility.normal')}</span>
                 </button>
                 <button 
                   className={`theme-button ${fontSize === 'large' ? 'active' : ''}`}
                   onClick={() => changeFontSize('large')}
                   aria-pressed={fontSize === 'large'}
-                  aria-label="Large font size"
+                  aria-label={t('accessibility.largeFontSize')}
                 >
                   <span className="theme-icon" style={{ fontSize: '1.2em' }}>A</span>
-                  <span className="theme-label">Large</span>
+                  <span className="theme-label">{t('accessibility.large')}</span>
                 </button>
                 <button 
                   className={`theme-button ${fontSize === 'x-large' ? 'active' : ''}`}
                   onClick={() => changeFontSize('x-large')}
                   aria-pressed={fontSize === 'x-large'}
-                  aria-label="Extra large font size"
+                  aria-label={t('accessibility.extraLargeFontSize')}
                 >
                   <span className="theme-icon" style={{ fontSize: '1.4em' }}>A</span>
-                  <span className="theme-label">X-Large</span>
+                  <span className="theme-label">{t('accessibility.larger')}</span>
                 </button>
               </div>
             </div>
             
             <div className="panel-section">
-              <h3 className="section-title">Font Weight</h3>
+              <h3 className="section-title">{t('accessibility.fontWeight')}</h3>
               <div className="theme-switcher">
                 <button 
                   className={`theme-button ${fontWeight === 'normal' ? 'active' : ''}`}
                   onClick={() => changeFontWeight('normal')}
                   aria-pressed={fontWeight === 'normal'}
-                  aria-label="Normal font weight"
+                  aria-label={t('accessibility.normalFontWeight')}
                 >
-                  <span className="theme-label">Normal</span>
+                  <span className="theme-label">{t('accessibility.normal')}</span>
                 </button>
                 <button 
                   className={`theme-button ${fontWeight === 'bold' ? 'active' : ''}`}
                   onClick={() => changeFontWeight('bold')}
                   aria-pressed={fontWeight === 'bold'}
-                  aria-label="Bold font weight"
+                  aria-label={t('accessibility.boldFontWeight')}
                 >
-                  <span className="theme-label" style={{ fontWeight: 'bold' }}>Bold</span>
+                  <span className="theme-label" style={{ fontWeight: 'bold' }}>{t('accessibility.bold')}</span>
                 </button>
                 <button 
                   className={`theme-button ${fontWeight === 'bolder' ? 'active' : ''}`}
                   onClick={() => changeFontWeight('bolder')}
                   aria-pressed={fontWeight === 'bolder'}
-                  aria-label="Bolder font weight"
+                  aria-label={t('accessibility.bolderFontWeight')}
                 >
-                  <span className="theme-label" style={{ fontWeight: 'bolder' }}>Bolder</span>
+                  <span className="theme-label" style={{ fontWeight: 'bolder' }}>{t('accessibility.bolder')}</span>
                 </button>
               </div>
             </div>
             
             <div className="panel-section">
-              <h3 className="section-title">Text Contrast</h3>
+              <h3 className="section-title">{t('accessibility.textContrast')}</h3>
               <div className="theme-switcher">
                 <button 
                   className={`theme-button ${textContrast === 'normal' ? 'active' : ''}`}
                   onClick={() => changeTextContrast('normal')}
                   aria-pressed={textContrast === 'normal'}
-                  aria-label="Default text contrast"
+                  aria-label={t('accessibility.defaultContrast')}
                 >
-                  <span className="theme-label">Normal</span>
+                  <span className="theme-label">{t('accessibility.normal')}</span>
                 </button>
                 <button 
                   className={`theme-button ${textContrast === 'high-black' ? 'active' : ''}`}
                   onClick={() => changeTextContrast('high-black')}
                   aria-pressed={textContrast === 'high-black'}
-                  aria-label="High contrast black text"
+                  aria-label={t('accessibility.highBlackContrast')}
                 >
-                  <span className="theme-label" style={{ color: '#000', backgroundColor: '#fff' }}>High Black</span>
+                  <span className="theme-label" style={{ color: '#000', backgroundColor: '#fff' }}>{t('accessibility.highBlack')}</span>
                 </button>
                 <button 
                   className={`theme-button ${textContrast === 'high-white' ? 'active' : ''}`}
                   onClick={() => changeTextContrast('high-white')}
                   aria-pressed={textContrast === 'high-white'}
-                  aria-label="High contrast white text"
+                  aria-label={t('accessibility.highWhiteContrast')}
                 >
-                  <span className="theme-label" style={{ color: '#fff', backgroundColor: '#222' }}>High White</span>
+                  <span className="theme-label" style={{ color: '#fff', backgroundColor: '#222' }}>{t('accessibility.highWhite')}</span>
                 </button>
                 <button 
                   className={`theme-button ${textContrast === 'yellow-black' ? 'active' : ''}`}
                   onClick={() => changeTextContrast('yellow-black')}
                   aria-pressed={textContrast === 'yellow-black'}
-                  aria-label="Yellow text on black background"
+                  aria-label={t('accessibility.yellowBlackContrast')}
                 >
-                  <span className="theme-label" style={{ color: '#ff0', backgroundColor: '#000' }}>Yellow on Black</span>
+                  <span className="theme-label" style={{ color: '#ff0', backgroundColor: '#000' }}>{t('accessibility.yellowBlack')}</span>
                 </button>
               </div>
             </div>

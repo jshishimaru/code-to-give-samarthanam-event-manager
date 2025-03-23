@@ -102,7 +102,7 @@ const EventCard = ({ eventId }) => {
         
         <div className="event-card__footer">
           <Link 
-            to={`/event/${eventId}`} 
+            to={`/events/${eventId}`} 
             className="event-card__link"
             aria-label={`View details for ${event.event_name}`}
           >

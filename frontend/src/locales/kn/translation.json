@@ -1,0 +1,66 @@
+{
+    "navbar": {
+      "skipToMainContent": "ಮುಖ್ಯ ವಿಷಯಕ್ಕೆ ಹೋಗಿ",
+      "logoAlt": "ಸಮರ್ಥನಂ ಟ್ರಸ್ಟ್ ಲೋಗೋ",
+      "menuOpen": "ಮೆನು ತೆರೆಯಿರಿ",
+      "menuClose": "ಮೆನು ಮುಚ್ಚಿರಿ",
+      "menu": "ಮೆನು",
+      "events": "ಕಾರ್ಯಕ್ರಮಗಳು",
+      "myEvents": "ನನ್ನ ಕಾರ್ಯಕ್ರಮಗಳು",
+      "about": "ನಮ್ಮ ಬಗ್ಗೆ",
+      "contact": "ಸಂಪರ್ಕಿಸಿ",
+      "login": "ಲಾಗಿನ್",
+      "register": "ನೋಂದಣಿ",
+      "logout": "ಲಾಗ್ ಔಟ್",
+      "profile": "ಪ್ರೊಫೈಲ್"
+    },
+    "auth": {
+      "loginTitle": "ಲಾಗಿನ್ ಮಾಡಿ",
+      "registerTitle": "ನೋಂದಣಿ ಮಾಡಿ",
+      "email": "ಇಮೇಲ್",
+      "password": "ಪಾಸ್‌ವರ್ಡ್",
+      "forgotPassword": "ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿರಾ?",
+      "noAccount": "ಖಾತೆ ಇಲ್ಲವೇ?",
+      "hasAccount": "ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ?",
+      "signUp": "ಸೈನ್ ಅಪ್ ಮಾಡಿ",
+      "signIn": "ಸೈನ್ ಇನ್ ಮಾಡಿ"
+    },
+    "events": {
+      "upcomingEvents": "ಮುಂಬರುವ ಕಾರ್ಯಕ್ರಮಗಳು",
+      "pastEvents": "ಹಿಂದಿನ ಕಾರ್ಯಕ್ರಮಗಳು",
+      "registerForEvent": "ಕಾರ್ಯಕ್ರಮಕ್ಕೆ ನೋಂದಾಯಿಸಿ",
+      "eventDetails": "ಕಾರ್ಯಕ್ರಮದ ವಿವರಗಳು",
+      "date": "ದಿನಾಂಕ",
+      "time": "ಸಮಯ",
+      "location": "ಸ್ಥಳ",
+      "organizer": "ಆಯೋಜಕರು",
+      "noEvents": "ಯಾವುದೇ ಕಾರ್ಯಕ್ರಮಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
+      "loadMore": "ಇನ್ನಷ್ಟು ನೋಡಿ"
+    },
+    "common": {
+      "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
+      "error": "ದೋಷ ಸಂಭವಿಸಿದೆ",
+      "retry": "ಮರುಪ್ರಯತ್ನಿಸಿ",
+      "cancel": "ರದ್ದುಮಾಡಿ",
+      "save": "ಉಳಿಸಿ",
+      "edit": "ಸಂಪಾದಿಸಿ",
+      "delete": "ಅಳಿಸಿ",
+      "view": "ವೀಕ್ಷಿಸಿ",
+      "search": "ಹುಡುಕಿ",
+      "back": "ಹಿಂದೆ",
+      "next": "ಮುಂದೆ",
+      "previous": "ಹಿಂದೆ"
+    },
+    "accessibility": {
+      "fontSize": "ಅಕ್ಷರದ ಗಾತ್ರ",
+      "fontWeight": "ಅಕ್ಷರದ ತೂಕ",
+      "textContrast": "ಪಠ್ಯದ ವ್ಯತ್ಯಾಸ",
+      "themeSettings": "ಥೀಮ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+      "normal": "ಸಾಮಾನ್ಯ",
+      "large": "ದೊಡ್ಡದು",
+      "larger": "ಇನ್ನೂ ದೊಡ್ಡದು",
+      "regular": "ನಿಯಮಿತ",
+      "bold": "ದಪ್ಪ",
+      "highContrast": "ಅಧಿಕ ವ್ಯತ್ಯಾಸ"
+    }
+  }

@@ -5,6 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import logoImage from "../assets/logo.png"; 
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 
 const LoginForm = ({ onSubmit }) => {
@@ -16,7 +17,7 @@ const LoginForm = ({ onSubmit }) => {
   
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({

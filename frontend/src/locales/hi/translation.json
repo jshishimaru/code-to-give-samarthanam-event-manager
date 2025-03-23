@@ -1,0 +1,66 @@
+{
+    "navbar": {
+      "skipToMainContent": "मुख्य सामग्री पर जाएं",
+      "logoAlt": "समर्थनम ट्रस्ट लोगो",
+      "menuOpen": "मेन्यू खोलें",
+      "menuClose": "मेन्यू बंद करें",
+      "menu": "मेन्यू",
+      "events": "कार्यक्रम",
+      "myEvents": "मेरे कार्यक्रम",
+      "about": "हमारे बारे में",
+      "contact": "संपर्क करें",
+      "login": "लॉग इन",
+      "register": "रजिस्टर करें",
+      "logout": "लॉग आउट",
+      "profile": "प्रोफाइल"
+    },
+    "auth": {
+      "loginTitle": "लॉग इन करें",
+      "registerTitle": "रजिस्टर करें",
+      "email": "ईमेल",
+      "password": "पासवर्ड",
+      "forgotPassword": "पासवर्ड भूल गए?",
+      "noAccount": "खाता नहीं है?",
+      "hasAccount": "पहले से खाता है?",
+      "signUp": "साइन अप करें",
+      "signIn": "साइन इन करें"
+    },
+    "events": {
+      "upcomingEvents": "आगामी कार्यक्रम",
+      "pastEvents": "पिछले कार्यक्रम",
+      "registerForEvent": "कार्यक्रम के लिए रजिस्टर करें",
+      "eventDetails": "कार्यक्रम विवरण",
+      "date": "तारीख",
+      "time": "समय",
+      "location": "स्थान",
+      "organizer": "आयोजक",
+      "noEvents": "कोई कार्यक्रम नहीं मिला",
+      "loadMore": "और लोड करें"
+    },
+    "common": {
+      "loading": "लोड हो रहा है...",
+      "error": "एक त्रुटि हुई",
+      "retry": "पुनः प्रयास करें",
+      "cancel": "रद्द करें",
+      "save": "सहेजें",
+      "edit": "संपादित करें",
+      "delete": "हटाएं",
+      "view": "देखें",
+      "search": "खोजें",
+      "back": "वापस",
+      "next": "अगला",
+      "previous": "पिछला"
+    },
+    "accessibility": {
+      "fontSize": "फ़ॉन्ट आकार",
+      "fontWeight": "फ़ॉन्ट वजन",
+      "textContrast": "टेक्स्ट कंट्रास्ट",
+      "themeSettings": "थीम सेटिंग्स",
+      "normal": "सामान्य",
+      "large": "बड़ा",
+      "larger": "और बड़ा",
+      "regular": "नियमित",
+      "bold": "बोल्ड",
+      "highContrast": "उच्च कंट्रास्ट"
+    }
+  }

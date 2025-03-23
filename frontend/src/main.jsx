@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import router from './router'
 import { RouterProvider } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext' 
+import './i18n' 
 import './styles/root.css'
 import './index.css' 
 
@@ -10,7 +11,14 @@ const savedTheme = localStorage.getItem('preferred-theme');
 const savedFontSize = localStorage.getItem('preferred-font-size');
 const savedFontWeight = localStorage.getItem('preferred-font-weight');
 const savedTextContrast = localStorage.getItem('preferred-text-contrast');
+const savedLanguage = localStorage.getItem('i18nextLng');
 
+
+if (savedLanguage) {
+  document.documentElement.lang = savedLanguage;
+} else {
+  document.documentElement.lang = 'en';
+}
 
 if (savedTheme) {
   document.documentElement.setAttribute('data-theme', savedTheme);

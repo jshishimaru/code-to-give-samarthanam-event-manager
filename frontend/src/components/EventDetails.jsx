@@ -20,6 +20,39 @@ const EventDetails = () => {
   const [activeTab, setActiveTab] = useState('event');
   const [tabsReady, setTabsReady] = useState(false);
 
+  // useEffect(() => {
+  //   const fetchEventDetails = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await getEventDetails(eventId);
+  //       if (response.success) {
+  //         setEvent(response.data.event);
+  //         // Set tabs ready to true after event data is loaded
+  //         setTabsReady(true);
+          
+  //         // Update document title with event name
+  //         document.title = response.data.event.title || t('eventDetails.defaultTitle');
+  //       } else {
+  //         console.error("Failed to fetch event data:", response);
+  //         setError(t('eventDetails.errors.fetchFailed'));
+  //       }
+  //     } catch (err) {
+  //       console.error('Error fetching event details:', err);
+  //       setError(t('eventDetails.errors.generalError'));
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   if (eventId) {
+  //     fetchEventDetails();
+  //   }
+    
+  //   // Reset document title when component unmounts
+  //   return () => {
+  //     document.title = t('site.title', 'Samarthanam Event Manager');
+  //   };
+  // }, [eventId, t]);
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
@@ -29,6 +62,13 @@ const EventDetails = () => {
           setEvent(response.data.event);
           // Set tabs ready to true after event data is loaded
           setTabsReady(true);
+          
+          // Get the event title directly from the event object
+          const eventTitle = response.data.event.title || response.data.event.event_name || 'Event Details';
+          
+          // Set document title directly to event name without translation
+          document.title = eventTitle;
+          console.log("Setting document title to:", eventTitle);
         } else {
           console.error("Failed to fetch event data:", response);
           setError(t('eventDetails.errors.fetchFailed'));
@@ -40,10 +80,15 @@ const EventDetails = () => {
         setLoading(false);
       }
     };
-
+  
     if (eventId) {
       fetchEventDetails();
     }
+    
+    // Reset document title when component unmounts
+    return () => {
+      document.title = 'Samarthanam Event Manager';
+    };
   }, [eventId, t]);
 
   const tabs = [
@@ -110,8 +155,12 @@ const EventDetails = () => {
 
   return (
     <main className="event-details-container">
+      
       <header className="event-details-header">
-        <h1 className="event-name">{event.title || t('eventDetails.defaultTitle')}</h1>
+        <h1 className="event-name">
+          {event?.title || event?.event_name || t('eventDetails.defaultTitle')}
+        </h1>
+        
       </header>
 
       <section className="event-details-tabs-container">

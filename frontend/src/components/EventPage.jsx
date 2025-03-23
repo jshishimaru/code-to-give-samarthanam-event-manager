@@ -20,6 +20,9 @@ const EventPage = () => {
   // View mode: 'grid' or 'list'
   const [viewMode, setViewMode] = useState('grid');
   
+  // Active tab state
+  const [activeTab, setActiveTab] = useState('enrolled');
+  
   // Dropdown state
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -179,6 +182,11 @@ const EventPage = () => {
     setViewMode(mode);
     setDropdownOpen(false);
   };
+  
+  // Change active tab
+  const changeTab = (tabName) => {
+    setActiveTab(tabName);
+  };
 
   // Render event section with appropriate loading and error states
   const renderEventSection = (title, eventIds, loadingState, errorState, emptyMessage, section) => {
@@ -304,45 +312,137 @@ const EventPage = () => {
         </div>
       </div>
       
-      {/* 1. Enrolled Events Section */}
-      {renderEventSection(
-        t('events.enrolledEvents', 'Enrolled Events'), 
-        enrolledEvents, 
-        loading.enrolled, 
-        error.enrolled, 
-        t('events.noEnrolledEvents', 'You are not enrolled in any events.'),
-        'enrolled'
-      )}
+      {/* Tab navigation */}
+      <div className="event-tabs-container">
+        <div 
+          className="event-tabs" 
+          role="tablist" 
+          aria-label={t('events.tabsLabel', 'Event categories')}
+        >
+          <button 
+            role="tab"
+            className={`event-tab-button ${activeTab === 'enrolled' ? 'active' : ''}`}
+            id="enrolled-tab"
+            aria-selected={activeTab === 'enrolled'}
+            aria-controls="enrolled-tab-panel"
+            onClick={() => changeTab('enrolled')}
+          >
+            <span>{t('events.enrolledEvents', 'Enrolled Events')}</span>
+            <span className="tab-count">{enrolledEvents.length}</span>
+          </button>
+          
+          <button 
+            role="tab"
+            className={`event-tab-button ${activeTab === 'ongoing' ? 'active' : ''}`}
+            id="ongoing-tab"
+            aria-selected={activeTab === 'ongoing'}
+            aria-controls="ongoing-tab-panel"
+            onClick={() => changeTab('ongoing')}
+          >
+            <span>{t('events.ongoingEvents', 'Ongoing Events')}</span>
+            <span className="tab-count">{ongoingEvents.length}</span>
+          </button>
+          
+          <button 
+            role="tab"
+            className={`event-tab-button ${activeTab === 'upcoming' ? 'active' : ''}`}
+            id="upcoming-tab"
+            aria-selected={activeTab === 'upcoming'}
+            aria-controls="upcoming-tab-panel"
+            onClick={() => changeTab('upcoming')}
+          >
+            <span>{t('events.upcomingEvents', 'Upcoming Events')}</span>
+            <span className="tab-count">{upcomingEvents.length}</span>
+          </button>
+          
+          <button 
+            role="tab"
+            className={`event-tab-button ${activeTab === 'past' ? 'active' : ''}`}
+            id="past-tab"
+            aria-selected={activeTab === 'past'}
+            aria-controls="past-tab-panel"
+            onClick={() => changeTab('past')}
+          >
+            <span>{t('events.pastEvents', 'Past Events')}</span>
+            <span className="tab-count">{pastEvents.length}</span>
+          </button>
+        </div>
+      </div>
       
-      {/* 2. Ongoing Events Section */}
-      {renderEventSection(
-        t('events.ongoingEvents', 'Ongoing Events'), 
-        ongoingEvents, 
-        loading.ongoing, 
-        error.ongoing, 
-        t('events.noOngoingEvents', 'No ongoing events at the moment.'),
-        'ongoing'
-      )}
-      
-      {/* 3. Upcoming Events Section */}
-      {renderEventSection(
-        t('events.upcomingEvents', 'Upcoming Events'), 
-        upcomingEvents, 
-        loading.upcoming, 
-        error.upcoming, 
-        t('events.noUpcomingEvents', 'No upcoming events at the moment.'),
-        'upcoming'
-      )}
-      
-      {/* 4. Past Events Section */}
-      {renderEventSection(
-        t('events.pastEvents', 'Past Events'), 
-        pastEvents, 
-        loading.past, 
-        error.past, 
-        t('events.noPastEvents', 'No past events to display.'),
-        'past'
-      )}
+      {/* Tab panels */}
+      <div className="event-tab-panels">
+        {/* Enrolled Events Section */}
+        <div 
+          role="tabpanel"
+          id="enrolled-tab-panel"
+          aria-labelledby="enrolled-tab"
+          className={`event-tab-panel ${activeTab === 'enrolled' ? 'active' : ''}`}
+          hidden={activeTab !== 'enrolled'}
+        >
+          {renderEventSection(
+            t('events.enrolledEvents', 'Enrolled Events'), 
+            enrolledEvents, 
+            loading.enrolled, 
+            error.enrolled, 
+            t('events.noEnrolledEvents', 'You are not enrolled in any events.'),
+            'enrolled'
+          )}
+        </div>
+        
+        {/* Ongoing Events Section */}
+        <div 
+          role="tabpanel"
+          id="ongoing-tab-panel"
+          aria-labelledby="ongoing-tab"
+          className={`event-tab-panel ${activeTab === 'ongoing' ? 'active' : ''}`}
+          hidden={activeTab !== 'ongoing'}
+        >
+          {renderEventSection(
+            t('events.ongoingEvents', 'Ongoing Events'), 
+            ongoingEvents, 
+            loading.ongoing, 
+            error.ongoing, 
+            t('events.noOngoingEvents', 'No ongoing events at the moment.'),
+            'ongoing'
+          )}
+        </div>
+        
+        {/* Upcoming Events Section */}
+        <div 
+          role="tabpanel"
+          id="upcoming-tab-panel"
+          aria-labelledby="upcoming-tab"
+          className={`event-tab-panel ${activeTab === 'upcoming' ? 'active' : ''}`}
+          hidden={activeTab !== 'upcoming'}
+        >
+          {renderEventSection(
+            t('events.upcomingEvents', 'Upcoming Events'), 
+            upcomingEvents, 
+            loading.upcoming, 
+            error.upcoming, 
+            t('events.noUpcomingEvents', 'No upcoming events at the moment.'),
+            'upcoming'
+          )}
+        </div>
+        
+        {/* Past Events Section */}
+        <div 
+          role="tabpanel"
+          id="past-tab-panel"
+          aria-labelledby="past-tab"
+          className={`event-tab-panel ${activeTab === 'past' ? 'active' : ''}`}
+          hidden={activeTab !== 'past'}
+        >
+          {renderEventSection(
+            t('events.pastEvents', 'Past Events'), 
+            pastEvents, 
+            loading.past, 
+            error.past, 
+            t('events.noPastEvents', 'No past events to display.'),
+            'past'
+          )}
+        </div>
+      </div>
     </main>
   );
 };

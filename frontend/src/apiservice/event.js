@@ -224,3 +224,48 @@ export const checkUserEnrollment = async (eventId) => {
     }
   }
 };
+
+
+// Add these new functions after your existing ones
+
+/**
+ * Fetch all ongoing events (events happening now)
+ * @returns {Promise<Object>} Response with success status and list of ongoing events
+ */
+export const getAllOngoingEvents = async () => {
+	try {
+	  const response = await axios.get(`${APP_API_URL}events/ongoing/`);
+	  return { success: true, data: response.data };
+	} catch (error) {
+	  console.error('Error fetching ongoing events:', error);
+	  return { success: false, error: error.response?.data?.message || error.message };
+	}
+  };
+  
+  /**
+   * Get ongoing events for the logged-in user
+   * @returns {Promise<Object>} Response with success status and list of user's ongoing events
+   */
+  export const getUserOngoingEvents = async () => {
+	try {
+	  const response = await axios.get(`${APP_API_URL}user/events/ongoing/`);
+	  return { success: true, data: response.data };
+	} catch (error) {
+	  console.error('Error fetching user ongoing events:', error);
+	  return { success: false, error: error.response?.data?.message || error.message };
+	}
+  };
+  
+  /**
+   * Get ongoing events for the host
+   * @returns {Promise<Object>} Response with success status and list of host's ongoing events
+   */
+  export const getHostOngoingEvents = async () => {
+	try {
+	  const response = await axios.get(`${APP_API_URL}host/events/ongoing/`);
+	  return { success: true, data: response.data };
+	} catch (error) {
+	  console.error('Error fetching host ongoing events:', error);
+	  return { success: false, error: error.response?.data?.message || error.message };
+	}
+  };

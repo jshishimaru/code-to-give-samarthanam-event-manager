@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import event_views
 from .views import feeback_views
 from .views import tasks_views
+from .views import chats_views
 
 # router = DefaultRouter()
 # router.register(r'events', event_views.EventViewSet, basename='events')
@@ -54,6 +55,11 @@ urlpatterns = [
     path('subtasks/notify-completion/', tasks_views.NotifySubtaskCompletionView.as_view(), name='notify_subtask_completion'),
     path('subtasks/mark-complete/', tasks_views.MarkSubtaskCompleteView.as_view(), name='mark_subtask_complete'),
     path('subtasks/notified/', tasks_views.GetNotifiedSubtasksView.as_view(), name='get_notified_subtasks'),
+
+	# chat endpoints 
+	path('events/chat/', chats_views.EventChatView.as_view(), name='event_chat'),
+	path('events/chat/history/', chats_views.EventChatHistoryView.as_view(), name='event_chat_history'),
+	path('user/chats/recent/', chats_views.RecentEventChatsView.as_view(), name='recent_event_chats'),
 
     
 ]

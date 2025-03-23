@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getUserEnrolledEvents, allUpcomingEvents, getUserPastEvents } from '../apiservice/event';
+import { 
+  getUserEnrolledEvents, 
+  allUpcomingEvents, 
+  getUserPastEvents, 
+  getAllOngoingEvents,
+  getUserOngoingEvents
+} from '../apiservice/event';
+import { checkAuth } from '../apiservice/auth';
 import EventCard from './EventCard';
 import '../styles/EventPage.css';
 import Navbar from './Navbar';
@@ -8,8 +15,9 @@ import { useTranslation } from 'react-i18next';
 const EventPage = () => {
   const { t } = useTranslation();
   
-  // User ID - in a real app, this would come from auth context
-  const [userId, setUserId] = useState('1'); // Placeholder user ID
+  // User authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userId, setUserId] = useState(null);
   
   // State for different event categories
   const [enrolledEvents, setEnrolledEvents] = useState([]);
@@ -52,6 +60,27 @@ const EventPage = () => {
     past: null
   });
 
+  // Check user authentication status
+  useEffect(() => {
+    const checkUserAuthentication = async () => {
+      try {
+        const response = await checkAuth();
+        if (response.success && response.data.authenticated) {
+          setIsAuthenticated(true);
+          setUserId(response.data.user.id);
+        } else {
+          setIsAuthenticated(false);
+          setUserId(null);
+        }
+      } catch (err) {
+        console.error('Error checking authentication:', err);
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkUserAuthentication();
+  }, []);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
@@ -66,7 +95,7 @@ const EventPage = () => {
     };
   }, []);
 
-  // Fetch enrolled events
+  // Fetch enrolled events when user is authenticated
   useEffect(() => {
     const fetchEnrolledEvents = async () => {
       try {
@@ -86,31 +115,34 @@ const EventPage = () => {
 
     if (userId) {
       fetchEnrolledEvents();
+    } else {
+      setLoading(prev => ({ ...prev, enrolled: false }));
     }
   }, [userId, t]);
 
-  // Fetch ongoing events
+  // Fetch ongoing events - use appropriate API based on authentication status
   useEffect(() => {
     const fetchOngoingEvents = async () => {
       try {
-        // This would be an actual API call in production
-        // Using real event IDs that exist in the system
-        const mockOngoingEvents = [1, 2, 3, 4, 5, 6];
+        // Use the appropriate API function based on authentication status
+        const fetchFunction = isAuthenticated ? getUserOngoingEvents : getAllOngoingEvents;
+        const response = await fetchFunction();
         
-        // Simulate API response delay
-        setTimeout(() => {
-          setOngoingEvents(mockOngoingEvents);
-          setLoading(prev => ({ ...prev, ongoing: false }));
-        }, 600);
+        if (response.success) {
+          setOngoingEvents(response.data.event_ids || []);
+        } else {
+          setError(prev => ({ ...prev, ongoing: t('events.errors.loadFailed') }));
+        }
       } catch (err) {
         console.error('Error fetching ongoing events:', err);
         setError(prev => ({ ...prev, ongoing: t('events.errors.connectionError') }));
+      } finally {
         setLoading(prev => ({ ...prev, ongoing: false }));
       }
     };
 
     fetchOngoingEvents();
-  }, [t]);
+  }, [isAuthenticated, t]);
 
   // Fetch upcoming events
   useEffect(() => {
@@ -153,6 +185,8 @@ const EventPage = () => {
 
     if (userId) {
       fetchPastEvents();
+    } else {
+      setLoading(prev => ({ ...prev, past: false }));
     }
   }, [userId, t]);
 
@@ -379,13 +413,19 @@ const EventPage = () => {
           className={`event-tab-panel ${activeTab === 'enrolled' ? 'active' : ''}`}
           hidden={activeTab !== 'enrolled'}
         >
-          {renderEventSection(
-            t('events.enrolledEvents', 'Enrolled Events'), 
-            enrolledEvents, 
-            loading.enrolled, 
-            error.enrolled, 
-            t('events.noEnrolledEvents', 'You are not enrolled in any events.'),
-            'enrolled'
+          {!isAuthenticated ? (
+            <div className="authentication-required">
+              <p>{t('events.authRequired', 'You need to be logged in to see your enrolled events.')}</p>
+            </div>
+          ) : (
+            renderEventSection(
+              t('events.enrolledEvents', 'Enrolled Events'), 
+              enrolledEvents, 
+              loading.enrolled, 
+              error.enrolled, 
+              t('events.noEnrolledEvents', 'You are not enrolled in any events.'),
+              'enrolled'
+            )
           )}
         </div>
         
@@ -433,13 +473,19 @@ const EventPage = () => {
           className={`event-tab-panel ${activeTab === 'past' ? 'active' : ''}`}
           hidden={activeTab !== 'past'}
         >
-          {renderEventSection(
-            t('events.pastEvents', 'Past Events'), 
-            pastEvents, 
-            loading.past, 
-            error.past, 
-            t('events.noPastEvents', 'No past events to display.'),
-            'past'
+          {!isAuthenticated ? (
+            <div className="authentication-required">
+              <p>{t('events.authRequired', 'You need to be logged in to see your past events.')}</p>
+            </div>
+          ) : (
+            renderEventSection(
+              t('events.pastEvents', 'Past Events'), 
+              pastEvents, 
+              loading.past, 
+              error.past, 
+              t('events.noPastEvents', 'No past events to display.'),
+              'past'
+            )
           )}
         </div>
       </div>

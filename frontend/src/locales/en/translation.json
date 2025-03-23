@@ -174,7 +174,7 @@
 	  "defaultTitle": "Event Details",
 	  "tabs": {
 		"event": "Event",
-		"contact": "Contact Us",
+		"chat": "Community Chat",
 		"feedback": "Feedback",
 		"tasks": "Tasks"
 	  },
@@ -183,33 +183,34 @@
 	  },
 	  "actions": {
 		"join": {
-			"label": "Join",
-			"labelEnrolled": "Joined",
-			"labelLoading": "Joining...",
-			"ariaLabel": "Join this event",
-			"ariaLabelEnrolled": "You are enrolled in this event",
-			"loginPrompt": "You need to login to join this event. Would you like to login now?",
-			"success": "Successfully joined the event!",
-			"failure": "Failed to join the event. Please try again.",
-			"error": "An error occurred. Please try again later.",
-			"alreadyEnrolled": "You are already enrolled in this event."
+		  "label": "Join",
+		  "labelEnrolled": "Joined",
+		  "labelLoading": "Joining...",
+		  "ariaLabel": "Join this event",
+		  "ariaLabelEnrolled": "You are enrolled in this event",
+		  "loginPrompt": "You need to login to join this event. Would you like to login now?",
+		  "success": "Successfully joined the event!",
+		  "failure": "Failed to join the event. Please try again.",
+		  "error": "An error occurred. Please try again later.",
+		  "alreadyEnrolled": "You are already enrolled in this event."
 		},
 		"unenroll": {
-			"label": "Unenroll",
-			"ariaLabel": "Unenroll from this event",
-			"success": "Successfully unenrolled from the event!",
-			"failure": "Failed to unenroll from the event. Please try again.",
-			"error": "An error occurred. Please try again later."
-		  },
+		  "label": "Unenroll",
+		  "ariaLabel": "Unenroll from this event",
+		  "success": "Successfully unenrolled from the event!",
+		  "failure": "Failed to unenroll from the event. Please try again.",
+		  "error": "An error occurred. Please try again later."
+		},
 		"share": {
-			"label": "Share",
-			"ariaLabel": "Share this event",
-			"defaultTitle": "Event Details",
-			"text": "Check out this event: {{title}}",
-			"copyMessage": "Event link copied to clipboard!",
-			"copyError": "Failed to copy link. Please try again.",
-			"success": "Event shared successfully!"
-		}
+		  "label": "Share",
+		  "ariaLabel": "Share this event",
+		  "defaultTitle": "Event Details",
+		  "text": "Check out this event: {{title}}",
+		  "copyMessage": "Event link copied to clipboard!",
+		  "copyError": "Failed to copy link. Please try again.",
+		  "success": "Event shared successfully!"
+		},
+		"loading": "Processing..."
 	  },
 	  "loading": {
 		"main": "Loading event details...",
@@ -219,6 +220,21 @@
 		"fetchFailed": "Failed to fetch event details",
 		"generalError": "An error occurred while fetching event details",
 		"notFound": "Event not found"
+	  }
+	},
+	"communityChat": {
+	  "title": "Community Chat for {{event}}",
+	  "defaultEventTitle": "This Event",
+	  "loading": "Loading messages...",
+	  "noMessages": "No messages yet. Be the first to start the conversation!",
+	  "inputPlaceholder": "Type a message...",
+	  "inputAriaLabel": "Message input",
+	  "sendAriaLabel": "Send message",
+	  "hostBadge": "HOST",
+	  "loginRequired": "Please log in to participate in the community chat",
+	  "errors": {
+		"auth": "You need to be logged in to view this chat",
+		"fetchFailed": "Failed to load messages. Please try again."
 	  }
 	},
 	"event": {

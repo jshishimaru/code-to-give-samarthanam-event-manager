@@ -278,3 +278,23 @@ class Chat(models.Model):
 
     def __str__(self):
         return f"Chat by {self.user.name} on {self.task.task_name}"
+    
+# Add this to your models.py
+class EventChat(models.Model):
+    """Community chat messages for events"""
+    event = models.ForeignKey(EventInfo, on_delete=models.CASCADE, related_name='chat_messages')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='event_messages')
+    message = models.TextField()
+    is_host = models.BooleanField(default=False, help_text="Indicates if the message was sent by a host")
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"Message by {self.user.name} in {self.event.event_name}"
+    
+    def save(self, *args, **kwargs):
+        # Auto-set is_host based on the user's status
+        self.is_host = self.user.isHost
+        super().save(*args, **kwargs)

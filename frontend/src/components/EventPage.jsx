@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getUserEnrolledEvents, allUpcomingEvents, getUserPastEvents } from '../apiservice/event';
 import EventCard from './EventCard';
 import '../styles/EventPage.css';
@@ -19,6 +19,10 @@ const EventPage = () => {
   
   // View mode: 'grid' or 'list'
   const [viewMode, setViewMode] = useState('grid');
+  
+  // Dropdown state
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   
   // Number of events to show initially per section
   const INITIAL_EVENTS_TO_SHOW = 4;
@@ -44,6 +48,20 @@ const EventPage = () => {
     upcoming: null,
     past: null
   });
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // Fetch enrolled events
   useEffect(() => {
@@ -73,8 +91,8 @@ const EventPage = () => {
     const fetchOngoingEvents = async () => {
       try {
         // This would be an actual API call in production
-        // For now using mock data as an example - replace with your API
-        const mockOngoingEvents = [201, 202, 203, 204, 205, 206];
+        // Using real event IDs that exist in the system
+        const mockOngoingEvents = [1, 2, 3, 4, 5, 6];
         
         // Simulate API response delay
         setTimeout(() => {
@@ -149,6 +167,17 @@ const EventPage = () => {
       return events;
     }
     return events.slice(0, INITIAL_EVENTS_TO_SHOW);
+  };
+
+  // Toggle dropdown
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  // Change view mode and close dropdown
+  const changeViewMode = (mode) => {
+    setViewMode(mode);
+    setDropdownOpen(false);
   };
 
   // Render event section with appropriate loading and error states
@@ -235,25 +264,42 @@ const EventPage = () => {
         <h1 className="page-title">{t('events.pageTitle', 'Events')}</h1>
         
         <div className="view-controls" role="toolbar" aria-label={t('events.viewControls', 'View Controls')}>
-          <div className="view-mode-toggle">
+          <div className="view-mode-dropdown" ref={dropdownRef}>
             <button 
-              className={`view-mode-button ${viewMode === 'grid' ? 'active' : ''}`}
-              onClick={() => setViewMode('grid')}
-              aria-pressed={viewMode === 'grid'}
-              aria-label={t('events.gridView', 'Grid View')}
+              className="dropdown-toggle"
+              onClick={toggleDropdown}
+              aria-haspopup="true"
+              aria-expanded={dropdownOpen}
             >
-              <span className="view-icon grid-icon" aria-hidden="true">▦</span>
-              <span className="view-text">{t('events.gridView', 'Grid')}</span>
+              <span className={`view-icon ${viewMode === 'grid' ? 'grid-icon' : 'list-icon'}`} aria-hidden="true">
+                {viewMode === 'grid' ? '▦' : '☰'}
+              </span>
+              <span className="view-text">
+                {viewMode === 'grid' ? t('events.gridView', 'Grid') : t('events.listView', 'List')}
+              </span>
+              <span className="dropdown-arrow" aria-hidden="true">▼</span>
             </button>
-            <button 
-              className={`view-mode-button ${viewMode === 'list' ? 'active' : ''}`}
-              onClick={() => setViewMode('list')}
-              aria-pressed={viewMode === 'list'}
-              aria-label={t('events.listView', 'List View')}
-            >
-              <span className="view-icon list-icon" aria-hidden="true">☰</span>
-              <span className="view-text">{t('events.listView', 'List')}</span>
-            </button>
+            
+            {dropdownOpen && (
+              <div className="dropdown-menu">
+                <button 
+                  className={`dropdown-item ${viewMode === 'grid' ? 'active' : ''}`}
+                  onClick={() => changeViewMode('grid')}
+                  aria-pressed={viewMode === 'grid'}
+                >
+                  <span className="view-icon grid-icon" aria-hidden="true">▦</span>
+                  <span>{t('events.gridView', 'Grid')}</span>
+                </button>
+                <button 
+                  className={`dropdown-item ${viewMode === 'list' ? 'active' : ''}`}
+                  onClick={() => changeViewMode('list')}
+                  aria-pressed={viewMode === 'list'}
+                >
+                  <span className="view-icon list-icon" aria-hidden="true">☰</span>
+                  <span>{t('events.listView', 'List')}</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

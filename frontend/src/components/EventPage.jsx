@@ -127,7 +127,7 @@ const EventPage = () => {
 
   return (
   <>
-    <Navbar />
+    {/* <Navbar /> */}
     <main id="main-content" className="event-page-container">
       <h1 className="page-title">{t('events.pageTitle')}</h1>
       

@@ -146,11 +146,19 @@ class TaskInfo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.event.event_name} - {self.task_name}"
+        try:
+            event_name = self.event.event_name if self.event_id else "Unknown Event"
+            return f"{event_name} - {self.task_name}"
+        except (EventInfo.DoesNotExist, AttributeError):
+            return f"Task: {self.task_name or 'New Task'}"
     
     @property
     def all_subtasks_complete(self):
         """Check if all subtasks are complete"""
+        # Don't try to check subtasks if the task hasn't been saved yet
+        if not self.pk:
+            return True
+            
         subtasks = self.subtasks.all()
         if not subtasks.exists():
             return True  # No subtasks means this check passes by default
@@ -158,7 +166,7 @@ class TaskInfo(models.Model):
     
     def save(self, *args, **kwargs):
         # If all subtasks are complete, we can automatically update the task status
-        if self.all_subtasks_complete and self.subtasks.exists() and self.status != 'Completed':
+        if self.pk and self.all_subtasks_complete and self.subtasks.exists() and self.status != 'Completed':
             self.status = 'Completed'
         
         super().save(*args, **kwargs)
@@ -194,14 +202,21 @@ class SubTask(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.parent_task.task_name} - {self.title}"
+        try:
+            parent_task_name = self.parent_task.task_name if self.parent_task_id else "Unknown Task"
+            return f"{parent_task_name} - {self.title}"
+        except (TaskInfo.DoesNotExist, AttributeError):
+            return f"SubTask: {self.title or 'New SubTask'}"
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         
         # After saving a subtask, check if we need to update the parent task
-        if self.status == 'Completed':
-            self.parent_task.save()  # This will trigger the parent task's save method
+        if self.status == 'Completed' and self.parent_task_id:
+            try:
+                self.parent_task.save()  # This will trigger the parent task's save method
+            except TaskInfo.DoesNotExist:
+                pass    # This will trigger the parent task's save method
     
     class Meta:
         ordering = ['start_time']
@@ -268,18 +283,33 @@ class Feedback(models.Model):
         unique_together = ['event', 'user']
 
 class Chat(models.Model):
+    """Task-specific chat messages between volunteers and hosts"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')
     task = models.ForeignKey(TaskInfo, on_delete=models.CASCADE, related_name='messages')
     text = models.TextField()
+    is_host = models.BooleanField(default=False, help_text="Indicates if the message was sent by a host")
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['timestamp']
 
     def __str__(self):
-        return f"Chat by {self.user.name} on {self.task.task_name}"
+        try:
+            user_name = self.user.name if self.user_id else "Unknown User"
+            task_name = self.task.task_name if self.task_id else "Unknown Task"
+            return f"Chat by {user_name} on {task_name}"
+        except (User.DoesNotExist, TaskInfo.DoesNotExist, AttributeError):
+            return f"Chat ID: {self.id or 'New'}"
     
-# Add this to your models.py
+    def save(self, *args, **kwargs):
+        # Auto-set is_host based on the user's status
+        if self.user_id:  # Only try to access user if we have a user_id
+            try:
+                self.is_host = self.user.isHost
+            except User.DoesNotExist:
+                pass  # Keep the default value if user doesn't exist
+        super().save(*args, **kwargs)
+    
 class EventChat(models.Model):
     """Community chat messages for events"""
     event = models.ForeignKey(EventInfo, on_delete=models.CASCADE, related_name='chat_messages')

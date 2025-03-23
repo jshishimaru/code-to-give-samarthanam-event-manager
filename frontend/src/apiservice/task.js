@@ -248,46 +248,84 @@ export const getTaskWithSubtasks = async (taskId) => {
   }
 };
 
+
 /**
  * Get tasks for an event
  * @param {number} eventId - ID of the event
  * @returns {Promise<Object>} Response with success status and tasks for the event
  */
 export const getTasksForEvent = async (eventId) => {
-  try {
-    // This endpoint isn't explicitly shown in the backend code but would be needed
-    // You'd need to add this to the backend
-    const response = await axios.get(`${APP_API_URL}tasks/event/`, {
-      params: { event_id: eventId }
-    });
-    return { success: true, data: response.data };
-  } catch (error) {
-    console.error('Error fetching tasks for event:', error);
-    return { 
-      success: false, 
-      error: error.response?.data?.message || error.message 
-    };
-  }
-};
-
-/**
- * Get tasks assigned to a volunteer
- * @param {number} userId - ID of the volunteer
- * @returns {Promise<Object>} Response with success status and assigned tasks
- */
-export const getVolunteerTasks = async (userId) => {
-  try {
-    // This endpoint isn't explicitly shown in the backend code but would be needed
-    // You'd need to add this to the backend
-    const response = await axios.get(`${APP_API_URL}tasks/volunteer/`, {
-      params: { user_id: userId }
-    });
-    return { success: true, data: response.data };
-  } catch (error) {
-    console.error('Error fetching volunteer tasks:', error);
-    return { 
-      success: false, 
-      error: error.response?.data?.message || error.message 
-    };
-  }
-};
+	try {
+	  // Use the correct endpoint from tasks_views.py
+	  const response = await axios.get(`${APP_API_URL}tasks/event/`, {
+		params: { event_id: eventId }
+	  });
+	  
+	  // Check if the response has the expected structure
+	  if (response.data && (response.data.tasks || response.data.status === 'success')) {
+		return { success: true, data: response.data };
+	  } else {
+		return { 
+		  success: false, 
+		  error: 'Invalid response format from server' 
+		};
+	  }
+	} catch (error) {
+	  console.error('Error fetching tasks for event:', error);
+	  
+	  // Try the fallback endpoint if the main one fails
+	  try {
+		const fallbackResponse = await axios.get(`${APP_API_URL}tasks/notified/`, {
+		  params: { event_id: eventId }
+		});
+		
+		if (fallbackResponse.data) {
+		  return { success: true, data: fallbackResponse.data };
+		} else {
+		  return { 
+			success: false, 
+			error: 'Invalid response format from server' 
+		  };
+		}
+	  } catch (fallbackError) {
+		console.error('Error with fallback endpoint:', fallbackError);
+		return { 
+		  success: false, 
+		  error: error.response?.data?.message || error.message 
+		};
+	  }
+	}
+  };
+  
+  /**
+   * Get tasks assigned to a volunteer
+   * @param {number} userId - ID of the volunteer
+   * @param {number} eventId - Optional event ID to filter tasks
+   * @returns {Promise<Object>} Response with success status and assigned tasks
+   */
+  export const getVolunteerTasks = async (userId, eventId = null) => {
+	try {
+	  // Build query parameters
+	  const params = { volunteer_id: userId };
+	  if (eventId) params.event_id = eventId;
+	  
+	  // Use the correct endpoint from tasks_views.py
+	  const response = await axios.get(`${APP_API_URL}tasks/volunteer/`, { params });
+	  
+	  // Check if the response has the expected structure
+	  if (response.data && (response.data.tasks || response.data.status === 'success')) {
+		return { success: true, data: response.data };
+	  } else {
+		return { 
+		  success: false, 
+		  error: 'Invalid response format from server' 
+		};
+	  }
+	} catch (error) {
+	  console.error('Error fetching volunteer tasks:', error);
+	  return { 
+		success: false, 
+		error: error.response?.data?.message || error.message 
+	  };
+	}
+  };

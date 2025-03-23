@@ -7,6 +7,7 @@ import '../styles/EventDetails.css';
 import Event from './Event/Event';
 import Feedback from './Event/feedback';
 import CommunityChat from './Event/CommunityChat';
+import Tasks from './Event/tasks';
 
 // Notification popup component
 const NotificationPopup = ({ message, type, onClose }) => {
@@ -117,7 +118,6 @@ const EventDetails = () => {
           
           // Set document title directly to event name without translation
           document.title = eventTitle;
-          console.log("Setting document title to:", eventTitle);
         } else {
           console.error("Failed to fetch event data:", response);
           setError(t('eventDetails.errors.fetchFailed'));
@@ -140,12 +140,28 @@ const EventDetails = () => {
     };
   }, [eventId, t]);
 
-  const tabs = [
-    { id: 'event', label: t('eventDetails.tabs.event'), component: tabsReady ? <Event eventData={event} /> : <Event eventData={null} /> },
-    { id: 'chat', label: t('eventDetails.tabs.chat'), component: <CommunityChat eventId={eventId} eventTitle={event?.title || event?.event_name} /> },
-    { id: 'feedback', label: t('eventDetails.tabs.feedback'), component: <Feedback /> },
-    // { id: 'tasks', label: t('eventDetails.tabs.tasks'), component: <Tasks /> },
-  ];
+  // Set initial active tab based on enrollment status
+  useEffect(() => {
+    if (isEnrolled && tabsReady) {
+      setActiveTab('tasks');
+    }
+  }, [isEnrolled, tabsReady]);
+
+  // Create tabs array based on enrollment status
+  const getTabs = () => {
+    const baseTabs = [
+      { id: 'event', label: t('eventDetails.tabs.event'), component: tabsReady ? <Event eventData={event} /> : <Event eventData={null} /> },
+      { id: 'chat', label: t('eventDetails.tabs.chat'), component: <CommunityChat eventId={eventId} eventTitle={event?.title || event?.event_name} /> },
+      { id: 'feedback', label: t('eventDetails.tabs.feedback'), component: <Feedback /> }
+    ];
+    
+    // Only show tasks tab if user is enrolled
+    if (isEnrolled) {
+      baseTabs.splice(1, 0, { id: 'tasks', label: t('eventDetails.tabs.tasks'), component: <Tasks eventId={eventId} /> });
+    }
+    
+    return baseTabs;
+  };
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
@@ -193,6 +209,11 @@ const EventDetails = () => {
         if (response.success) {
           setIsEnrolled(false);
           showNotification(t('eventDetails.actions.unenroll.success'), 'success');
+          
+          // If currently on tasks tab, switch to event tab since tasks will no longer be accessible
+          if (activeTab === 'tasks') {
+            setActiveTab('event');
+          }
         } else {
           showNotification(t('eventDetails.actions.unenroll.failure'), 'error');
         }
@@ -203,6 +224,9 @@ const EventDetails = () => {
         if (response.success) {
           setIsEnrolled(true);
           showNotification(t('eventDetails.actions.join.success'), 'success');
+          
+          // Switch to tasks tab when user enrolls
+          setActiveTab('tasks');
         } else {
           showNotification(t('eventDetails.actions.join.failure'), 'error');
         }
@@ -274,6 +298,8 @@ const EventDetails = () => {
       </div>
     );
   }
+
+  const tabs = getTabs();
 
   return (
     <main className="event-details-container">

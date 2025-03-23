@@ -4,7 +4,7 @@ from .views import event_views
 from .views import feeback_views
 from .views import tasks_views
 from .views import chats_views
-
+from .views import taskchat_views
 # router = DefaultRouter()
 # router.register(r'events', event_views.EventViewSet, basename='events')
 
@@ -36,19 +36,19 @@ urlpatterns = [
     path('feedback/user/', feeback_views.UserFeedbackListView.as_view(), name='user_feedback_list'),
     path('feedback/eligibility/', feeback_views.CheckFeedbackEligibilityView.as_view(), name='check_feedback_eligibility'),
     
-    # Task Management Endpoints
-    path('tasks/add/', tasks_views.AddTaskToEventView.as_view(), name='add_task_to_event'),
-    path('tasks/assign-volunteers/', tasks_views.AssignVolunteerToTaskView.as_view(), name='assign_volunteers_to_task'),
-    path('tasks/update/', tasks_views.EditTaskView.as_view(), name='edit_task'),
-    path('tasks/delete/', tasks_views.DeleteTaskView.as_view(), name='delete_task'),
-    path('tasks/details/', tasks_views.GetTaskWithSubtasksView.as_view(), name='get_task_with_subtasks'),
-    
-    # Task Notification Endpoints
-    path('tasks/notify-completion/', tasks_views.NotifyTaskCompletionView.as_view(), name='notify_task_completion'),
-    path('tasks/mark-complete/', tasks_views.MarkTaskCompleteView.as_view(), name='mark_task_complete'),
-    path('tasks/notified/', tasks_views.GetNotifiedTasksView.as_view(), name='get_notified_tasks'),
-    # path('tasks/volunteer/', tasks_views.GetVolunteerTasksView.as_view(), name='get_volunteer_tasks'),
-    # path('tasks/event/', tasks_views.GetEventTasksView.as_view(), name='get_event_tasks'),
+	# Task Management Endpoints
+	path('tasks/add/', tasks_views.AddTaskToEventView.as_view(), name='add_task_to_event'),
+	path('tasks/assign-volunteers/', tasks_views.AssignVolunteerToTaskView.as_view(), name='assign_volunteers_to_task'),
+	path('tasks/update/', tasks_views.EditTaskView.as_view(), name='edit_task'),
+	path('tasks/delete/', tasks_views.DeleteTaskView.as_view(), name='delete_task'),
+	path('tasks/details/', tasks_views.GetTaskWithSubtasksView.as_view(), name='get_task_with_subtasks'),
+
+	# Task Notification Endpoints
+	path('tasks/notify-completion/', tasks_views.NotifyTaskCompletionView.as_view(), name='notify_task_completion'),
+	path('tasks/mark-complete/', tasks_views.MarkTaskCompleteView.as_view(), name='mark_task_complete'),
+	path('tasks/notified/', tasks_views.GetNotifiedTasksView.as_view(), name='get_notified_tasks'),
+	path('tasks/volunteer/', tasks_views.GetVolunteerTasksView.as_view(), name='get_volunteer_tasks'),
+	path('tasks/event/', tasks_views.GetEventTasksView.as_view(), name='get_event_tasks'),
     
     # Subtask Management Endpoints
     path('subtasks/add/', tasks_views.AddSubtaskView.as_view(), name='add_subtask'),
@@ -61,5 +61,8 @@ urlpatterns = [
 	path('events/chat/history/', chats_views.EventChatHistoryView.as_view(), name='event_chat_history'),
 	path('user/chats/recent/', chats_views.RecentEventChatsView.as_view(), name='recent_event_chats'),
 
-    
+    # Task Chat Endpoints
+	path('tasks/chat/', taskchat_views.TaskChatView.as_view(), name='task_chat'),
+	path('tasks/chat/history/', taskchat_views.TaskChatHistoryView.as_view(), name='task_chat_history'),
+	path('user/tasks/chats/recent/', taskchat_views.RecentTaskChatsView.as_view(), name='recent_task_chats'),
 ]

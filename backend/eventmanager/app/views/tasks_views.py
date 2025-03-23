@@ -782,3 +782,192 @@ class GetTaskWithSubtasksView(View):
     def post(self, request):
         # POST method can use the same logic as GET for this view
         return self.get(request)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetVolunteerTasksView(View):
+    """Get all tasks assigned to a specific volunteer"""
+    def get(self, request):
+        try:
+            # Check authentication
+            if not request.user.is_authenticated:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'Authentication required'
+                }, status=401)
+                
+            # Get volunteer_id from query parameters (optional, defaults to the authenticated user)
+            volunteer_id = request.GET.get('volunteer_id')
+            
+            # If volunteer_id is provided, the user must be a host to view other volunteers' tasks
+            if volunteer_id and volunteer_id != str(request.user.id):
+                if not request.user.isHost:
+                    return JsonResponse({
+                        'status': 'error', 
+                        'message': 'Only hosts can view tasks assigned to other volunteers'
+                    }, status=403)
+                
+                # Find the volunteer
+                try:
+                    volunteer = User.objects.get(id=volunteer_id, isHost=False)
+                except User.DoesNotExist:
+                    return JsonResponse({
+                        'status': 'error', 
+                        'message': 'Volunteer not found'
+                    }, status=404)
+            else:
+                # Use the authenticated user
+                volunteer = request.user
+                
+                # Make sure the user is not a host (hosts don't have tasks assigned)
+                if volunteer.isHost:
+                    return JsonResponse({
+                        'status': 'error', 
+                        'message': 'Hosts are not assigned tasks as volunteers'
+                    }, status=400)
+            
+            # Get optional filter parameters
+            status = request.GET.get('status')
+            event_id = request.GET.get('event_id')
+            
+            # Get tasks assigned to this volunteer
+            tasks = TaskInfo.objects.filter(volunteers=volunteer)
+            
+            # Apply filters if provided
+            if status:
+                tasks = tasks.filter(status=status)
+                
+            if event_id:
+                tasks = tasks.filter(event_id=event_id)
+                
+            # Order by start_time
+            tasks = tasks.order_by('start_time')
+            
+            # Serialize the tasks
+            serializer = TaskInfoSerializer(tasks, many=True)
+            
+            # Optional: Add event names for easier frontend display
+            tasks_with_events = []
+            for task_data in serializer.data:
+                try:
+                    event = EventInfo.objects.get(id=task_data['event'])
+                    task_data['event_name'] = event.event_name
+                except EventInfo.DoesNotExist:
+                    task_data['event_name'] = 'Unknown Event'
+                tasks_with_events.append(task_data)
+            
+            return JsonResponse({
+                'status': 'success',
+                'volunteer_id': volunteer.id,
+                'volunteer_name': volunteer.name,
+                'count': len(tasks_with_events),
+                'tasks': tasks_with_events
+            })
+            
+        except Exception as e:
+            print(f"Error in GetVolunteerTasksView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error', 
+                'message': str(e)
+            }, status=500)
+    
+    def post(self, request):
+        # POST method can use the same logic as GET for this view
+        return self.get(request)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GetEventTasksView(View):
+    """Get all tasks for a specific event"""
+    def get(self, request):
+        try:
+            # Get event_id from query parameters
+            event_id = request.GET.get('event_id')
+            
+            if not event_id:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'Event ID is required'
+                }, status=400)
+                
+            # Find the event
+            try:
+                event = EventInfo.objects.get(id=event_id)
+            except EventInfo.DoesNotExist:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'Event not found'
+                }, status=404)
+            
+            # Check authentication for non-public events
+            if event.visibility != 'Public' and not request.user.is_authenticated:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'Authentication required to view tasks for this event'
+                }, status=401)
+            
+            # For private events, only hosts and enrolled volunteers can view tasks
+            if event.visibility == 'Private' and request.user.is_authenticated:
+                if not (request.user.isHost or request.user == event.host or request.user in event.volunteer_enrolled.all()):
+                    return JsonResponse({
+                        'status': 'error', 
+                        'message': 'You do not have access to view tasks for this event'
+                    }, status=403)
+            
+            # Get optional filter parameters
+            status = request.GET.get('status')
+            volunteer_id = request.GET.get('volunteer_id')
+            
+            # Get tasks for this event
+            tasks = TaskInfo.objects.filter(event=event)
+            
+            # Apply filters if provided
+            if status:
+                tasks = tasks.filter(status=status)
+                
+            if volunteer_id:
+                try:
+                    volunteer = User.objects.get(id=volunteer_id)
+                    tasks = tasks.filter(volunteers=volunteer)
+                except User.DoesNotExist:
+                    # If volunteer doesn't exist, return empty list rather than error
+                    tasks = TaskInfo.objects.none()
+            
+            # Order by start_time
+            tasks = tasks.order_by('start_time')
+            
+            # Serialize the tasks
+            serializer = TaskInfoSerializer(tasks, many=True)
+            
+            # Get task counts by status
+            status_counts = {
+                'Pending': tasks.filter(status='Pending').count(),
+                'In Progress': tasks.filter(status='In Progress').count(),
+                'Completed': tasks.filter(status='Completed').count(),
+                'Cancelled': tasks.filter(status='Cancelled').count(),
+                'Delayed': tasks.filter(status='Delayed').count()
+            }
+            
+            # Get volunteer counts
+            volunteer_count = sum(task.volunteers.count() for task in tasks)
+            
+            return JsonResponse({
+                'status': 'success',
+                'event_id': event.id,
+                'event_name': event.event_name,
+                'count': len(serializer.data),
+                'tasks': serializer.data,
+                'status_counts': status_counts,
+                'volunteer_count': volunteer_count
+            })
+            
+        except Exception as e:
+            print(f"Error in GetEventTasksView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error', 
+                'message': str(e)
+            }, status=500)
+    
+    def post(self, request):
+        # POST method can use the same logic as GET for this view
+        return self.get(request)

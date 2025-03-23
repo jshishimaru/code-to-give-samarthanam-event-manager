@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 import json
 from app.models import User
 import traceback
+from django.contrib.auth.hashers import is_password_usable
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginView(View):
@@ -128,17 +129,37 @@ class HostLoginView(View):
                     'message': 'Email and password are required'
                 }, status=400)
             
-            # Authenticate user
-            user = authenticate(request, username=email, password=password)
-            
-            if user is not None:
+            # First check if the user exists
+            try:
+                user_obj = User.objects.get(email=email)
                 # Check if the user is a host
-                if not user.isHost:
+                if not user_obj.isHost:
                     return JsonResponse({
                         'status': 'error',
                         'message': 'Invalid host credentials. This account is registered as a regular user.'
                     }, status=401)
                 
+                # Check if the password is properly hashed
+                if not user_obj.password.startswith(('pbkdf2_sha256$', 'bcrypt$', 'argon2')):
+                    # Password might be plain text - log this as a security issue
+                    print(f"WARNING: User {email} may have an unhashed password!")
+                    
+                    # We'll still try to authenticate, but warn the admin
+                    from django.core.mail import mail_admins
+                    mail_admins(
+                        subject="SECURITY ALERT: Unhashed password detected",
+                        message=f"User {email} has a potentially unhashed password. Please fix this immediately using the fix_password_hashing management command."
+                    )
+            except User.DoesNotExist:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'No account exists with this email'
+                }, status=401)
+            
+            # Authenticate user
+            user = authenticate(request, username=email, password=password)
+            
+            if user is not None:
                 login(request, user)
                 
                 # Return host info
@@ -151,9 +172,17 @@ class HostLoginView(View):
                     'isHost': True
                 })
             else:
+                # If authentication failed, provide more detailed error
+                if not is_password_usable(user_obj.password):
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'This account has an unusable password. Please contact the administrator to reset it.',
+                        'needs_password_reset': True
+                    }, status=401)
+                
                 return JsonResponse({
                     'status': 'error',
-                    'message': 'Invalid email or password'
+                    'message': 'Invalid password'
                 }, status=401)
                 
         except Exception as e:
@@ -163,36 +192,6 @@ class HostLoginView(View):
                 'status': 'error',
                 'message': str(e)
             }, status=500)
-    
-    def get(self, request):
-        """Handle GET requests"""
-        # Check if there's a 'next' parameter in the query string
-        next_url = request.GET.get('next', '/api/auth/profile/')
-        
-        # If user is already authenticated, return success
-        if request.user.is_authenticated:
-            if not request.user.isHost:
-                return JsonResponse({
-                    'status': 'error', 
-                    'message': 'You are logged in as a regular user. Please use the user login endpoint.'
-                }, status=403)
-            
-            return JsonResponse({
-                'status': 'success',
-                'message': 'Already logged in',
-                'host_id': request.user.id,
-                'email': request.user.email,
-                'name': request.user.name,
-                'isHost': True
-            })
-        
-        # For API usage - return a response explaining authentication is required
-        return JsonResponse({
-            'status': 'error',
-            'message': 'Authentication required',
-            'login_required': True,
-            'next': next_url
-        }, status=401)
 
 
 @method_decorator(csrf_exempt, name='dispatch')

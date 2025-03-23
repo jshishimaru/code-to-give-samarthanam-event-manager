@@ -113,6 +113,29 @@
 		"connectionError": "Connection error, please try again"
 	  }
 	},
+	"tasks": {
+		"title": "Assigned Tasks",
+		"loading": "Loading tasks...",
+		"noTasksVolunteer": "No tasks have been assigned to you for this event.",
+		"noTasksHost": "No tasks have been created for this event yet.",
+		"listAriaLabel": "List of assigned tasks",
+		"viewDetails": "View details for {{task}}",
+		"noDate": "No due date",
+		"status": {
+		  "pending": "Pending",
+		  "inProgress": "In Progress",
+		  "completed": "Completed",
+		  "notificationSent": "Completed (Pending Verification)"
+		},
+		"addTask": {
+		  "label": "Add Task",
+		  "ariaLabel": "Add a new task"
+	  },
+	  "errors": {
+		"auth": "You need to be logged in to view tasks",
+		"fetchFailed": "Failed to load tasks. Please try again."
+	  }
+	},
 	"common": {
 	  "loading": "Loading...",
 	  "noContent": "No content to display",
@@ -333,5 +356,65 @@
 		"submissionFailed": "Failed to submit feedback. Please try again.",
 		"generalError": "An error occurred. Please try again later."
 	  }
-	}
+	},
+		"taskDetail": {
+		  "backToTasks": "Back to Tasks",
+		  "backToEvent": "Back to Event",
+		  "loading": "Loading task details...",
+		  "progress": "Completion Progress",
+		  "completionProgress": "Task completion progress: {{percentage}}%",
+		  "startDate": "Start",
+		  "dueDate": "Due",
+		  "noDate": "No date set",
+		  "description": "Description",
+		  "assignedVolunteers": "Assigned Volunteers",
+		  "you": "You",
+		  "subtasks": "Subtasks",
+		  "notifyCompletion": "Notify Completion",
+		  "notifying": "Notifying...",
+		  "completionNotified": "Completion notified at {{time}}",
+		  "closeNotification": "Close notification",
+		  "status": {
+			"pending": "Pending",
+			"inProgress": "In Progress",
+			"completed": "Completed",
+			"notificationSent": "Pending Verification",
+			"unknown": "Unknown Status"
+		  },
+		  "notifications": {
+			"completed": "Completion notification sent successfully!",
+			"alreadyNotified": "This task has already been notified as completed."
+		  },
+		  "errors": {
+			"auth": "You need to be logged in to view task details",
+			"fetchFailed": "Failed to load task details. Please try again.",
+			"notFound": "Task not found. It may have been deleted.",
+			"notificationFailed": "Failed to send completion notification. Please try again.",
+			"notAuthorized": "You are not authorized to view this task."
+		  },
+		  "comingSoon": "Task details are coming soon",
+		  "implementationNote": "This feature is currently being implemented"
+		},
+		"taskChat": {
+			"title": "Task Chat",
+			"loading": "Loading chat...",
+			"loadMore": "Load earlier messages",
+			"loadingMore": "Loading...",
+			"retry": "Retry",
+			"noMessages": "No messages yet. Start the conversation!",
+			"messagePlaceholder": "Type a message...",
+			"send": "Send",
+			"host": "Host",
+			"you": "You",
+			"justNow": "just now",
+			"minutesAgo": "{{count}}m ago",
+			"hoursAgo": "{{count}}h ago",
+			"daysAgo": "{{count}}d ago",
+			"errors": {
+			  "auth": "You need to be logged in to use the chat",
+			  "fetchFailed": "Failed to load chat messages",
+			  "sendFailed": "Failed to send message",
+			  "loadMoreFailed": "Failed to load more messages"
+			}
+		}
   }

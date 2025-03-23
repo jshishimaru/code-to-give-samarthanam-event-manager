@@ -1,15 +1,19 @@
 import React from 'react';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 import '../../styles/Event/Event.css';
 import { useEffect } from 'react';
 
 const Event = ({ eventData }) => {
+  const { t, i18n } = useTranslation();
+  
   const formatDate = (dateString) => {
-    if (!dateString) return 'Date not available';
+    if (!dateString) return t('event.dates.notAvailable');
     
     try {
       // Parse the date string and format it nicely
       const date = new Date(dateString);
+      // You can implement locale-specific date formatting based on i18n.language
       return format(date, 'EEEE, MMMM d, yyyy • h:mm a');
     } catch (error) {
       console.error('Error parsing date:', error);
@@ -34,9 +38,9 @@ const Event = ({ eventData }) => {
     }
   };
 
-  useEffect(() => {
-    console.log(eventData);
-  }, [eventData]);
+//   useEffect(() => {
+//     console.log(eventData);
+//   }, [eventData]);
 
   // Default image if none provided
   const defaultImage = 'https://via.placeholder.com/400x300?text=Event+Image';
@@ -49,21 +53,21 @@ const Event = ({ eventData }) => {
     <div className="event-info-container">
       <div className="event-info-left">
         <section className="event-overview-section">
-          <h2 className="event-section-title">Overview</h2>
+          <h2 className="event-section-title">{t('event.sections.overview.title')}</h2>
           <div className="event-overview-content">
             <p className="event-overview-text">
-              {eventData?.overview || 'No overview available for this event.'}
+              {eventData?.overview || t('event.sections.overview.notAvailable')}
             </p>
           </div>
         </section>
 
         <section className="event-description-section">
-          <h2 className="event-section-title">Description</h2>
+          <h2 className="event-section-title">{t('event.sections.description.title')}</h2>
           <div className="event-description-content">
             {eventData?.description ? (
               <div className="event-description-text" dangerouslySetInnerHTML={{ __html: eventData.description }} />
             ) : (
-              <p className="event-description-text">No detailed description available for this event.</p>
+              <p className="event-description-text">{t('event.sections.description.notAvailable')}</p>
             )}
           </div>
         </section>
@@ -72,7 +76,7 @@ const Event = ({ eventData }) => {
       <div className="event-info-right">
         <section className="event-dates-section">
           <div className="event-date-item">
-            <h3 className="event-date-label">Starts</h3>
+            <h3 className="event-date-label">{t('event.dates.starts')}</h3>
             <div className="date-with-calendar">
               <div className="calendar-icon starts-calendar">
                 <div className="calendar-month">{startCalendar.month}</div>
@@ -85,7 +89,7 @@ const Event = ({ eventData }) => {
           </div>
           
           <div className="event-date-item">
-            <h3 className="event-date-label">Ends</h3>
+            <h3 className="event-date-label">{t('event.dates.ends')}</h3>
             <div className="date-with-calendar">
               <div className="calendar-icon ends-calendar">
                 <div className="calendar-month">{endCalendar.month}</div>
@@ -98,9 +102,9 @@ const Event = ({ eventData }) => {
           </div>
         </section>
 
-        {/* Add new location section */}
+        {/* Location section */}
         <section className="event-location-section">
-          <h3 className="event-section-title">Location</h3>
+          <h3 className="event-section-title">{t('event.sections.location.title')}</h3>
           <div className="location-with-icon">
             <div className="location-icon-container">
               <svg 
@@ -114,7 +118,7 @@ const Event = ({ eventData }) => {
             </div>
             <div className="location-details">
               <p className="location-text">
-                {eventData?.location || 'Location not specified'}
+                {eventData?.location || t('event.sections.location.notSpecified')}
               </p>
               {eventData?.address && <p className="location-address">{eventData.address}</p>}
             </div>
@@ -124,7 +128,7 @@ const Event = ({ eventData }) => {
         <section className="event-image-section">
           <img 
             src={eventData?.image || defaultImage} 
-            alt={`${eventData?.title || 'Event'} promotional image`}
+            alt={t('event.image.alt', { title: eventData?.title || t('event.defaultTitle') })}
             className="event-image"
           />
         </section>

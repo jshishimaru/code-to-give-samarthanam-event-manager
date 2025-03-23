@@ -146,3 +146,56 @@ export const createEvent = async (eventData) => {
     return { success: false, error: error.message };
   }
 };
+
+
+/**
+ * Check if a user is enrolled in a specific event
+ * @param {number} eventId - ID of the event to check enrollment for
+ * @returns {Promise<Object>} Response with success status and enrollment information
+ */
+export const checkUserEnrollment = async (eventId) => {
+	try {
+	  const response = await axios.get(`${APP_API_URL}events/check-enrollment/`, {
+		params: { event_id: eventId }
+	  });
+	  
+	  return { 
+		success: true, 
+		data: {
+		  enrolled: response.data.enrolled,
+		  eventName: response.data.event_name,
+		  eventId: response.data.event_id,
+		  message: response.data.message
+		}
+	  };
+	} catch (error) {
+	  console.error('Error checking enrollment status:', error);
+	  
+	  // More detailed error handling
+	  if (error.response) {
+		// The request was made and the server responded with a status code
+		// that falls out of the range of 2xx
+		return { 
+		  success: false, 
+		  error: error.response.data.message || 'Error checking enrollment status',
+		  data: { enrolled: false }
+		};
+	  } else if (error.request) {
+		// The request was made but no response was received
+		return { 
+		  success: false, 
+		  error: 'No response from server',
+		  data: { enrolled: false }
+		};
+	  } else {
+		// Something happened in setting up the request that triggered an Error
+		return { 
+		  success: false, 
+		  error: error.message,
+		  data: { enrolled: false }
+		};
+	  }
+	}
+  };
+
+  

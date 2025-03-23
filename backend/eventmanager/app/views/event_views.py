@@ -757,3 +757,130 @@ class UnenrollUserView(View):
                 'status': 'error',
                 'message': str(e)
             }, status=500)
+        
+@method_decorator(csrf_exempt, name='dispatch')
+class CheckUserEnrollmentView(View):
+    """
+    Check if the authenticated user is enrolled in a specific event
+    """
+    def get(self, request):
+        try:
+            # Get the authenticated user
+            user = request.user
+            
+            # Check if user is authenticated
+            if not user.is_authenticated:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Authentication required',
+                    'enrolled': False
+                }, status=401)
+            
+            # Check if user is a volunteer (hosts don't enroll in events)
+            if user.isHost:
+                return JsonResponse({
+                    'status': 'success',
+                    'message': 'Hosts cannot enroll in events',
+                    'enrolled': False
+                })
+            
+            # Get event_id from query parameters
+            event_id = request.GET.get('event_id')
+            
+            if not event_id:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Event ID is required',
+                    'enrolled': False
+                }, status=400)
+            
+            # Get the event
+            try:
+                event = EventInfo.objects.get(id=event_id)
+            except EventInfo.DoesNotExist:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Event not found',
+                    'enrolled': False
+                }, status=404)
+            
+            # Check if user is enrolled
+            is_enrolled = user in event.volunteer_enrolled.all()
+            
+            return JsonResponse({
+                'status': 'success',
+                'event_id': event_id,
+                'event_name': event.event_name,
+                'enrolled': is_enrolled
+            })
+            
+        except Exception as e:
+            print(f"Error in CheckUserEnrollmentView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e),
+                'enrolled': False
+            }, status=500)
+    
+    def post(self, request):
+        # Support POST method with request body
+        try:
+            # Get the authenticated user
+            user = request.user
+            
+            # Check if user is authenticated
+            if not user.is_authenticated:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Authentication required',
+                    'enrolled': False
+                }, status=401)
+            
+            # Check if user is a volunteer (hosts don't enroll in events)
+            if user.isHost:
+                return JsonResponse({
+                    'status': 'success',
+                    'message': 'Hosts cannot enroll in events',
+                    'enrolled': False
+                })
+            
+            # Extract data from request
+            data = request.POST if request.POST else json.loads(request.body)
+            event_id = data.get('event_id')
+            
+            if not event_id:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Event ID is required',
+                    'enrolled': False
+                }, status=400)
+            
+            # Get the event
+            try:
+                event = EventInfo.objects.get(id=event_id)
+            except EventInfo.DoesNotExist:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Event not found',
+                    'enrolled': False
+                }, status=404)
+            
+            # Check if user is enrolled
+            is_enrolled = user in event.volunteer_enrolled.all()
+            
+            return JsonResponse({
+                'status': 'success',
+                'event_id': event_id,
+                'event_name': event.event_name,
+                'enrolled': is_enrolled
+            })
+            
+        except Exception as e:
+            print(f"Error in CheckUserEnrollmentView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e),
+                'enrolled': False
+            }, status=500)

@@ -1,66 +1,299 @@
 {
-    "navbar": {
-      "skipToMainContent": "ಮುಖ್ಯ ವಿಷಯಕ್ಕೆ ಹೋಗಿ",
-      "logoAlt": "ಸಮರ್ಥನಂ ಟ್ರಸ್ಟ್ ಲೋಗೋ",
-      "menuOpen": "ಮೆನು ತೆರೆಯಿರಿ",
-      "menuClose": "ಮೆನು ಮುಚ್ಚಿರಿ",
-      "menu": "ಮೆನು",
-      "events": "ಕಾರ್ಯಕ್ರಮಗಳು",
-      "myEvents": "ನನ್ನ ಕಾರ್ಯಕ್ರಮಗಳು",
-      "about": "ನಮ್ಮ ಬಗ್ಗೆ",
-      "contact": "ಸಂಪರ್ಕಿಸಿ",
-      "login": "ಲಾಗಿನ್",
-      "register": "ನೋಂದಣಿ",
-      "logout": "ಲಾಗ್ ಔಟ್",
-      "profile": "ಪ್ರೊಫೈಲ್"
-    },
-    "auth": {
-      "loginTitle": "ಲಾಗಿನ್ ಮಾಡಿ",
-      "registerTitle": "ನೋಂದಣಿ ಮಾಡಿ",
-      "email": "ಇಮೇಲ್",
-      "password": "ಪಾಸ್‌ವರ್ಡ್",
-      "forgotPassword": "ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿರಾ?",
-      "noAccount": "ಖಾತೆ ಇಲ್ಲವೇ?",
-      "hasAccount": "ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ?",
-      "signUp": "ಸೈನ್ ಅಪ್ ಮಾಡಿ",
-      "signIn": "ಸೈನ್ ಇನ್ ಮಾಡಿ"
-    },
-    "events": {
-      "upcomingEvents": "ಮುಂಬರುವ ಕಾರ್ಯಕ್ರಮಗಳು",
-      "pastEvents": "ಹಿಂದಿನ ಕಾರ್ಯಕ್ರಮಗಳು",
-      "registerForEvent": "ಕಾರ್ಯಕ್ರಮಕ್ಕೆ ನೋಂದಾಯಿಸಿ",
-      "eventDetails": "ಕಾರ್ಯಕ್ರಮದ ವಿವರಗಳು",
-      "date": "ದಿನಾಂಕ",
-      "time": "ಸಮಯ",
-      "location": "ಸ್ಥಳ",
-      "organizer": "ಆಯೋಜಕರು",
-      "noEvents": "ಯಾವುದೇ ಕಾರ್ಯಕ್ರಮಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
-      "loadMore": "ಇನ್ನಷ್ಟು ನೋಡಿ"
-    },
-    "common": {
-      "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
-      "error": "ದೋಷ ಸಂಭವಿಸಿದೆ",
-      "retry": "ಮರುಪ್ರಯತ್ನಿಸಿ",
-      "cancel": "ರದ್ದುಮಾಡಿ",
-      "save": "ಉಳಿಸಿ",
-      "edit": "ಸಂಪಾದಿಸಿ",
-      "delete": "ಅಳಿಸಿ",
-      "view": "ವೀಕ್ಷಿಸಿ",
-      "search": "ಹುಡುಕಿ",
-      "back": "ಹಿಂದೆ",
-      "next": "ಮುಂದೆ",
-      "previous": "ಹಿಂದೆ"
-    },
-    "accessibility": {
-      "fontSize": "ಅಕ್ಷರದ ಗಾತ್ರ",
-      "fontWeight": "ಅಕ್ಷರದ ತೂಕ",
-      "textContrast": "ಪಠ್ಯದ ವ್ಯತ್ಯಾಸ",
-      "themeSettings": "ಥೀಮ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
-      "normal": "ಸಾಮಾನ್ಯ",
-      "large": "ದೊಡ್ಡದು",
-      "larger": "ಇನ್ನೂ ದೊಡ್ಡದು",
-      "regular": "ನಿಯಮಿತ",
-      "bold": "ದಪ್ಪ",
-      "highContrast": "ಅಧಿಕ ವ್ಯತ್ಯಾಸ"
-    }
+	"navbar": {
+	  "skipToMainContent": "ಮುಖ್ಯ ವಿಷಯಕ್ಕೆ ಹೋಗಿ",
+	  "logoAlt": "ಸಮರ್ಥನಂ ಟ್ರಸ್ಟ್ ಲೋಗೋ",
+	  "menuOpen": "ಮೆನು ತೆರೆಯಿರಿ",
+	  "menuClose": "ಮೆನು ಮುಚ್ಚಿರಿ",
+	  "menu": "ಮೆನು",
+	  "events": "ಕಾರ್ಯಕ್ರಮಗಳು",
+	  "myEvents": "ನನ್ನ ಕಾರ್ಯಕ್ರಮಗಳು",
+	  "about": "ನಮ್ಮ ಬಗ್ಗೆ",
+	  "contact": "ಸಂಪರ್ಕಿಸಿ",
+	  "login": "ಲಾಗಿನ್",
+	  "register": "ನೋಂದಣಿ",
+	  "logout": "ಲಾಗ್ ಔಟ್",
+	  "profile": "ಪ್ರೊಫೈಲ್",
+	  "loginAria": "ನಿಮ್ಮ ಖಾತೆಗೆ ಲಾಗಿನ್ ಮಾಡಿ",
+	  "logoutAria": "ನಿಮ್ಮ ಖಾತೆಯಿಂದ ಲಾಗ್ ಔಟ್ ಮಾಡಿ",
+	  "registerAria": "ಹೊಸ ಖಾತೆಯನ್ನು ರಚಿಸಿ",
+	  "greeting": "ನಮಸ್ಕಾರ, {{name}}",
+	  "user": "ಬಳಕೆದಾರ"
+	},
+	"auth": {
+	  "loginTitle": "ಖಾತೆ ಲಾಗಿನ್",
+	  "registerTitle": "ನೋಂದಣಿ ಮಾಡಿ",
+	  "email": "ಇಮೇಲ್",
+	  "password": "ಪಾಸ್‌ವರ್ಡ್",
+	  "forgotPassword": "ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿರಾ?",
+	  "passwordResetInfo": "ಪಾಸ್‌ವರ್ಡ್ ರೀಸೆಟ್ ಲಿಂಕ್ ನಿಮ್ಮ ಇಮೇಲ್‌ಗೆ ಕಳುಹಿಸಲಾಗುವುದು.",
+	  "noAccount": "ಖಾತೆ ಇಲ್ಲವೇ?",
+	  "hasAccount": "ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ?",
+	  "signUp": "ಸೈನ್ ಅಪ್ ಮಾಡಿ",
+	  "signIn": "ಸೈನ್ ಇನ್ ಮಾಡಿ",
+	  "welcomeMessage": "ಮರಳಿ ಸ್ವಾಗತ",
+	  "loggingIn": "ಲಾಗಿನ್ ಆಗುತ್ತಿದೆ...",
+	  "emailPlaceholder": "ನಿಮ್ಮ ಇಮೇಲ್ ನಮೂದಿಸಿ",
+	  "passwordPlaceholder": "ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ",
+	  "volunteerRole": "ಸ್ವಯಂಸೇವಕ",
+	  "adminRole": "ನಿರ್ವಾಹಕ",
+	  "loginAsVolunteer": "ಸ್ವಯಂಸೇವಕರಾಗಿ ಲಾಗಿನ್ ಮಾಡಿ",
+	  "loginAsAdmin": "ನಿರ್ವಾಹಕರಾಗಿ ಲಾಗಿನ್ ಮಾಡಿ",
+	  "selectRole": "ನಿಮ್ಮ ಪಾತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+	  "userRole": "ಬಳಕೆದಾರರ ಪಾತ್ರ",
+	  "fullName": "ಪೂರ್ಣ ಹೆಸರು",
+	  "fullNamePlaceholder": "ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
+	  "contactNumber": "ಸಂಪರ್ಕ ಸಂಖ್ಯೆ",
+	  "contactPlaceholder": "ನಿಮ್ಮ ಸಂಪರ್ಕ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ",
+	  "registerDescription": "ನೋಂದಾಯಿಸಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ ವಿವರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ",
+	  "signupFormLabel": "ಸೈನ್-ಅಪ್ ಫಾರ್ಮ್",
+	  "submitting": "ಸಲ್ಲಿಸಲಾಗುತ್ತಿದೆ...",
+	  "errors": {
+		"invalidCredentials": "ಅಮಾನ್ಯ ಇಮೇಲ್ ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್",
+		"serverError": "ಸರ್ವರ್ ದೋಷ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+		"requiredFields": "ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಅಗತ್ಯ ಕ್ಷೇತ್ರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ",
+		"name": "ಪೂರ್ಣ ಹೆಸರು ಅಗತ್ಯವಿದೆ",
+		"contact": "ಸಂಪರ್ಕ ಸಂಖ್ಯೆ ಅಗತ್ಯವಿದೆ",
+		"invalidEmail": "ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ"
+	  }
+	},
+	"events": {
+	  "pageTitle": "ಕಾರ್ಯಕ್ರಮಗಳು",
+	  "upcomingEvents": "ಮುಂಬರುವ ಕಾರ್ಯಕ್ರಮಗಳು",
+	  "pastEvents": "ಹಿಂದಿನ ಕಾರ್ಯಕ್ರಮಗಳು",
+	  "enrolledEvents": "ದಾಖಲಾದ ಕಾರ್ಯಕ್ರಮಗಳು",
+	  "registerForEvent": "ಕಾರ್ಯಕ್ರಮಕ್ಕೆ ನೋಂದಾಯಿಸಿ",
+	  "eventDetails": "ಕಾರ್ಯಕ್ರಮದ ವಿವರಗಳು",
+	  "date": "ದಿನಾಂಕ",
+	  "time": "ಸಮಯ",
+	  "location": "ಸ್ಥಳ",
+	  "organizer": "ಆಯೋಜಕರು",
+	  "noEvents": "ಯಾವುದೇ ಕಾರ್ಯಕ್ರಮಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
+	  "loadMore": "ಇನ್ನಷ್ಟು ನೋಡಿ",
+	  "noUpcomingEvents": "ಯಾವುದೇ ಮುಂಬರುವ ಕಾರ್ಯಕ್ರಮಗಳು ಲಭ್ಯವಿಲ್ಲ.",
+	  "noPastEvents": "ಯಾವುದೇ ಹಿಂದಿನ ಕಾರ್ಯಕ್ರಮಗಳು ಕಂಡುಬಂದಿಲ್ಲ.",
+	  "noEnrolledEvents": "ನೀವು ಇನ್ನೂ ಯಾವುದೇ ಕಾರ್ಯಕ್ರಮಗಳಲ್ಲಿ ದಾಖಲಾಗಿಲ್ಲ.",
+	  "errorLoadingEvent": "ಕಾರ್ಯಕ್ರಮ ಲೋಡ್ ಮಾಡುವಲ್ಲಿ ದೋಷ",
+	  "eventNotFound": "ಕಾರ್ಯಕ್ರಮ ಕಂಡುಬಂದಿಲ್ಲ",
+	  "eventImageAlt": "{{title}} ಕಾರ್ಯಕ್ರಮಕ್ಕಾಗಿ ಚಿತ್ರ",
+	  "locationNotSpecified": "ಸ್ಥಳವನ್ನು ನಿರ್ದಿಷ್ಟಪಡಿಸಿಲ್ಲ",
+	  "noDescription": "ಯಾವುದೇ ವಿವರಣೆ ಲಭ್ಯವಿಲ್ಲ",
+	  "viewDetails": "ವಿವರಗಳನ್ನು ವೀಕ್ಷಿಸಿ",
+	  "viewDetailsFor": "{{title}} ಗಾಗಿ ವಿವರಗಳನ್ನು ವೀಕ್ಷಿಸಿ",
+	  "noDetailedDescription": "ಈ ಕಾರ್ಯಕ್ರಮದ ಬಗ್ಗೆ ಯಾವುದೇ ವಿವರವಾದ ವಿವರಣೆ ಲಭ್ಯವಿಲ್ಲ.",
+	  "description": "ವಿವರಣೆ",
+	  "starts": "ಪ್ರಾರಂಭ",
+	  "ends": "ಮುಕ್ತಾಯ",
+	  "dateNotAvailable": "ದಿನಾಂಕ ಲಭ್ಯವಿಲ್ಲ",
+	  "organizerNotSpecified": "ಆಯೋಜಕರನ್ನು ನಿರ್ದಿಷ್ಟಪಡಿಸಿಲ್ಲ",
+	  "shareEventText": "ಈ ಕಾರ್ಯಕ್ರಮವನ್ನು ನೋಡಿ: {{title}}",
+	  "shareLinkCopied": "ಹಂಚಿಕೆ ಲಿಂಕ್ ಕ್ಲಿಪ್‌ಬೋರ್ಡ್‌ಗೆ ನಕಲಿಸಲಾಗಿದೆ!",
+	  "tabs": {
+		"event": "ಕಾರ್ಯಕ್ರಮ",
+		"location": "ಸ್ಥಳ",
+		"contact": "ಸಂಪರ್ಕಿಸಿ",
+		"feedback": "ಪ್ರತಿಕ್ರಿಯೆ",
+		"tasks": "ಕಾರ್ಯಗಳು"
+	  },
+	  "tabsAriaLabel": "ಕಾರ್ಯಕ್ರಮದ ಮಾಹಿತಿ ಟ್ಯಾಬ್‌ಗಳು",
+	  "joinEvent": "ಸೇರಿ",
+	  "shareEvent": "ಹಂಚಿಕೊಳ್ಳಿ",
+	  "joinEventAria": "ಈ ಕಾರ್ಯಕ್ರಮವನ್ನು ಸೇರಿ",
+	  "shareEventAria": "ಈ ಕಾರ್ಯಕ್ರಮವನ್ನು ಹಂಚಿಕೊಳ್ಳಿ",
+	  "locationContent": "ಸ್ಥಳದ ವಿವರಗಳನ್ನು ಇಲ್ಲಿ ತೋರಿಸಲಾಗುವುದು",
+	  "contactContent": "ಸಂಪರ್ಕ ಮಾಹಿತಿಯನ್ನು ಇಲ್ಲಿ ತೋರಿಸಲಾಗುವುದು",
+	  "feedbackContent": "ಪ್ರತಿಕ್ರಿಯೆ ಫಾರಂ ಇಲ್ಲಿ ತೋರಿಸಲಾಗುವುದು",
+	  "tasksContent": "ಕಾರ್ಯಗಳನ್ನು ಇಲ್ಲಿ ತೋರಿಸಲಾಗುವುದು",
+	  "errors": {
+		"loadFailed": "ಕಾರ್ಯಕ್ರಮಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ",
+		"connectionError": "ಸಂಪರ್ಕ ದೋಷ, ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ"
+	  }
+	},
+	"common": {
+	  "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
+	  "noContent": "ಪ್ರದರ್ಶಿಸಲು ಯಾವುದೇ ವಿಷಯವಿಲ್ಲ",
+	  "error": "ದೋಷ ಸಂಭವಿಸಿದೆ",
+	  "retry": "ಮರುಪ್ರಯತ್ನಿಸಿ",
+	  "cancel": "ರದ್ದುಮಾಡಿ",
+	  "save": "ಉಳಿಸಿ",
+	  "edit": "ಸಂಪಾದಿಸಿ",
+	  "delete": "ಅಳಿಸಿ",
+	  "view": "ವೀಕ್ಷಿಸಿ",
+	  "search": "ಹುಡುಕಿ",
+	  "back": "ಹಿಂದೆ",
+	  "next": "ಮುಂದೆ",
+	  "previous": "ಹಿಂದೆ"
+	},
+	"accessibility": {
+	  "accessibility": "ಪ್ರವೇಶಿಸುವಿಕೆ",
+	  "accessibilitySettings": "ಪ್ರವೇಶಿಸುವಿಕೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+	  "accessibilityOptions": "ಪ್ರವೇಶಿಸುವಿಕೆ ಆಯ್ಕೆಗಳು",
+	  "accessibilityOptionsMenu": "ಪ್ರವೇಶಿಸುವಿಕೆ ಆಯ್ಕೆಗಳ ಮೆನು",
+	  "openSettings": "ಪ್ರವೇಶಿಸುವಿಕೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ತೆರೆಯಿರಿ",
+	  "closeSettings": "ಪ್ರವೇಶಿಸುವಿಕೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಮುಚ್ಚಿರಿ",
+	  "closeAccessibilityMenu": "ಪ್ರವೇಶಿಸುವಿಕೆ ಮೆನು ಮುಚ್ಚಿರಿ",
+	  "themeSettings": "ಥೀಮ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+	  "closePanel": "ಪ್ಯಾನಲ್ ಮುಚ್ಚಿರಿ",
+	  "theme": "ಥೀಮ್",
+	  "lightTheme": "ಬೆಳಕಿನ ಥೀಮ್",
+	  "darkTheme": "ಕತ್ತಲೆ ಥೀಮ್",
+	  "highContrastLightTheme": "ಹೆಚ್ಚಿನ ಕಾಂಟ್ರಾಸ್ಟ್ ಬೆಳಕಿನ ಥೀಮ್",
+	  "highContrastDarkTheme": "ಹೆಚ್ಚಿನ ಕಾಂಟ್ರಾಸ್ಟ್ ಕತ್ತಲೆ ಥೀಮ್",
+	  "light": "ಬೆಳಕು",
+	  "dark": "ಕತ್ತಲೆ",
+	  "highContrastLight": "ಹೆಚ್ಚಿನ ಕಾಂಟ್ರಾಸ್ಟ್ ಬೆಳಕು",
+	  "highContrastDark": "ಹೆಚ್ಚಿನ ಕಾಂಟ್ರಾಸ್ಟ್ ಕತ್ತಲೆ",
+	  "fontSize": "ಅಕ್ಷರದ ಗಾತ್ರ",
+	  "fontWeight": "ಅಕ್ಷರದ ತೂಕ",
+	  "textContrast": "ಪಠ್ಯ ಕಾಂಟ್ರಾಸ್ಟ್",
+	  "normal": "ಸಾಮಾನ್ಯ",
+	  "large": "ದೊಡ್ಡದು",
+	  "larger": "ಹೆಚ್ಚು ದೊಡ್ಡದು",
+	  "regular": "ನಿಯಮಿತ",
+	  "bold": "ದಪ್ಪ",
+	  "bolder": "ಹೆಚ್ಚು ದಪ್ಪ",
+	  "highBlack": "ಹೆಚ್ಚಿನ ಕಪ್ಪು",
+	  "highWhite": "ಹೆಚ್ಚಿನ ಬಿಳಿ",
+	  "yellowBlack": "ಕಪ್ಪಿನ ಮೇಲೆ ಹಳದಿ",
+	  "defaultContrast": "ಡೀಫಾಲ್ಟ್ ಪಠ್ಯ ಕಾಂಟ್ರಾಸ್ಟ್",
+	  "highBlackContrast": "ಹೆಚ್ಚಿನ ಕಾಂಟ್ರಾಸ್ಟ್ ಕಪ್ಪು ಪಠ್ಯ",
+	  "highWhiteContrast": "ಹೆಚ್ಚಿನ ಕಾಂಟ್ರಾಸ್ಟ್ ಬಿಳಿ ಪಠ್ಯ",
+	  "yellowBlackContrast": "ಕಪ್ಪು ಹಿನ್ನೆಲೆಯಲ್ಲಿ ಹಳದಿ ಪಠ್ಯ",
+	  "normalFontSize": "ಸಾಮಾನ್ಯ ಅಕ್ಷರದ ಗಾತ್ರ",
+	  "largeFontSize": "ದೊಡ್ಡ ಅಕ್ಷರದ ಗಾತ್ರ",
+	  "extraLargeFontSize": "ಅತಿ ದೊಡ್ಡ ಅಕ್ಷರದ ಗಾತ್ರ",
+	  "normalFontWeight": "ಸಾಮಾನ್ಯ ಅಕ್ಷರದ ತೂಕ",
+	  "boldFontWeight": "ದಪ್ಪ ಅಕ್ಷರದ ತೂಕ",
+	  "bolderFontWeight": "ಹೆಚ್ಚು ದಪ್ಪ ಅಕ್ಷರದ ತೂಕ"
+	},
+	"eventDetails": {
+	  "defaultTitle": "ಕಾರ್ಯಕ್ರಮದ ವಿವರಗಳು",
+	  "tabs": {
+		"event": "ಕಾರ್ಯಕ್ರಮ",
+		"contact": "ಸಂಪರ್ಕಿಸಿ",
+		"feedback": "ಪ್ರತಿಕ್ರಿಯೆ",
+		"tasks": "ಕಾರ್ಯಗಳು"
+	  },
+	  "tablist": {
+		"label": "ಕಾರ್ಯಕ್ರಮದ ಮಾಹಿತಿ ಟ್ಯಾಬ್‌ಗಳು"
+	  },
+	  "actions": {
+		"join": {
+		  "label": "ಸೇರಿ",
+		  "ariaLabel": "ಈ ಕಾರ್ಯಕ್ರಮವನ್ನು ಸೇರಿ"
+		},
+		"share": {
+		  "label": "ಹಂಚಿಕೊಳ್ಳಿ",
+		  "ariaLabel": "ಈ ಕಾರ್ಯಕ್ರಮವನ್ನು ಹಂಚಿಕೊಳ್ಳಿ",
+		  "defaultTitle": "ಕಾರ್ಯಕ್ರಮದ ವಿವರಗಳು",
+		  "text": "ಈ ಕಾರ್ಯಕ್ರಮವನ್ನು ನೋಡಿ: {{title}}",
+		  "copyMessage": "ಹಂಚಿಕೆ ಲಿಂಕ್ ಕ್ಲಿಪ್‌ಬೋರ್ಡ್‌ಗೆ ನಕಲಿಸಲಾಗಿದೆ!"
+		}
+	  },
+	  "loading": {
+		"main": "ಕಾರ್ಯಕ್ರಮದ ವಿವರಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
+		"tabContent": "ಕಾರ್ಯಕ್ರಮದ ಮಾಹಿತಿಯನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."
+	  },
+	  "errors": {
+		"fetchFailed": "ಕಾರ್ಯಕ್ರಮದ ವಿವರಗಳನ್ನು ಪಡೆಯಲು ವಿಫಲವಾಗಿದೆ",
+		"generalError": "ಕಾರ್ಯಕ್ರಮದ ವಿವರಗಳನ್ನು ಪಡೆಯುವಾಗ ದೋಷ ಸಂಭವಿಸಿದೆ",
+		"notFound": "ಕಾರ್ಯಕ್ರಮ ಕಂಡುಬಂದಿಲ್ಲ"
+	  }
+	},
+	"event": {
+	  "defaultTitle": "ಕಾರ್ಯಕ್ರಮ",
+	  "dates": {
+		"starts": "ಪ್ರಾರಂಭ",
+		"ends": "ಮುಕ್ತಾಯ",
+		"notAvailable": "ದಿನಾಂಕ ಲಭ್ಯವಿಲ್ಲ"
+	  },
+	  "sections": {
+		"overview": {
+		  "title": "ಅವಲೋಕನ",
+		  "notAvailable": "ಈ ಕಾರ್ಯಕ್ರಮಕ್ಕೆ ಯಾವುದೇ ಅವಲೋಕನ ಲಭ್ಯವಿಲ್ಲ."
+		},
+		"description": {
+		  "title": "ವಿವರಣೆ",
+		  "notAvailable": "ಈ ಕಾರ್ಯಕ್ರಮಕ್ಕೆ ಯಾವುದೇ ವಿವರವಾದ ವಿವರಣೆ ಲಭ್ಯವಿಲ್ಲ."
+		},
+		"location": {
+		  "title": "ಸ್ಥಳ",
+		  "notSpecified": "ಸ್ಥಳವನ್ನು ನಿರ್ದಿಷ್ಟಪಡಿಸಿಲ್ಲ"
+		}
+	  },
+	  "image": {
+		"alt": "{{title}} ಪ್ರಚಾರದ ಚಿತ್ರ"
+	  }
+	},
+	"eventCard": {
+	  "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
+	  "errors": {
+		"fetchFailed": "ಕಾರ್ಯಕ್ರಮದ ವಿವರಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ",
+		"generalError": "ಕಾರ್ಯಕ್ರಮದ ಡೇಟಾವನ್ನು ಪಡೆಯುವಾಗ ದೋಷ ಸಂಭವಿಸಿದೆ",
+		"notFound": "ಕಾರ್ಯಕ್ರಮ ಕಂಡುಬಂದಿಲ್ಲ"
+	  },
+	  "image": {
+		"alt": "{{name}} ಕಾರ್ಯಕ್ರಮ",
+		"noImage": "ಯಾವುದೇ ಚಿತ್ರ ಲಭ್ಯವಿಲ್ಲ",
+		"noImageText": "ಚಿತ್ರವಿಲ್ಲ"
+	  },
+	  "date": {
+		"ariaLabel": "ಕಾರ್ಯಕ್ರಮದ ಪ್ರಾರಂಭ ದಿನಾಂಕ ಮತ್ತು ಸಮಯ"
+	  },
+	  "viewDetails": {
+		"label": "ವಿವರಗಳನ್ನು ವೀಕ್ಷಿಸಿ",
+		"ariaLabel": "{{name}} ಗಾಗಿ ವಿವರಗಳನ್ನು ವೀಕ್ಷಿಸಿ"
+	  }
+	},
+	"feedback": {
+	  "title": "ಕಾರ್ಯಕ್ರಮದ ಪ್ರತಿಕ್ರಿಯೆ",
+	  "submittedTitle": "ನಿಮ್ಮ ಪ್ರತಿಕ್ರಿಯೆ",
+	  "notEligibleTitle": "ಪ್ರತಿಕ್ರಿಯೆ ಲಭ್ಯವಿಲ್ಲ",
+	  "errorTitle": "ದೋಷ",
+	  "loading": "ಪ್ರತಿಕ್ರಿಯೆ ಅರ್ಹತೆಯನ್ನು ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ...",
+	  "submit": "ಪ್ರತಿಕ್ರಿಯೆ ಸಲ್ಲಿಸಿ",
+	  "submitting": "ಸಲ್ಲಿಸಲಾಗುತ್ತಿದೆ...",
+	  "submitSuccess": "ನಿಮ್ಮ ಪ್ರತಿಕ್ರಿಯೆಗೆ ಧನ್ಯವಾದಗಳು!",
+	  "stars": "ನಕ್ಷತ್ರಗಳು",
+	  "alreadySubmitted": "ನೀವು ಈಗಾಗಲೇ ಈ ಕಾರ್ಯಕ್ರಮಕ್ಕೆ ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಸಲ್ಲಿಸಿದ್ದೀರಿ.",
+	  "submittedDescription": "ಈ ಕಾರ್ಯಕ್ರಮದ ಬಗ್ಗೆ ನಿಮ್ಮ ಅಭಿಪ್ರಾಯಗಳನ್ನು ಹಂಚಿಕೊಂಡಿದ್ದಕ್ಕೆ ಧನ್ಯವಾದಗಳು. ನಿಮ್ಮ ಪ್ರತಿಕ್ರಿಯೆಯು ಭವಿಷ್ಯದ ಕಾರ್ಯಕ್ರಮಗಳನ್ನು ಸುಧಾರಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ.",
+	  "ratingsOverview": "ನಿಮ್ಮ ರೇಟಿಂಗ್‌ಗಳು",
+	  "submittedOn": "{{date}} ರಂದು ಸಲ್ಲಿಸಲಾಗಿದೆ",
+	  "wouldVolunteerAgainYes": "ಹೌದು, ನೀವು ಭವಿಷ್ಯದಲ್ಲಿ ಇದೇ ರೀತಿಯ ಕಾರ್ಯಕ್ರಮಗಳಲ್ಲಿ ಸ್ವಯಂಸೇವಕರಾಗಿ ಕಾರ್ಯ ನಿರ್ವಹಿಸಲು ಸೂಚಿಸಿದ್ದೀರಿ.",
+	  "wouldVolunteerAgainNo": "ಇಲ್ಲ, ನೀವು ಭವಿಷ್ಯದಲ್ಲಿ ಇದೇ ರೀತಿಯ ಕಾರ್ಯಕ್ರಮಗಳಲ್ಲಿ ಸ್ವಯಂಸೇವಕರಾಗಿ ಕಾರ್ಯ ನಿರ್ವಹಿಸಲು ಬಯಸುವುದಿಲ್ಲ ಎಂದು ಸೂಚಿಸಿದ್ದೀರಿ.",
+	  "sections": {
+		"ratings": "ಕಾರ್ಯಕ್ರಮದ ರೇಟಿಂಗ್‌ಗಳು",
+		"textFeedback": "ವಿವರವಾದ ಪ್ರತಿಕ್ರಿಯೆ",
+		"futureParticipation": "ಭವಿಷ್ಯದ ಭಾಗವಹಿಸುವಿಕೆ"
+	  },
+	  "fields": {
+		"overallExperience": "ಒಟ್ಟಾರೆ ಅನುಭವ",
+		"organizationQuality": "ಆಯೋಜನೆಯ ಗುಣಮಟ್ಟ",
+		"communication": "ಸಂವಹನ",
+		"hostInteraction": "ಆತಿಥೇಯ ಸಂವಹನ",
+		"volunteerSupport": "ಸ್ವಯಂಸೇವಕ ಬೆಂಬಲ",
+		"taskClarity": "ಕಾರ್ಯದ ಸ್ಪಷ್ಟತೆ",
+		"impactAwareness": "ಪ್ರಭಾವದ ಅರಿವು",
+		"inclusivity": "ಸಮಾವೇಶಗೊಳಿಸುವಿಕೆ",
+		"timeManagement": "ಸಮಯ ನಿರ್ವಹಣೆ",
+		"recognition": "ಸ್ವಯಂಸೇವಕ ಗುರುತಿಸುವಿಕೆ",
+		"strengths": "ಕಾರ್ಯಕ್ರಮದ ಬಲಗಳು",
+		"improvements": "ಸೂಚಿಸಿದ ಸುಧಾರಣೆಗಳು",
+		"additionalComments": "ಹೆಚ್ಚುವರಿ ಕಾಮೆಂಟ್‌ಗಳು",
+		"wouldVolunteerAgain": "ನಾನು ಭವಿಷ್ಯದಲ್ಲಿ ಇದೇ ರೀತಿಯ ಕಾರ್ಯಕ್ರಮಗಳಲ್ಲಿ ಸ್ವಯಂಸೇವಕನಾಗಿರಲು ಬಯಸುತ್ತೇನೆ"
+	  },
+	  "descriptions": {
+		"overallExperience": "ಈ ಕಾರ್ಯಕ್ರಮಕ್ಕಾಗಿ ಸ್ವಯಂಸೇವಕರಾಗಿರುವ ನಿಮ್ಮ ಒಟ್ಟಾರೆ ಅನುಭವವನ್ನು ರೇಟ್ ಮಾಡಿ"
+	  },
+	  "placeholders": {
+		"strengths": "ಕಾರ್ಯಕ್ರಮದ ಯಾವ ಅಂಶಗಳು ವಿಶೇಷವಾಗಿ ಉತ್ತಮವಾಗಿ ಕಾರ್ಯನಿರ್ವಹಿಸಿದವು?",
+		"improvements": "ಭವಿಷ್ಯದ ಕಾರ್ಯಕ್ರಮಗಳಿಗಾಗಿ ಯಾವ ಅಂಶಗಳನ್ನು ಸುಧಾರಿಸಬಹುದು?",
+		"additionalComments": "ನೀವು ಹಂಚಿಕೊಳ್ಳಲು ಬಯಸುವ ಯಾವುದೇ ಇತರ ಕಾಮೆಂಟ್‌ಗಳು ಅಥವಾ ಸಲಹೆಗಳು"
+	  },
+	  "errors": {
+		"notEligible": "ನೀವು ಈ ಕಾರ್ಯಕ್ರಮಕ್ಕೆ ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಸಲ್ಲಿಸಲು ಅರ್ಹರಲ್ಲ.",
+		"eligibilityCheckFailed": "ಪ್ರತಿಕ್ರಿಯೆ ಅರ್ಹತೆಯನ್ನು ಪರಿಶೀಲಿಸಲು ವಿಫಲವಾಗಿದೆ.",
+		"submissionFailed": "ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಸಲ್ಲಿಸಲು ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+		"generalError": "ದೋಷ ಸಂಭವಿಸಿದೆ. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+	  }
+	}
   }

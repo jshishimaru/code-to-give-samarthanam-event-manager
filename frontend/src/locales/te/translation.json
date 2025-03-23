@@ -1,66 +1,299 @@
 {
-    "navbar": {
-      "skipToMainContent": "ప్రధాన విషయానికి వెళ్ళండి",
-      "logoAlt": "సమర్థనం ట్రస్ట్ లోగో",
-      "menuOpen": "మెను తెరవండి",
-      "menuClose": "మెను మూసివేయండి",
-      "menu": "మెను",
-      "events": "కార్యక్రమాలు",
-      "myEvents": "నా కార్యక్రమాలు",
-      "about": "మా గురించి",
-      "contact": "సంప్రదించండి",
-      "login": "లాగిన్",
-      "register": "నమోదు",
-      "logout": "లాగౌట్",
-      "profile": "ప్రొఫైల్"
-    },
-    "auth": {
-      "loginTitle": "లాగిన్ చేయండి",
-      "registerTitle": "నమోదు చేయండి",
-      "email": "ఇమెయిల్",
-      "password": "పాస్‌వర్డ్",
-      "forgotPassword": "పాస్‌వర్డ్ మర్చిపోయారా?",
-      "noAccount": "ఖాతా లేదా?",
-      "hasAccount": "ఇప్పటికే ఖాతా ఉందా?",
-      "signUp": "సైన్ అప్ చేయండి",
-      "signIn": "సైన్ ఇన్ చేయండి"
-    },
-    "events": {
-      "upcomingEvents": "రాబోయే కార్యక్రమాలు",
-      "pastEvents": "గత కార్యక్రమాలు",
-      "registerForEvent": "కార్యక్రమం కోసం నమోదు చేయండి",
-      "eventDetails": "కార్యక్రమం వివరాలు",
-      "date": "తేదీ",
-      "time": "సమయం",
-      "location": "ప్రదేశం",
-      "organizer": "నిర్వాహకులు",
-      "noEvents": "కార్యక్రమాలు కనుగొనబడలేదు",
-      "loadMore": "మరిన్ని చూపించు"
-    },
-    "common": {
-      "loading": "లోడ్ అవుతోంది...",
-      "error": "లోపం సంభవించింది",
-      "retry": "మళ్ళీ ప్రయత్నించండి",
-      "cancel": "రద్దు చేయండి",
-      "save": "సేవ్ చేయండి",
-      "edit": "సవరించండి",
-      "delete": "తొలగించండి",
-      "view": "చూడండి",
-      "search": "వెతకండి",
-      "back": "వెనుకకు",
-      "next": "తదుపరి",
-      "previous": "మునుపటి"
-    },
-    "accessibility": {
-      "fontSize": "ఫాంట్ పరిమాణం",
-      "fontWeight": "ఫాంట్ బరువు",
-      "textContrast": "టెక్స్ట్ కాంట్రాస్ట్",
-      "themeSettings": "థీమ్ సెట్టింగులు",
-      "normal": "సాధారణ",
-      "large": "పెద్దది",
-      "larger": "ఇంకా పెద్దది",
-      "regular": "సాధారణ",
-      "bold": "బోల్డ్",
-      "highContrast": "అధిక కాంట్రాస్ట్"
-    }
+	"navbar": {
+	  "skipToMainContent": "ప్రధాన విషయానికి వెళ్ళండి",
+	  "logoAlt": "సమర్థనం ట్రస్ట్ లోగో",
+	  "menuOpen": "మెను తెరవండి",
+	  "menuClose": "మెను మూసివేయండి",
+	  "menu": "మెను",
+	  "events": "కార్యక్రమాలు",
+	  "myEvents": "నా కార్యక్రమాలు",
+	  "about": "మా గురించి",
+	  "contact": "సంప్రదించండి",
+	  "login": "లాగిన్",
+	  "register": "నమోదు",
+	  "logout": "లాగౌట్",
+	  "profile": "ప్రొఫైల్",
+	  "loginAria": "మీ ఖాతాలోకి లాగిన్ చేయండి",
+	  "logoutAria": "మీ ఖాతా నుండి లాగౌట్ చేయండి",
+	  "registerAria": "కొత్త ఖాతాను సృష్టించండి",
+	  "greeting": "హలో, {{name}}",
+	  "user": "వినియోగదారు"
+	},
+	"auth": {
+	  "loginTitle": "ఖాతా లాగిన్",
+	  "registerTitle": "నమోదు చేయండి",
+	  "email": "ఇమెయిల్",
+	  "password": "పాస్‌వర్డ్",
+	  "forgotPassword": "పాస్‌వర్డ్ మర్చిపోయారా?",
+	  "passwordResetInfo": "పాస్‌వర్డ్ రీసెట్ లింక్ మీ ఇమెయిల్‌కు పంపబడుతుంది.",
+	  "noAccount": "ఖాతా లేదా?",
+	  "hasAccount": "ఇప్పటికే ఖాతా ఉందా?",
+	  "signUp": "సైన్ అప్ చేయండి",
+	  "signIn": "లాగిన్ చేయండి",
+	  "welcomeMessage": "తిరిగి స్వాగతం",
+	  "loggingIn": "లాగిన్ అవుతోంది...",
+	  "emailPlaceholder": "మీ ఇమెయిల్‌ను నమోదు చేయండి",
+	  "passwordPlaceholder": "మీ పాస్‌వర్డ్‌ను నమోదు చేయండి",
+	  "volunteerRole": "స్వచ్ఛంద సేవకుడు",
+	  "adminRole": "నిర్వాహకుడు",
+	  "loginAsVolunteer": "స్వచ్ఛంద సేవకునిగా లాగిన్ చేయండి",
+	  "loginAsAdmin": "నిర్వాహకునిగా లాగిన్ చేయండి",
+	  "selectRole": "మీ పాత్రను ఎంచుకోండి",
+	  "userRole": "వినియోగదారు పాత్ర",
+	  "fullName": "పూర్తి పేరు",
+	  "fullNamePlaceholder": "మీ పూర్తి పేరును నమోదు చేయండి",
+	  "contactNumber": "సంప్రదింపు నంబర్",
+	  "contactPlaceholder": "మీ సంప్రదింపు నంబర్‌ను నమోదు చేయండి",
+	  "registerDescription": "నమోదు చేయడానికి దయచేసి మీ వివరాలను పూరించండి",
+	  "signupFormLabel": "సైన్-అప్ ఫారమ్",
+	  "submitting": "సమర్పిస్తోంది...",
+	  "errors": {
+		"invalidCredentials": "చెల్లని ఇమెయిల్ లేదా పాస్‌వర్డ్",
+		"serverError": "సర్వర్ లోపం. దయచేసి తర్వాత మళ్లీ ప్రయత్నించండి.",
+		"requiredFields": "దయచేసి అవసరమైన అన్ని ఫీల్డ్‌లను పూరించండి",
+		"name": "పూర్తి పేరు అవసరం",
+		"contact": "సంప్రదింపు నంబర్ అవసరం",
+		"invalidEmail": "దయచేసి చెల్లుబాటు అయ్యే ఇమెయిల్ చిరునామాను నమోదు చేయండి"
+	  }
+	},
+	"events": {
+	  "pageTitle": "కార్యక్రమాలు",
+	  "upcomingEvents": "రాబోయే కార్యక్రమాలు",
+	  "pastEvents": "గత కార్యక్రమాలు",
+	  "enrolledEvents": "నమోదు చేసుకున్న కార్యక్రమాలు",
+	  "registerForEvent": "కార్యక్రమానికి నమోదు చేయండి",
+	  "eventDetails": "కార్యక్రమం వివరాలు",
+	  "date": "తేదీ",
+	  "time": "సమయం",
+	  "location": "ప్రదేశం",
+	  "organizer": "నిర్వాహకుడు",
+	  "noEvents": "కార్యక్రమాలు కనుగొనబడలేదు",
+	  "loadMore": "మరిన్ని చూపించు",
+	  "noUpcomingEvents": "రాబోయే కార్యక్రమాలు లేవు.",
+	  "noPastEvents": "గత కార్యక్రమాలు కనుగొనబడలేదు.",
+	  "noEnrolledEvents": "మీరు ఇంకా ఏ కార్యక్రమాలకు నమోదు చేసుకోలేదు.",
+	  "errorLoadingEvent": "కార్యక్రమాన్ని లోడ్ చేయడంలో లోపం",
+	  "eventNotFound": "కార్యక్రమం కనుగొనబడలేదు",
+	  "eventImageAlt": "{{title}} కార్యక్రమం కోసం చిత్రం",
+	  "locationNotSpecified": "ప్రదేశం పేర్కొనబడలేదు",
+	  "noDescription": "వివరణ అందుబాటులో లేదు",
+	  "viewDetails": "వివరాలను చూడండి",
+	  "viewDetailsFor": "{{title}} కోసం వివరాలను చూడండి",
+	  "noDetailedDescription": "ఈ కార్యక్రమానికి విస్తృత వివరణ అందుబాటులో లేదు.",
+	  "description": "వివరణ",
+	  "starts": "ప్రారంభం",
+	  "ends": "ముగింపు",
+	  "dateNotAvailable": "తేదీ అందుబాటులో లేదు",
+	  "organizerNotSpecified": "నిర్వాహకుడు పేర్కొనబడలేదు",
+	  "shareEventText": "ఈ కార్యక్రమాన్ని చూడండి: {{title}}",
+	  "shareLinkCopied": "షేర్ లింక్ క్లిప్‌బోర్డ్‌కు కాపీ చేయబడింది!",
+	  "tabs": {
+		"event": "కార్యక్రమం",
+		"location": "ప్రదేశం",
+		"contact": "సంప్రదించండి",
+		"feedback": "అభిప్రాయం",
+		"tasks": "పనులు"
+	  },
+	  "tabsAriaLabel": "కార్యక్రమం సమాచార ట్యాబ్‌లు",
+	  "joinEvent": "చేరండి",
+	  "shareEvent": "షేర్ చేయండి",
+	  "joinEventAria": "ఈ కార్యక్రమంలో చేరండి",
+	  "shareEventAria": "ఈ కార్యక్రమాన్ని షేర్ చేయండి",
+	  "locationContent": "ప్రదేశం వివరాలు ఇక్కడ చూపబడతాయి",
+	  "contactContent": "సంప్రదింపు సమాచారం ఇక్కడ చూపబడుతుంది",
+	  "feedbackContent": "అభిప్రాయం ఫారమ్ ఇక్కడ చూపబడుతుంది",
+	  "tasksContent": "పనులు ఇక్కడ చూపబడతాయి",
+	  "errors": {
+		"loadFailed": "కార్యక్రమాలను లోడ్ చేయడంలో విఫలమైంది",
+		"connectionError": "కనెక్షన్ లోపం, దయచేసి మళ్లీ ప్రయత్నించండి"
+	  }
+	},
+	"common": {
+	  "loading": "లోడ్ అవుతోంది...",
+	  "noContent": "ప్రదర్శించడానికి కంటెంట్ లేదు",
+	  "error": "లోపం సంభవించింది",
+	  "retry": "మళ్లీ ప్రయత్నించండి",
+	  "cancel": "రద్దు చేయండి",
+	  "save": "సేవ్ చేయండి",
+	  "edit": "సవరించండి",
+	  "delete": "తొలగించండి",
+	  "view": "చూడండి",
+	  "search": "వెతకండి",
+	  "back": "వెనుకకు",
+	  "next": "తరువాత",
+	  "previous": "మునుపటి"
+	},
+	"accessibility": {
+	  "accessibility": "ప్రాప్యత",
+	  "accessibilitySettings": "ప్రాప్యత సెట్టింగులు",
+	  "accessibilityOptions": "ప్రాప్యత ఎంపికలు",
+	  "accessibilityOptionsMenu": "ప్రాప్యత ఎంపికల మెను",
+	  "openSettings": "ప్రాప్యత సెట్టింగులను తెరవండి",
+	  "closeSettings": "ప్రాప్యత సెట్టింగులను మూసివేయండి",
+	  "closeAccessibilityMenu": "ప్రాప్యత మెనును మూసివేయండి",
+	  "themeSettings": "థీమ్ సెట్టింగులు",
+	  "closePanel": "ప్యానెల్ మూసివేయండి",
+	  "theme": "థీమ్",
+	  "lightTheme": "లైట్ థీమ్",
+	  "darkTheme": "డార్క్ థీమ్",
+	  "highContrastLightTheme": "అధిక కాంట్రాస్ట్ లైట్ థీమ్",
+	  "highContrastDarkTheme": "అధిక కాంట్రాస్ట్ డార్క్ థీమ్",
+	  "light": "లైట్",
+	  "dark": "డార్క్",
+	  "highContrastLight": "అధిక కాంట్రాస్ట్ లైట్",
+	  "highContrastDark": "అధిక కాంట్రాస్ట్ డార్క్",
+	  "fontSize": "ఫాంట్ పరిమాణం",
+	  "fontWeight": "ఫాంట్ బరువు",
+	  "textContrast": "టెక్స్ట్ కాంట్రాస్ట్",
+	  "normal": "సాధారణ",
+	  "large": "పెద్దది",
+	  "larger": "మరింత పెద్దది",
+	  "regular": "సాధారణ",
+	  "bold": "బోల్డ్",
+	  "bolder": "మరింత బోల్డ్",
+	  "highBlack": "అధిక నలుపు",
+	  "highWhite": "అధిక తెలుపు",
+	  "yellowBlack": "నలుపుపై పసుపు",
+	  "defaultContrast": "డిఫాల్ట్ టెక్స్ట్ కాంట్రాస్ట్",
+	  "highBlackContrast": "అధిక కాంట్రాస్ట్ నలుపు టెక్స్ట్",
+	  "highWhiteContrast": "అధిక కాంట్రాస్ట్ తెలుపు టెక్స్ట్",
+	  "yellowBlackContrast": "నలుపు నేపథ్యంలో పసుపు టెక్స్ట్",
+	  "normalFontSize": "సాధారణ ఫాంట్ పరిమాణం",
+	  "largeFontSize": "పెద్ద ఫాంట్ పరిమాణం",
+	  "extraLargeFontSize": "అత్యంత పెద్ద ఫాంట్ పరిమాణం",
+	  "normalFontWeight": "సాధారణ ఫాంట్ బరువు",
+	  "boldFontWeight": "బోల్డ్ ఫాంట్ బరువు",
+	  "bolderFontWeight": "మరింత బోల్డ్ ఫాంట్ బరువు"
+	},
+	"eventDetails": {
+	  "defaultTitle": "కార్యక్రమం వివరాలు",
+	  "tabs": {
+		"event": "కార్యక్రమం",
+		"contact": "సంప్రదించండి",
+		"feedback": "అభిప్రాయం",
+		"tasks": "పనులు"
+	  },
+	  "tablist": {
+		"label": "కార్యక్రమం సమాచార ట్యాబ్‌లు"
+	  },
+	  "actions": {
+		"join": {
+		  "label": "చేరండి",
+		  "ariaLabel": "ఈ కార్యక్రమంలో చేరండి"
+		},
+		"share": {
+		  "label": "షేర్ చేయండి",
+		  "ariaLabel": "ఈ కార్యక్రమాన్ని షేర్ చేయండి",
+		  "defaultTitle": "కార్యక్రమం వివరాలు",
+		  "text": "ఈ కార్యక్రమాన్ని చూడండి: {{title}}",
+		  "copyMessage": "షేర్ లింక్ క్లిప్‌బోర్డ్‌కు కాపీ చేయబడింది!"
+		}
+	  },
+	  "loading": {
+		"main": "కార్యక్రమం వివరాలు లోడ్ అవుతున్నాయి...",
+		"tabContent": "కార్యక్రమం సమాచారం లోడ్ అవుతోంది..."
+	  },
+	  "errors": {
+		"fetchFailed": "కార్యక్రమం వివరాలను పొందడంలో విఫలమైంది",
+		"generalError": "కార్యక్రమం వివరాలను పొందేటప్పుడు లోపం సంభవించింది",
+		"notFound": "కార్యక్రమం కనుగొనబడలేదు"
+	  }
+	},
+	"event": {
+	  "defaultTitle": "కార్యక్రమం",
+	  "dates": {
+		"starts": "ప్రారంభం",
+		"ends": "ముగింపు",
+		"notAvailable": "తేదీ అందుబాటులో లేదు"
+	  },
+	  "sections": {
+		"overview": {
+		  "title": "సారాంశం",
+		  "notAvailable": "ఈ కార్యక్రమానికి సారాంశం అందుబాటులో లేదు."
+		},
+		"description": {
+		  "title": "వివరణ",
+		  "notAvailable": "ఈ కార్యక్రమానికి విస్తృత వివరణ అందుబాటులో లేదు."
+		},
+		"location": {
+		  "title": "ప్రదేశం",
+		  "notSpecified": "ప్రదేశం పేర్కొనబడలేదు"
+		}
+	  },
+	  "image": {
+		"alt": "{{title}} ప్రచార చిత్రం"
+	  }
+	},
+	"eventCard": {
+	  "loading": "లోడ్ అవుతోంది...",
+	  "errors": {
+		"fetchFailed": "కార్యక్రమం వివరాలను లోడ్ చేయడంలో విఫలమైంది",
+		"generalError": "కార్యక్రమం సమాచారాన్ని పొందేటప్పుడు లోపం సంభవించింది",
+		"notFound": "కార్యక్రమం కనుగొనబడలేదు"
+	  },
+	  "image": {
+		"alt": "{{name}} కార్యక్రమం",
+		"noImage": "చిత్రం అందుబాటులో లేదు",
+		"noImageText": "చిత్రం లేదు"
+	  },
+	  "date": {
+		"ariaLabel": "కార్యక్రమం ప్రారంభ తేదీ మరియు సమయం"
+	  },
+	  "viewDetails": {
+		"label": "వివరాలను చూడండి",
+		"ariaLabel": "{{name}} కోసం వివరాలను చూడండి"
+	  }
+	},
+	"feedback": {
+	  "title": "కార్యక్రమ అభిప్రాయం",
+	  "submittedTitle": "మీ అభిప్రాయం",
+	  "notEligibleTitle": "అభిప్రాయం అందుబాటులో లేదు",
+	  "errorTitle": "లోపం",
+	  "loading": "అభిప్రాయం అర్హతను తనిఖీ చేస్తోంది...",
+	  "submit": "అభిప్రాయాన్ని సమర్పించండి",
+	  "submitting": "సమర్పిస్తోంది...",
+	  "submitSuccess": "మీ అభిప్రాయానికి ధన్యవాదాలు!",
+	  "stars": "నక్షత్రాలు",
+	  "alreadySubmitted": "మీరు ఈ కార్యక్రమానికి ఇప్పటికే అభిప్రాయాన్ని సమర్పించారు.",
+	  "submittedDescription": "ఈ కార్యక్రమం గురించి మీ ఆలోచనలను పంచుకున్నందుకు ధన్యవాదాలు. మీ అభిప్రాయం భవిష్యత్తు కార్యక్రమాలను మెరుగుపరచడానికి సహాయపడుతుంది.",
+	  "ratingsOverview": "మీ రేటింగ్‌లు",
+	  "submittedOn": "{{date}} న సమర్పించబడింది",
+	  "wouldVolunteerAgainYes": "అవును, మీరు భవిష్యత్తులో ఇలాంటి కార్యక్రమాల్లో స్వచ్ఛందంగా పాల్గొనడానికి సంకేతం ఇచ్చారు.",
+	  "wouldVolunteerAgainNo": "లేదు, మీరు భవిష్యత్తులో ఇలాంటి కార్యక్రమాల్లో స్వచ్ఛందంగా పాల్గొనడానికి ఇష్టపడనట్లు సంకేతం ఇచ్చారు.",
+	  "sections": {
+		"ratings": "కార్యక్రమం రేటింగ్‌లు",
+		"textFeedback": "వివరణాత్మక అభిప్రాయం",
+		"futureParticipation": "భవిష్యత్ పాల్గొనడం"
+	  },
+	  "fields": {
+		"overallExperience": "మొత్తం అనుభవం",
+		"organizationQuality": "నిర్వహణ నాణ్యత",
+		"communication": "కమ్యూనికేషన్",
+		"hostInteraction": "హోస్ట్ ఇంటరాక్షన్",
+		"volunteerSupport": "స్వచ్ఛంద సేవకుల మద్దతు",
+		"taskClarity": "పని స్పష్టత",
+		"impactAwareness": "ప్రభావ అవగాహన",
+		"inclusivity": "సమగ్రత",
+		"timeManagement": "సమయ నిర్వహణ",
+		"recognition": "స్వచ్ఛంద సేవకుల గుర్తింపు",
+		"strengths": "కార్యక్రమం బలాలు",
+		"improvements": "సూచించిన మెరుగుదలలు",
+		"additionalComments": "అదనపు వ్యాఖ్యలు",
+		"wouldVolunteerAgain": "నేను భవిష్యత్తులో ఇలాంటి కార్యక్రమాల్లో స్వచ్ఛందంగా పాల్గొనదలిచాను"
+	  },
+	  "descriptions": {
+		"overallExperience": "ఈ కార్యక్రమంలో స్వచ్ఛంద సేవకునిగా మీ మొత్తం అనుభవాన్ని రేట్ చేయండి"
+	  },
+	  "placeholders": {
+		"strengths": "కార్యక్రమంలోని ఏ అంశాలు ప్రత్యేకంగా బాగా పనిచేశాయి?",
+		"improvements": "భవిష్యత్తు కార్యక్రమాల కోసం ఏ అంశాలను మెరుగుపరచవచ్చు?",
+		"additionalComments": "మీరు పంచుకోవాలనుకుంటున్న ఇతర వ్యాఖ్యలు లేదా సూచనలు"
+	  },
+	  "errors": {
+		"notEligible": "మీరు ఈ కార్యక్రమానికి అభిప్రాయాన్ని సమర్పించడానికి అర్హత లేరు.",
+		"eligibilityCheckFailed": "అభిప్రాయం అర్హతను తనిఖీ చేయడం విఫలమైంది.",
+		"submissionFailed": "అభిప్రాయాన్ని సమర్పించడం విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి.",
+		"generalError": "లోపం సంభవించింది. దయచేసి తర్వాత మళ్లీ ప్రయత్నించండి."
+	  }
+	}
   }

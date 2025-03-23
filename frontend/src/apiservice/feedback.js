@@ -45,7 +45,7 @@ export const getEventFeedbackList = async (eventId) => {
  */
 export const getFeedbackDetails = async (feedbackId) => {
   try {
-    const response = await axios.get(`${APP_API_URL}feedback/details/`, {
+    const response = await axios.get(`${APP_API_URL}feedback/detail/`, {
       params: { feedback_id: feedbackId }
     });
     
@@ -156,7 +156,8 @@ export const checkFeedbackEligibility = async (eventId) => {
       success: true, 
       data: {
         eligible: response.data.eligible,
-        reason: response.data.reason
+        reason: response.data.reason,
+		existing_feedback_id : response.data.existing_feedback_id
       }
     };
   } catch (error) {

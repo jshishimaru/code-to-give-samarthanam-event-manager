@@ -22,6 +22,7 @@ const Navbar = () => {
     const checkAuthStatus = async () => {
       try {
         const response = await checkAuth();
+		console.log(response.data);
         
         if (response.success && response.data.authenticated) {
           setIsLoggedIn(true);

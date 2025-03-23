@@ -3,9 +3,11 @@ import { getUserEnrolledEvents, allUpcomingEvents, getUserPastEvents } from '../
 import EventCard from './EventCard';
 import '../styles/EventPage.css';
 import Navbar from './Navbar';
-
+import { useTranslation } from 'react-i18next';
 
 const EventPage = () => {
+  const { t } = useTranslation();
+  
   // User ID - in a real app, this would come from auth context
   const [userId, setUserId] = useState('1'); // Placeholder user ID
   
@@ -34,11 +36,11 @@ const EventPage = () => {
         if (response.success) {
           setEnrolledEvents(response.data.event_ids || []);
         } else {
-          setError(prev => ({ ...prev, enrolled: 'Failed to load enrolled events' }));
+          setError(prev => ({ ...prev, enrolled: t('events.errors.loadFailed') }));
         }
       } catch (err) {
         console.error('Error fetching enrolled events:', err);
-        setError(prev => ({ ...prev, enrolled: 'Error loading enrolled events' }));
+        setError(prev => ({ ...prev, enrolled: t('events.errors.connectionError') }));
       } finally {
         setLoading(prev => ({ ...prev, enrolled: false }));
       }
@@ -47,7 +49,7 @@ const EventPage = () => {
     if (userId) {
       fetchEnrolledEvents();
     }
-  }, [userId]);
+  }, [userId, t]);
 
   // Fetch upcoming events
   useEffect(() => {
@@ -57,18 +59,18 @@ const EventPage = () => {
         if (response.success) {
           setUpcomingEvents(response.data.event_ids || []);
         } else {
-          setError(prev => ({ ...prev, upcoming: 'Failed to load upcoming events' }));
+          setError(prev => ({ ...prev, upcoming: t('events.errors.loadFailed') }));
         }
       } catch (err) {
         console.error('Error fetching upcoming events:', err);
-        setError(prev => ({ ...prev, upcoming: 'Error loading upcoming events' }));
+        setError(prev => ({ ...prev, upcoming: t('events.errors.connectionError') }));
       } finally {
         setLoading(prev => ({ ...prev, upcoming: false }));
       }
     };
 
     fetchUpcomingEvents();
-  }, []);
+  }, [t]);
 
   // Fetch past events
   useEffect(() => {
@@ -78,11 +80,11 @@ const EventPage = () => {
         if (response.success) {
           setPastEvents(response.data.event_ids || []);
         } else {
-          setError(prev => ({ ...prev, past: 'Failed to load past events' }));
+          setError(prev => ({ ...prev, past: t('events.errors.loadFailed') }));
         }
       } catch (err) {
         console.error('Error fetching past events:', err);
-        setError(prev => ({ ...prev, past: 'Error loading past events' }));
+        setError(prev => ({ ...prev, past: t('events.errors.connectionError') }));
       } finally {
         setLoading(prev => ({ ...prev, past: false }));
       }
@@ -91,7 +93,7 @@ const EventPage = () => {
     if (userId) {
       fetchPastEvents();
     }
-  }, [userId]);
+  }, [userId, t]);
 
   // Render event section with appropriate loading and error states
   const renderEventSection = (title, eventIds, loadingState, errorState, emptyMessage) => (
@@ -101,7 +103,7 @@ const EventPage = () => {
       {loadingState ? (
         <div className="loading-container" aria-live="polite" aria-busy="true">
           <div className="loading-spinner"></div>
-          <p>Loading events...</p>
+          <p>{t('common.loading')}</p>
         </div>
       ) : errorState ? (
         <div className="error-container" role="alert">
@@ -127,30 +129,30 @@ const EventPage = () => {
   <>
     <Navbar />
     <main id="main-content" className="event-page-container">
-      <h1 className="page-title">Events</h1>
+      <h1 className="page-title">{t('events.pageTitle')}</h1>
       
       {renderEventSection(
-        'Enrolled Events', 
+        t('events.enrolledEvents'), 
         enrolledEvents, 
         loading.enrolled, 
         error.enrolled, 
-        'You are not enrolled in any events yet.'
+        t('events.noEnrolledEvents')
       )}
       
       {renderEventSection(
-        'Upcoming Events', 
+        t('events.upcomingEvents'), 
         upcomingEvents, 
         loading.upcoming, 
         error.upcoming, 
-        'No upcoming events available.'
+        t('events.noUpcomingEvents')
       )}
       
       {renderEventSection(
-        'Past Events', 
+        t('events.pastEvents'), 
         pastEvents, 
         loading.past, 
         error.past, 
-        'No past events found.'
+        t('events.noPastEvents')
       )}
     </main>
   </>

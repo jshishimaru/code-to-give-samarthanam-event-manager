@@ -113,6 +113,7 @@ class EventInfo(models.Model):
             elif now < self.start_time:
                 self.status = 'Upcoming'
         super().save(*args, **kwargs)
+# Update TaskInfo and SubTask models
 
 class TaskInfo(models.Model):
     STATUS_CHOICES = [
@@ -122,14 +123,23 @@ class TaskInfo(models.Model):
         ('Cancelled', 'Cancelled'),
     ]
     
-    volunteer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_tasks',
-                                 limit_choices_to={'isHost': False})
+    # Many-to-many relationship with volunteers
+    volunteers = models.ManyToManyField(User, related_name='assigned_tasks', 
+                                     limit_choices_to={'isHost': False}, blank=True)
     event = models.ForeignKey(EventInfo, on_delete=models.CASCADE, related_name='tasks')
     task_name = models.CharField(max_length=255)
     description = models.TextField()
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Pending')
+    
+    # Notification field (for volunteers to notify host)
+    completion_notified = models.BooleanField(default=False, 
+                                           help_text="Indicates if volunteers have notified that the task is completed")
+    notification_message = models.TextField(blank=True, 
+                                         help_text="Message from volunteers about task completion")
+    notification_time = models.DateTimeField(null=True, blank=True)
+    
     volunteer_efficiency = models.IntegerField(default=0)
     task_analysis = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -137,6 +147,21 @@ class TaskInfo(models.Model):
 
     def __str__(self):
         return f"{self.event.event_name} - {self.task_name}"
+    
+    @property
+    def all_subtasks_complete(self):
+        """Check if all subtasks are complete"""
+        subtasks = self.subtasks.all()
+        if not subtasks.exists():
+            return True  # No subtasks means this check passes by default
+        return not subtasks.exclude(status='Completed').exists()
+    
+    def save(self, *args, **kwargs):
+        # If all subtasks are complete, we can automatically update the task status
+        if self.all_subtasks_complete and self.subtasks.exists() and self.status != 'Completed':
+            self.status = 'Completed'
+        
+        super().save(*args, **kwargs)
 
 
 class SubTask(models.Model):
@@ -157,12 +182,26 @@ class SubTask(models.Model):
     end_time = models.DateTimeField()
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Pending')
     
+    # Notification field (for volunteers to notify host)
+    completion_notified = models.BooleanField(default=False, 
+                                           help_text="Indicates if volunteers have notified that the subtask is completed")
+    notification_message = models.TextField(blank=True, 
+                                         help_text="Message from volunteers about subtask completion")
+    notification_time = models.DateTimeField(null=True, blank=True)
+    
     # Tracking
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.parent_task.task_name} - {self.title}"
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        
+        # After saving a subtask, check if we need to update the parent task
+        if self.status == 'Completed':
+            self.parent_task.save()  # This will trigger the parent task's save method
     
     class Meta:
         ordering = ['start_time']

@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { getEventDetails } from '../apiservice/event';
 import '../styles/EventDetails.css';
 
 // Make sure the import path is correct
 import Event from './Event/Event';
+import Feedback from './Event/feedback';
 
 // These will be actual component imports later
-const EventLocation = () => <div>Location Content</div>;
 const ContactUs = () => <div>Contact Us Content</div>;
-const Feedback = () => <div>Feedback Content</div>;
 const Tasks = () => <div>Tasks Content</div>;
 
 const EventDetails = () => {
+  const { t } = useTranslation();
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -31,11 +32,11 @@ const EventDetails = () => {
           setTabsReady(true);
         } else {
           console.error("Failed to fetch event data:", response);
-          setError('Failed to fetch event details');
+          setError(t('eventDetails.errors.fetchFailed'));
         }
       } catch (err) {
         console.error('Error fetching event details:', err);
-        setError('An error occurred while fetching event details');
+        setError(t('eventDetails.errors.generalError'));
       } finally {
         setLoading(false);
       }
@@ -44,15 +45,15 @@ const EventDetails = () => {
     if (eventId) {
       fetchEventDetails();
     }
-  }, [eventId]);
+  }, [eventId, t]);
 
   const tabs = [
-    { id: 'event', label: 'Event', component: tabsReady ? <Event eventData={event} /> : <Event /> },
-    { id: 'location', label: 'Location', component: <EventLocation /> },
-    { id: 'contact', label: 'Contact Us', component: <ContactUs /> },
-    { id: 'feedback', label: 'Feedback', component: <Feedback /> },
-    { id: 'tasks', label: 'Tasks', component: <Tasks /> },
+    { id: 'event', label: t('eventDetails.tabs.event'), component: tabsReady ? <Event eventData={event} /> : <Event eventdata ={null} /> },
+    { id: 'contact', label: t('eventDetails.tabs.contact'), component: <ContactUs /> },
+    { id: 'feedback', label: t('eventDetails.tabs.feedback'), component: <Feedback /> },
+    { id: 'tasks', label: t('eventDetails.tabs.tasks'), component: <Tasks /> },
   ];
+
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
@@ -64,31 +65,30 @@ const EventDetails = () => {
   };
 
   const handleShareEvent = () => {
-    console.log('Share event clicked for event ID:', eventId);
     
     if (navigator.share) {
       navigator.share({
-        title: event?.title || 'Event Details',
-        text: `Check out this event: ${event?.title}`,
+        title: event?.title || t('eventDetails.share.defaultTitle'),
+        text: t('eventDetails.share.text', { title: event?.title }),
         url: window.location.href,
       })
       .catch(err => console.error('Error sharing:', err));
     } else {
-      alert('Share link copied to clipboard!');
+      alert(t('eventDetails.share.copyMessage'));
     }
   };
 
   // Loading placeholder for tab content
   const TabLoadingPlaceholder = () => (
     <div className="tab-loading-placeholder">
-      <p>Loading event information...</p>
+      <p>{t('eventDetails.loading.tabContent')}</p>
     </div>
   );
 
   if (loading) {
     return (
       <div className="event-details-loading" aria-live="polite">
-        <p>Loading event details...</p>
+        <p>{t('eventDetails.loading.main')}</p>
       </div>
     );
   }
@@ -104,7 +104,7 @@ const EventDetails = () => {
   if (!event) {
     return (
       <div className="event-details-error" role="alert">
-        <p>Event not found</p>
+        <p>{t('eventDetails.errors.notFound')}</p>
       </div>
     );
   }
@@ -112,12 +112,12 @@ const EventDetails = () => {
   return (
     <main className="event-details-container">
       <header className="event-details-header">
-        <h1 className="event-name">{event.title || 'Event Details'}</h1>
+        <h1 className="event-name">{event.title || t('eventDetails.defaultTitle')}</h1>
       </header>
 
       <section className="event-details-tabs-container">
         <div className="tabs-actions-container">
-          <div className="tabs-header" role="tablist" aria-label="Event information tabs">
+          <div className="tabs-header" role="tablist" aria-label={t('eventDetails.tablist.label')}>
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -137,16 +137,16 @@ const EventDetails = () => {
             <button 
               className="event-action-btn join-btn"
               onClick={handleJoinEvent}
-              aria-label="Join this event"
+              aria-label={t('eventDetails.actions.join.ariaLabel')}
             >
-              Join
+              {t('eventDetails.actions.join.label')}
             </button>
             <button 
               className="event-action-btn share-btn"
               onClick={handleShareEvent}
-              aria-label="Share this event"
+              aria-label={t('eventDetails.actions.share.ariaLabel')}
             >
-              Share
+              {t('eventDetails.actions.share.label')}
             </button>
           </div>
         </div>

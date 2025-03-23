@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from eventmanager.auth import (
     UserLoginView, HostLoginView, UserSignupView,
-    LogoutView, ProfileView, CheckAuthView
+    LogoutView, ProfileView, IsAuthenticatedView , check_auth
 )
 
 urlpatterns = [
@@ -20,8 +20,8 @@ urlpatterns = [
     # Common authentication endpoints
     path('api/auth/logout/', LogoutView.as_view(), name='logout'),
     path('api/auth/profile/', ProfileView.as_view(), name='profile'),
-    path('api/auth/check/', CheckAuthView.as_view(), name='check_auth'),
-    
+    path('api/auth/is-authenticated/', IsAuthenticatedView.as_view(), name='is_authenticated'),
+    path('api/auth/check/', check_auth, name='check_auth'),
     # Include app URLs
     path('api/app/', include('app.urls')),
 ]

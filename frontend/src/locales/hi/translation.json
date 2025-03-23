@@ -1,66 +1,299 @@
 {
-    "navbar": {
-      "skipToMainContent": "मुख्य सामग्री पर जाएं",
-      "logoAlt": "समर्थनम ट्रस्ट लोगो",
-      "menuOpen": "मेन्यू खोलें",
-      "menuClose": "मेन्यू बंद करें",
-      "menu": "मेन्यू",
-      "events": "कार्यक्रम",
-      "myEvents": "मेरे कार्यक्रम",
-      "about": "हमारे बारे में",
-      "contact": "संपर्क करें",
-      "login": "लॉग इन",
-      "register": "रजिस्टर करें",
-      "logout": "लॉग आउट",
-      "profile": "प्रोफाइल"
-    },
-    "auth": {
-      "loginTitle": "लॉग इन करें",
-      "registerTitle": "रजिस्टर करें",
-      "email": "ईमेल",
-      "password": "पासवर्ड",
-      "forgotPassword": "पासवर्ड भूल गए?",
-      "noAccount": "खाता नहीं है?",
-      "hasAccount": "पहले से खाता है?",
-      "signUp": "साइन अप करें",
-      "signIn": "साइन इन करें"
-    },
-    "events": {
-      "upcomingEvents": "आगामी कार्यक्रम",
-      "pastEvents": "पिछले कार्यक्रम",
-      "registerForEvent": "कार्यक्रम के लिए रजिस्टर करें",
-      "eventDetails": "कार्यक्रम विवरण",
-      "date": "तारीख",
-      "time": "समय",
-      "location": "स्थान",
-      "organizer": "आयोजक",
-      "noEvents": "कोई कार्यक्रम नहीं मिला",
-      "loadMore": "और लोड करें"
-    },
-    "common": {
-      "loading": "लोड हो रहा है...",
-      "error": "एक त्रुटि हुई",
-      "retry": "पुनः प्रयास करें",
-      "cancel": "रद्द करें",
-      "save": "सहेजें",
-      "edit": "संपादित करें",
-      "delete": "हटाएं",
-      "view": "देखें",
-      "search": "खोजें",
-      "back": "वापस",
-      "next": "अगला",
-      "previous": "पिछला"
-    },
-    "accessibility": {
-      "fontSize": "फ़ॉन्ट आकार",
-      "fontWeight": "फ़ॉन्ट वजन",
-      "textContrast": "टेक्स्ट कंट्रास्ट",
-      "themeSettings": "थीम सेटिंग्स",
-      "normal": "सामान्य",
-      "large": "बड़ा",
-      "larger": "और बड़ा",
-      "regular": "नियमित",
-      "bold": "बोल्ड",
-      "highContrast": "उच्च कंट्रास्ट"
-    }
+	"navbar": {
+	  "skipToMainContent": "मुख्य सामग्री पर जाएं",
+	  "logoAlt": "समर्थनम ट्रस्ट लोगो",
+	  "menuOpen": "मेन्यू खोलें",
+	  "menuClose": "मेन्यू बंद करें",
+	  "menu": "मेनू",
+	  "events": "कार्यक्रम",
+	  "myEvents": "मेरे कार्यक्रम",
+	  "about": "हमारे बारे में",
+	  "contact": "संपर्क करें",
+	  "login": "लॉग इन",
+	  "register": "रजिस्टर करें",
+	  "logout": "लॉग आउट",
+	  "profile": "प्रोफाइल",
+	  "loginAria": "अपने खाते में लॉग इन करें",
+	  "logoutAria": "अपने खाते से लॉग आउट करें",
+	  "registerAria": "नया खाता बनाएं",
+	  "greeting": "नमस्ते, {{name}}",
+	  "user": "उपयोगकर्ता"
+	},
+	"auth": {
+	  "loginTitle": "खाता लॉगिन",
+	  "registerTitle": "रजिस्टर करें",
+	  "email": "ईमेल",
+	  "password": "पासवर्ड",
+	  "forgotPassword": "पासवर्ड भूल गए?",
+	  "passwordResetInfo": "पासवर्ड रीसेट लिंक आपके ईमेल पर भेजी जाएगी।",
+	  "noAccount": "खाता नहीं है?",
+	  "hasAccount": "पहले से खाता है?",
+	  "signUp": "साइन अप करें",
+	  "signIn": "लॉगिन करें",
+	  "welcomeMessage": "वापसी पर स्वागत है",
+	  "loggingIn": "लॉगिन हो रहा है...",
+	  "emailPlaceholder": "अपना ईमेल दर्ज करें",
+	  "passwordPlaceholder": "अपना पासवर्ड दर्ज करें",
+	  "volunteerRole": "स्वयंसेवक",
+	  "adminRole": "प्रशासक",
+	  "loginAsVolunteer": "स्वयंसेवक के रूप में लॉगिन करें",
+	  "loginAsAdmin": "प्रशासक के रूप में लॉगिन करें",
+	  "selectRole": "अपनी भूमिका चुनें",
+	  "userRole": "उपयोगकर्ता भूमिका",
+	  "fullName": "पूरा नाम",
+	  "fullNamePlaceholder": "अपना पूरा नाम दर्ज करें",
+	  "contactNumber": "संपर्क नंबर",
+	  "contactPlaceholder": "अपना संपर्क नंबर दर्ज करें",
+	  "registerDescription": "रजिस्टर करने के लिए कृपया अपना विवरण भरें",
+	  "signupFormLabel": "साइन-अप फॉर्म",
+	  "submitting": "जमा किया जा रहा है...",
+	  "errors": {
+		"invalidCredentials": "अमान्य ईमेल या पासवर्ड",
+		"serverError": "सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।",
+		"requiredFields": "कृपया सभी आवश्यक फ़ील्ड भरें",
+		"name": "पूरा नाम आवश्यक है",
+		"contact": "संपर्क नंबर आवश्यक है",
+		"invalidEmail": "कृपया एक वैध ईमेल पता दर्ज करें"
+	  }
+	},
+	"events": {
+	  "pageTitle": "कार्यक्रम",
+	  "upcomingEvents": "आगामी कार्यक्रम",
+	  "pastEvents": "पिछले कार्यक्रम",
+	  "enrolledEvents": "नामांकित कार्यक्रम",
+	  "registerForEvent": "कार्यक्रम के लिए रजिस्टर करें",
+	  "eventDetails": "कार्यक्रम विवरण",
+	  "date": "तारीख",
+	  "time": "समय",
+	  "location": "स्थान",
+	  "organizer": "आयोजक",
+	  "noEvents": "कोई कार्यक्रम नहीं मिला",
+	  "loadMore": "और लोड करें",
+	  "noUpcomingEvents": "कोई आगामी कार्यक्रम उपलब्ध नहीं है।",
+	  "noPastEvents": "कोई पिछला कार्यक्रम नहीं मिला।",
+	  "noEnrolledEvents": "आप अभी तक किसी भी कार्यक्रम में नामांकित नहीं हैं।",
+	  "errorLoadingEvent": "कार्यक्रम लोड करने में त्रुटि",
+	  "eventNotFound": "कार्यक्रम नहीं मिला",
+	  "eventImageAlt": "{{title}} कार्यक्रम के लिए छवि",
+	  "locationNotSpecified": "स्थान निर्दिष्ट नहीं है",
+	  "noDescription": "कोई विवरण उपलब्ध नहीं है",
+	  "viewDetails": "विवरण देखें",
+	  "viewDetailsFor": "{{title}} का विवरण देखें",
+	  "noDetailedDescription": "इस कार्यक्रम के लिए कोई विस्तृत विवरण उपलब्ध नहीं है।",
+	  "description": "विवरण",
+	  "starts": "प्रारंभ",
+	  "ends": "समाप्त",
+	  "dateNotAvailable": "तिथि उपलब्ध नहीं है",
+	  "organizerNotSpecified": "आयोजक निर्दिष्ट नहीं है",
+	  "shareEventText": "इस कार्यक्रम को देखें: {{title}}",
+	  "shareLinkCopied": "शेयर लिंक क्लिपबोर्ड पर कॉपी कर लिया गया!",
+	  "tabs": {
+		"event": "कार्यक्रम",
+		"location": "स्थान",
+		"contact": "संपर्क करें",
+		"feedback": "प्रतिक्रिया",
+		"tasks": "कार्य"
+	  },
+	  "tabsAriaLabel": "कार्यक्रम जानकारी टैब",
+	  "joinEvent": "शामिल हों",
+	  "shareEvent": "शेयर करें",
+	  "joinEventAria": "इस कार्यक्रम में शामिल हों",
+	  "shareEventAria": "इस कार्यक्रम को शेयर करें",
+	  "locationContent": "स्थान विवरण यहां दिखाया जाएगा",
+	  "contactContent": "संपर्क जानकारी यहां दिखाई जाएगी",
+	  "feedbackContent": "प्रतिक्रिया फॉर्म यहां दिखाया जाएगा",
+	  "tasksContent": "कार्य यहां दिखाए जाएंगे",
+	  "errors": {
+		"loadFailed": "कार्यक्रम लोड करने में विफल",
+		"connectionError": "कनेक्शन त्रुटि, कृपया पुनः प्रयास करें"
+	  }
+	},
+	"common": {
+	  "loading": "लोड हो रहा है...",
+	  "noContent": "प्रदर्शित करने के लिए कोई सामग्री नहीं है",
+	  "error": "एक त्रुटि हुई",
+	  "retry": "पुनः प्रयास करें",
+	  "cancel": "रद्द करें",
+	  "save": "सहेजें",
+	  "edit": "संपादित करें",
+	  "delete": "हटाएं",
+	  "view": "देखें",
+	  "search": "खोजें",
+	  "back": "वापस",
+	  "next": "अगला",
+	  "previous": "पिछला"
+	},
+	"accessibility": {
+	  "accessibility": "सुगम्यता",
+	  "accessibilitySettings": "सुगम्यता सेटिंग्स",
+	  "accessibilityOptions": "सुगम्यता विकल्प",
+	  "accessibilityOptionsMenu": "सुगम्यता विकल्प मेनू",
+	  "openSettings": "सुगम्यता सेटिंग्स खोलें",
+	  "closeSettings": "सुगम्यता सेटिंग्स बंद करें",
+	  "closeAccessibilityMenu": "सुगम्यता मेनू बंद करें",
+	  "themeSettings": "थीम सेटिंग्स",
+	  "closePanel": "पैनल बंद करें",
+	  "theme": "थीम",
+	  "lightTheme": "लाइट थीम",
+	  "darkTheme": "डार्क थीम",
+	  "highContrastLightTheme": "उच्च कंट्रास्ट लाइट थीम",
+	  "highContrastDarkTheme": "उच्च कंट्रास्ट डार्क थीम",
+	  "light": "लाइट",
+	  "dark": "डार्क",
+	  "highContrastLight": "उच्च कंट्रास्ट लाइट",
+	  "highContrastDark": "उच्च कंट्रास्ट डार्क",
+	  "fontSize": "फ़ॉन्ट आकार",
+	  "fontWeight": "फ़ॉन्ट वजन",
+	  "textContrast": "टेक्स्ट कंट्रास्ट",
+	  "normal": "सामान्य",
+	  "large": "बड़ा",
+	  "larger": "बहुत बड़ा",
+	  "regular": "नियमित",
+	  "bold": "बोल्ड",
+	  "bolder": "अधिक बोल्ड",
+	  "highBlack": "उच्च काला",
+	  "highWhite": "उच्च सफेद",
+	  "yellowBlack": "काले पर पीला",
+	  "defaultContrast": "डिफ़ॉल्ट टेक्स्ट कंट्रास्ट",
+	  "highBlackContrast": "उच्च कंट्रास्ट काला टेक्स्ट",
+	  "highWhiteContrast": "उच्च कंट्रास्ट सफेद टेक्स्ट",
+	  "yellowBlackContrast": "काले पृष्ठभूमि पर पीला टेक्स्ट",
+	  "normalFontSize": "सामान्य फ़ॉन्ट आकार",
+	  "largeFontSize": "बड़ा फ़ॉन्ट आकार",
+	  "extraLargeFontSize": "अतिरिक्त बड़ा फ़ॉन्ट आकार",
+	  "normalFontWeight": "सामान्य फ़ॉन्ट वजन",
+	  "boldFontWeight": "बोल्ड फ़ॉन्ट वजन",
+	  "bolderFontWeight": "अत्यधिक बोल्ड फ़ॉन्ट वजन"
+	},
+	"eventDetails": {
+	  "defaultTitle": "कार्यक्रम विवरण",
+	  "tabs": {
+		"event": "कार्यक्रम",
+		"contact": "संपर्क करें",
+		"feedback": "प्रतिक्रिया",
+		"tasks": "कार्य"
+	  },
+	  "tablist": {
+		"label": "कार्यक्रम जानकारी टैब"
+	  },
+	  "actions": {
+		"join": {
+		  "label": "शामिल हों",
+		  "ariaLabel": "इस कार्यक्रम में शामिल हों"
+		},
+		"share": {
+		  "label": "शेयर करें",
+		  "ariaLabel": "इस कार्यक्रम को शेयर करें",
+		  "defaultTitle": "कार्यक्रम विवरण",
+		  "text": "इस कार्यक्रम को देखें: {{title}}",
+		  "copyMessage": "शेयर लिंक क्लिपबोर्ड पर कॉपी कर लिया गया है!"
+		}
+	  },
+	  "loading": {
+		"main": "कार्यक्रम विवरण लोड हो रहा है...",
+		"tabContent": "कार्यक्रम जानकारी लोड हो रही है..."
+	  },
+	  "errors": {
+		"fetchFailed": "कार्यक्रम विवरण प्राप्त करने में विफल",
+		"generalError": "कार्यक्रम विवरण प्राप्त करते समय एक त्रुटि हुई",
+		"notFound": "कार्यक्रम नहीं मिला"
+	  }
+	},
+	"event": {
+	  "defaultTitle": "कार्यक्रम",
+	  "dates": {
+		"starts": "प्रारंभ",
+		"ends": "समाप्त",
+		"notAvailable": "तिथि उपलब्ध नहीं"
+	  },
+	  "sections": {
+		"overview": {
+		  "title": "अवलोकन",
+		  "notAvailable": "इस कार्यक्रम के लिए कोई अवलोकन उपलब्ध नहीं है।"
+		},
+		"description": {
+		  "title": "विवरण",
+		  "notAvailable": "इस कार्यक्रम के लिए कोई विस्तृत विवरण उपलब्ध नहीं है।"
+		},
+		"location": {
+		  "title": "स्थान",
+		  "notSpecified": "स्थान निर्दिष्ट नहीं है"
+		}
+	  },
+	  "image": {
+		"alt": "{{title}} प्रचार छवि"
+	  }
+	},
+	"eventCard": {
+	  "loading": "लोड हो रहा है...",
+	  "errors": {
+		"fetchFailed": "कार्यक्रम विवरण लोड करने में विफल",
+		"generalError": "कार्यक्रम डेटा प्राप्त करते समय एक त्रुटि हुई",
+		"notFound": "कार्यक्रम नहीं मिला"
+	  },
+	  "image": {
+		"alt": "{{name}} कार्यक्रम",
+		"noImage": "कोई छवि उपलब्ध नहीं",
+		"noImageText": "कोई छवि नहीं"
+	  },
+	  "date": {
+		"ariaLabel": "कार्यक्रम प्रारंभ तिथि और समय"
+	  },
+	  "viewDetails": {
+		"label": "विवरण देखें",
+		"ariaLabel": "{{name}} के लिए विवरण देखें"
+	  }
+	},
+	"feedback": {
+	  "title": "कार्यक्रम प्रतिक्रिया",
+	  "submittedTitle": "आपकी प्रतिक्रिया",
+	  "notEligibleTitle": "प्रतिक्रिया उपलब्ध नहीं है",
+	  "errorTitle": "त्रुटि",
+	  "loading": "प्रतिक्रिया योग्यता की जांच कर रहा है...",
+	  "submit": "प्रतिक्रिया जमा करें",
+	  "submitting": "जमा कर रहा है...",
+	  "submitSuccess": "आपकी प्रतिक्रिया के लिए धन्यवाद!",
+	  "stars": "तारे",
+	  "alreadySubmitted": "आपने इस कार्यक्रम के लिए पहले ही प्रतिक्रिया दे दी है।",
+	  "submittedDescription": "इस कार्यक्रम के बारे में अपने विचार साझा करने के लिए धन्यवाद। आपकी प्रतिक्रिया भविष्य के कार्यक्रमों को बेहतर बनाने में मदद करती है।",
+	  "ratingsOverview": "आपकी रेटिंग",
+	  "submittedOn": "{{date}} को जमा किया गया",
+	  "wouldVolunteerAgainYes": "हां, आपने संकेत दिया कि आप भविष्य में इसी तरह के कार्यक्रमों में स्वयंसेवक बनना चाहेंगे।",
+	  "wouldVolunteerAgainNo": "नहीं, आपने संकेत दिया कि आप भविष्य में इसी तरह के कार्यक्रमों में स्वयंसेवक नहीं बनना चाहेंगे।",
+	  "sections": {
+		"ratings": "कार्यक्रम रेटिंग",
+		"textFeedback": "विस्तृत प्रतिक्रिया",
+		"futureParticipation": "भविष्य की भागीदारी"
+	  },
+	  "fields": {
+		"overallExperience": "समग्र अनुभव",
+		"organizationQuality": "आयोजन की गुणवत्ता",
+		"communication": "संचार",
+		"hostInteraction": "होस्ट इंटरैक्शन",
+		"volunteerSupport": "स्वयंसेवक समर्थन",
+		"taskClarity": "कार्य स्पष्टता",
+		"impactAwareness": "प्रभाव जागरूकता",
+		"inclusivity": "समावेशिता",
+		"timeManagement": "समय प्रबंधन",
+		"recognition": "स्वयंसेवक मान्यता",
+		"strengths": "कार्यक्रम की ताकतें",
+		"improvements": "सुझाए गए सुधार",
+		"additionalComments": "अतिरिक्त टिप्पणियां",
+		"wouldVolunteerAgain": "मैं भविष्य में इसी तरह के कार्यक्रमों में स्वयंसेवक बनना चाहूंगा"
+	  },
+	  "descriptions": {
+		"overallExperience": "इस कार्यक्रम के लिए स्वयंसेवा करने के अपने समग्र अनुभव का मूल्यांकन करें"
+	  },
+	  "placeholders": {
+		"strengths": "कार्यक्रम के किन पहलुओं ने विशेष रूप से अच्छा काम किया?",
+		"improvements": "भविष्य के कार्यक्रमों के लिए किन पहलुओं में सुधार किया जा सकता है?",
+		"additionalComments": "कोई अन्य टिप्पणी या सुझाव जो आप साझा करना चाहते हैं"
+	  },
+	  "errors": {
+		"notEligible": "आप इस कार्यक्रम के लिए प्रतिक्रिया देने के योग्य नहीं हैं।",
+		"eligibilityCheckFailed": "प्रतिक्रिया योग्यता की जांच करने में विफल।",
+		"submissionFailed": "प्रतिक्रिया जमा करने में विफल। कृपया पुनः प्रयास करें।",
+		"generalError": "एक त्रुटि हुई है। कृपया बाद में पुनः प्रयास करें।"
+	  }
+	}
   }

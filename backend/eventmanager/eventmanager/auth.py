@@ -337,27 +337,36 @@ class ProfileView(View):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class CheckAuthView(View):
-    """Check if the user is authenticated and return their session info"""
+class IsAuthenticatedView(View):
+    """
+    Simple view to check if a user is authenticated
+    Returns only a boolean indicating authentication status and minimal user info
+    """
     def get(self, request):
-        if request.user.is_authenticated:
-            return JsonResponse({
-                'status': 'success',
-                'authenticated': True,
-                'user': {
-                    'id': request.user.id,
-                    'email': request.user.email,
-                    'name': request.user.name,
-                    'isHost': request.user.isHost,
-                }
-            })
-        else:
-            return JsonResponse({
-                'status': 'error',
-                'authenticated': False,
-                'message': 'User is not authenticated'
-            }, status=401)
+        # Check authentication status
+        is_authenticated = request.user.is_authenticated
+        
+        # Prepare response data
+        response_data = {
+            'status': 'success',
+            'isAuthenticated': is_authenticated,
+            'authenticated': is_authenticated,
+        }
+        
+        # If authenticated, include minimal user info
+        if is_authenticated:
+            response_data['user'] = {
+                'id': request.user.id,
+                'name': request.user.name,
+                'isHost': request.user.isHost
+            }
+        
+        # Set appropriate status code (200 for both auth and non-auth)
+        return JsonResponse(response_data)
 
+    def post(self, request):
+        """Handle POST requests by delegating to GET"""
+        return self.get(request)
 
 # For backwards compatibility - these functions call the class-based views
 def user_login(request):
@@ -386,6 +395,6 @@ def profile(request):
     return view(request)
 
 def check_auth(request):
-    """Compatibility function for check_auth"""
-    view = CheckAuthView.as_view()
+    """Compatibility function for is_authenticated - returns authentication status and user info"""
+    view = IsAuthenticatedView.as_view()
     return view(request)

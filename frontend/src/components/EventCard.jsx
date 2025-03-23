@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { getEventDetails } from '../apiservice/event';
 import '../styles/EventCard.css';
 
@@ -9,6 +10,7 @@ import '../styles/EventCard.css';
  * @param {string} props.eventId The ID of the event to display
  */
 const EventCard = ({ eventId }) => {
+  const { t, i18n } = useTranslation();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,10 +24,10 @@ const EventCard = ({ eventId }) => {
         if (response.success) {
           setEvent(response.data.event);
         } else {
-          setError('Failed to load event details');
+          setError(t('eventCard.errors.fetchFailed'));
         }
       } catch (err) {
-        setError('An error occurred while fetching event data');
+        setError(t('eventCard.errors.generalError'));
         console.error(err);
       } finally {
         setLoading(false);
@@ -35,27 +37,47 @@ const EventCard = ({ eventId }) => {
     if (eventId) {
       fetchEventDetails();
     }
-  }, [eventId]);
+  }, [eventId, t]);
 
-  // Format date for display
+  // Format date for display based on current language
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    
+    // Get localized date formatting based on the current language
+    try {
+      // You can implement locale mapping here based on i18n.language
+      const locale = i18n.language === 'en' ? 'en-US' : 
+                    i18n.language === 'hi' ? 'hi-IN' : 
+                    i18n.language === 'kn' ? 'kn-IN' : 
+                    i18n.language === 'te' ? 'te-IN' : 'en-US';
+                    
+      return date.toLocaleDateString(locale, {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (e) {
+      // Fallback to English if locale isn't supported
+      return date.toLocaleDateString('en-US', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
   };
 
   if (loading) {
     return (
       <article className="event-card" aria-busy="true">
         <div className="event-card__placeholder" aria-hidden="true">
-          Loading...
+          {t('eventCard.loading')}
         </div>
       </article>
     );
@@ -66,7 +88,7 @@ const EventCard = ({ eventId }) => {
       <article className="event-card" aria-errormessage="event-card-error">
         <div className="event-card__content">
           <p id="event-card-error" className="error">
-            {error || 'Event not found'}
+            {error || t('eventCard.errors.notFound')}
           </p>
         </div>
       </article>
@@ -79,13 +101,13 @@ const EventCard = ({ eventId }) => {
         {event.image_url ? (
           <img 
             src={event.image_url} 
-            alt={`${event.event_name} event`} 
+            alt={t('eventCard.image.alt', { name: event.event_name })} 
             className="event-card__image"
             loading="lazy"
           />
         ) : (
-          <div className="event-card__placeholder" aria-label="No image available">
-            No image
+          <div className="event-card__placeholder" aria-label={t('eventCard.image.noImage')}>
+            {t('eventCard.image.noImageText')}
           </div>
         )}
       </div>
@@ -93,7 +115,7 @@ const EventCard = ({ eventId }) => {
       <div className="event-card__content">
         <h3 className="event-card__title">{event.event_name}</h3>
         
-        <div className="event-card__date" aria-label="Event start date and time">
+        <div className="event-card__date" aria-label={t('eventCard.date.ariaLabel')}>
           <span className="event-card__date-icon" aria-hidden="true">📅</span>
           <time dateTime={event.start_time}>
             {formatDate(event.start_time)}
@@ -104,9 +126,9 @@ const EventCard = ({ eventId }) => {
           <Link 
             to={`/events/${eventId}`} 
             className="event-card__link"
-            aria-label={`View details for ${event.event_name}`}
+            aria-label={t('eventCard.viewDetails.ariaLabel', { name: event.event_name })}
           >
-            View Details
+            {t('eventCard.viewDetails.label')}
           </Link>
         </div>
       </div>

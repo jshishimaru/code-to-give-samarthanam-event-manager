@@ -2,6 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import event_views
 from .views import feeback_views
+from .views import tasks_views
 
 # router = DefaultRouter()
 # router.register(r'events', event_views.EventViewSet, basename='events')
@@ -31,4 +32,18 @@ urlpatterns = [
 	path('feedback/user/', feeback_views.UserFeedbackListView.as_view(), name='user_feedback_list'),
 	path('feedback/eligibility/', feeback_views.CheckFeedbackEligibilityView.as_view(), name='check_feedback_eligibility'),
 	
+    # Task Endpoints
+    path('tasks/add-to-event/<int:event_id>/', tasks_views.AddTaskToEventView.as_view(), name='add_task_to_event'),
+    path('tasks/assign-volunteer/<int:task_id>/', tasks_views.AssignVolunteerToTaskView.as_view(), name='assign_volunteer_to_task'),
+    path('tasks/update/<int:task_id>/', tasks_views.TakeTaskUpdatesView.as_view(), name='task_update'),
+    path('tasks/delete/<int:task_id>/', tasks_views.DeleteTaskView.as_view(), name='delete_task'),
+    path('tasks/edit/<int:task_id>/', tasks_views.EditTaskView.as_view(), name='edit_task'),
+    path('tasks/notify-volunteers/<int:task_id>/', tasks_views.NotifyVolunteersView.as_view(), name='notify_volunteers'),
+
+    # Subtask Endpoints
+    path('subtasks/add/<int:task_id>/', tasks_views.AddSubtaskView.as_view(), name='add_subtask'),
+    path('subtasks/assign-volunteer/<int:subtask_id>/', tasks_views.AssignVolunteerToSubtaskView.as_view(), name='assign_volunteer_to_subtask'),
+    path('subtasks/update/<int:subtask_id>/', tasks_views.TakeSubtaskUpdatesView.as_view(), name='subtask_update'),
+    path('subtasks/notify-volunteers/<int:subtask_id>/', tasks_views.NotifySubtaskVolunteersView.as_view(), name='notify_subtask_volunteers'),
+
 ]

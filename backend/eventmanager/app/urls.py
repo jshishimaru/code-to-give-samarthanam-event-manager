@@ -46,10 +46,14 @@ urlpatterns = [
     path('tasks/notify-completion/', tasks_views.NotifyTaskCompletionView.as_view(), name='notify_task_completion'),
     path('tasks/mark-complete/', tasks_views.MarkTaskCompleteView.as_view(), name='mark_task_complete'),
     path('tasks/notified/', tasks_views.GetNotifiedTasksView.as_view(), name='get_notified_tasks'),
+    # path('tasks/volunteer/', tasks_views.GetVolunteerTasksView.as_view(), name='get_volunteer_tasks'),
+    # path('tasks/event/', tasks_views.GetEventTasksView.as_view(), name='get_event_tasks'),
     
     # Subtask Management Endpoints
     path('subtasks/add/', tasks_views.AddSubtaskView.as_view(), name='add_subtask'),
     path('subtasks/notify-completion/', tasks_views.NotifySubtaskCompletionView.as_view(), name='notify_subtask_completion'),
     path('subtasks/mark-complete/', tasks_views.MarkSubtaskCompleteView.as_view(), name='mark_subtask_complete'),
     path('subtasks/notified/', tasks_views.GetNotifiedSubtasksView.as_view(), name='get_notified_subtasks'),
+
+    
 ]

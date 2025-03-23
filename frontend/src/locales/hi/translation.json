@@ -57,6 +57,11 @@
 	  }
 	},
 	"events": {
+	  "viewControls": "दृश्य मोड बदलें",
+      "gridView": "ग्रिड दृश्य",
+      "listView": "सूची दृश्य",
+      "viewMore": "{{count}} और देखें",
+      "viewLess": "कम देखें",
 	  "pageTitle": "कार्यक्रम",
 	  "upcomingEvents": "आगामी कार्यक्रम",
 	  "pastEvents": "पिछले कार्यक्रम",

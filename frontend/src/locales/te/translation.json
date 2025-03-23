@@ -57,6 +57,11 @@
 	  }
 	},
 	"events": {
+	  "viewControls": "காட்சி முறையை மாற்றவும்",
+      "gridView": "கட்ட காட்சி",
+      "listView": "பட்டியல் காட்சி",
+      "viewMore": "மேலும் {{count}} காண்க",
+      "viewLess": "குறைவாகக் காண்க",
 	  "pageTitle": "కార్యక్రమాలు",
 	  "upcomingEvents": "రాబోయే కార్యక్రమాలు",
 	  "pastEvents": "గత కార్యక్రమాలు",

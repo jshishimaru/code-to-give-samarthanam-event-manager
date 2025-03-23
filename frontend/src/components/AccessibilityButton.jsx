@@ -58,7 +58,7 @@ const AccessibilityButton = () => {
         onClick={handleToggleMenu}
         aria-label={t('accessibility.accessibilityOptions')}
       >
-        <span className="accessibility-icon" aria-hidden="true">💀</span>
+        <span className="accessibility-icon" aria-hidden="true">🚹</span>
         <span className="sr-only">{t('accessibility.accessibility')}</span>
       </button>
       

@@ -8,8 +8,9 @@ import '../styles/EventCard.css';
  * EventCard component for displaying event information
  * @param {Object} props Component props
  * @param {string} props.eventId The ID of the event to display
+ * @param {string} props.viewMode Display mode ('grid' or 'list')
  */
-const EventCard = ({ eventId }) => {
+const EventCard = ({ eventId, viewMode = 'grid' }) => {
   const { t, i18n } = useTranslation();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -73,11 +74,21 @@ const EventCard = ({ eventId }) => {
     }
   };
 
+  // Determine component class based on view mode
+  const cardClasses = `event-card ${viewMode === 'list' ? 'event-card-list' : ''}`;
+
   if (loading) {
     return (
-      <article className="event-card" aria-busy="true">
-        <div className="event-card__placeholder" aria-hidden="true">
-          {t('eventCard.loading')}
+      <article className={cardClasses} aria-busy="true">
+        <div className="event-card__image-container">
+          <div className="event-card__placeholder" aria-hidden="true">
+            {t('eventCard.loading')}
+          </div>
+        </div>
+        <div className="event-card__content">
+          <div className="skeleton-title"></div>
+          <div className="skeleton-date"></div>
+          <div className="skeleton-description"></div>
         </div>
       </article>
     );
@@ -85,7 +96,7 @@ const EventCard = ({ eventId }) => {
 
   if (error || !event) {
     return (
-      <article className="event-card" aria-errormessage="event-card-error">
+      <article className={cardClasses} aria-errormessage="event-card-error">
         <div className="event-card__content">
           <p id="event-card-error" className="error">
             {error || t('eventCard.errors.notFound')}
@@ -96,7 +107,7 @@ const EventCard = ({ eventId }) => {
   }
 
   return (
-    <article className="event-card">
+    <article className={cardClasses}>
       <div className="event-card__image-container">
         {event.image_url ? (
           <img 
@@ -121,6 +132,13 @@ const EventCard = ({ eventId }) => {
             {formatDate(event.start_time)}
           </time>
         </div>
+        
+        {/* Only show description in list view */}
+        {viewMode === 'list' && event.description && (
+          <p className="event-card__description">
+            {event.description}
+          </p>
+        )}
         
         <div className="event-card__footer">
           <Link 

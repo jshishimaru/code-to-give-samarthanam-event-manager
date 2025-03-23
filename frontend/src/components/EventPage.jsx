@@ -16,6 +16,19 @@ const EventPage = () => {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [pastEvents, setPastEvents] = useState([]);
   
+  // View mode: 'grid' or 'list'
+  const [viewMode, setViewMode] = useState('grid');
+  
+  // Number of events to show initially per section
+  const INITIAL_EVENTS_TO_SHOW = 4;
+  
+  // State to track expanded sections
+  const [expandedSections, setExpandedSections] = useState({
+    enrolled: false,
+    upcoming: false,
+    past: false
+  });
+  
   // Loading and error states
   const [loading, setLoading] = useState({
     enrolled: true,
@@ -95,48 +108,131 @@ const EventPage = () => {
     }
   }, [userId, t]);
 
-  // Render event section with appropriate loading and error states
-  const renderEventSection = (title, eventIds, loadingState, errorState, emptyMessage) => (
+  // Toggle between grid and list view
+  const toggleViewMode = () => {
+    setViewMode(prevMode => prevMode === 'grid' ? 'list' : 'grid');
+  };
+
+  // Toggle expanded state for a section
+  const toggleSectionExpansion = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  // Get the appropriate number of events to display based on section expansion
+  const getVisibleEvents = (events, section) => {
+    if (expandedSections[section]) {
+      return events;
+    }
+    return events.slice(0, INITIAL_EVENTS_TO_SHOW);
+  };
+
+// Update the renderEventSection function to ensure the view-more button is always visible when needed
+const renderEventSection = (title, eventIds, loadingState, errorState, emptyMessage, section) => {
+  const visibleEvents = getVisibleEvents(eventIds, section);
+  const hasMoreEvents = eventIds.length > INITIAL_EVENTS_TO_SHOW;
+  
+  return (
     <section className="event-section" aria-labelledby={title.toLowerCase().replace(/\s+/g, '-')}>
-      <h2 id={title.toLowerCase().replace(/\s+/g, '-')} className="section-title">{title}</h2>
+      <div className="section-header">
+        <h2 id={title.toLowerCase().replace(/\s+/g, '-')} className="section-title">{title}</h2>
+        <span className="event-count" aria-label={`${eventIds.length} ${t('events.countLabel')}`}>
+          ({eventIds.length})
+        </span>
+      </div>
       
       {loadingState ? (
         <div className="loading-container" aria-live="polite" aria-busy="true">
-          <div className="loading-spinner"></div>
-          <p>{t('common.loading')}</p>
+          <div className="loading-spinner" role="status"></div>
+          <span className="sr-only">{t('common.loading')}</span>
         </div>
       ) : errorState ? (
         <div className="error-container" role="alert">
           <p className="error-message">{errorState}</p>
         </div>
       ) : eventIds.length === 0 ? (
-        <div className="empty-container">
-          <p>{emptyMessage}</p>
+        <div className="empty-state" aria-live="polite">
+          <div className="empty-state-icon" aria-hidden="true">📅</div>
+          <p className="empty-state-text">{emptyMessage}</p>
         </div>
       ) : (
-        <div className="event-grid" role="list">
-          {eventIds.map(eventId => (
-            <div key={eventId} className="event-item" role="listitem">
-              <EventCard eventId={eventId} />
-            </div>
-          ))}
-        </div>
+        <>
+          <div 
+            id={`${section}-events`}
+            className={`event-collection ${viewMode === 'grid' ? 'event-grid' : 'event-list'}`} 
+            role="list"
+            aria-label={`${title} events in ${viewMode} view`}
+          >
+            {visibleEvents.map(eventId => (
+              <div 
+                key={eventId} 
+                className={`event-item ${viewMode === 'list' ? 'event-list-item' : ''}`} 
+                role="listitem"
+              >
+                <EventCard eventId={eventId} viewMode={viewMode} />
+              </div>
+            ))}
+          </div>
+          
+          {/* Always render the button container but conditionally show the button */}
+          <div className="view-more-container">
+            {hasMoreEvents && (
+              <button 
+                className="view-more-button" 
+                onClick={() => toggleSectionExpansion(section)}
+                aria-expanded={expandedSections[section]}
+                aria-controls={`${section}-events`}
+              >
+                {expandedSections[section] 
+                  ? t('events.viewLess') 
+                  : t('events.viewMore', { count: eventIds.length - INITIAL_EVENTS_TO_SHOW })}
+              </button>
+            )}
+          </div>
+        </>
       )}
     </section>
   );
+};
 
   return (
-  <>
-    {/* <Navbar /> */}
     <main id="main-content" className="event-page-container">
-      <h1 className="page-title">{t('events.pageTitle')}</h1>
+      <div className="event-page-header">
+        <h1 className="page-title">{t('events.pageTitle')}</h1>
+        
+        <div className="view-controls" role="toolbar" aria-label={t('events.viewControls')}>
+          <div className="view-mode-toggle">
+            <button 
+              className={`view-mode-button ${viewMode === 'grid' ? 'active' : ''}`}
+              onClick={() => setViewMode('grid')}
+              aria-pressed={viewMode === 'grid'}
+              aria-label={t('events.gridView')}
+            >
+              <span className="view-icon grid-icon" aria-hidden="true">▦</span>
+              <span className="view-text">{t('events.gridView')}</span>
+            </button>
+            <button 
+              className={`view-mode-button ${viewMode === 'list' ? 'active' : ''}`}
+              onClick={() => setViewMode('list')}
+              aria-pressed={viewMode === 'list'}
+              aria-label={t('events.listView')}
+            >
+              <span className="view-icon list-icon" aria-hidden="true">☰</span>
+              <span className="view-text">{t('events.listView')}</span>
+            </button>
+          </div>
+        </div>
+      </div>
       
       {renderEventSection(
         t('events.enrolledEvents'), 
         enrolledEvents, 
         loading.enrolled, 
         error.enrolled, 
-        t('events.noEnrolledEvents')
+        t('events.noEnrolledEvents'),
+        'enrolled'
       )}
       
       {renderEventSection(
@@ -144,7 +240,8 @@ const EventPage = () => {
         upcomingEvents, 
         loading.upcoming, 
         error.upcoming, 
-        t('events.noUpcomingEvents')
+        t('events.noUpcomingEvents'),
+        'upcoming'
       )}
       
       {renderEventSection(
@@ -152,10 +249,10 @@ const EventPage = () => {
         pastEvents, 
         loading.past, 
         error.past, 
-        t('events.noPastEvents')
+        t('events.noPastEvents'),
+        'past'
       )}
     </main>
-  </>
   );
 };
 

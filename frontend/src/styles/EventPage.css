@@ -19,9 +19,17 @@
 	  transform: translateY(0);
 	}
   }
+  .event-page-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 2rem;
+	flex-wrap: wrap;
+	gap: 1rem;
+  }
   
   /* Animated page title with gradient underline effect */
-  .page-title {
+  /* .page-title {
 	font-size: 2.5rem;
 	font-weight: calc(700 * var(--font-weight-scale));
 	margin-bottom: 2.5rem;
@@ -30,6 +38,18 @@
 	display: inline-block;
 	padding-bottom: 0.5rem;
 	animation: slideInFromLeft 0.6s ease-out;
+  } */
+
+  .page-title {
+	font-size: 2.5rem;
+	font-weight: calc(700 * var(--font-weight-scale));
+	color: var(--text-color);
+	position: relative;
+	display: inline-block;
+	padding-bottom: 0.5rem;
+	animation: slideInFromLeft 0.6s ease-out;
+	margin-bottom: 0; 
+	margin-right: auto; 
   }
   
   .page-title::after {
@@ -140,11 +160,10 @@
   /* Event grid with card animation on hover */
   .event-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-	gap: 2rem;
-	opacity: 0;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Reduced from likely 300px+ */
+	gap: 1.25rem; /* Reduced gap between items */
+	margin-top: 1rem;
 	animation: fadeInStagger 0.8s ease-out forwards;
-	animation-delay: 0.3s;
   }
   
   @keyframes fadeInStagger {
@@ -160,14 +179,15 @@
   
   /* Event card styling */
   .event-card {
-	background-color: var(--bg-color);
-	border-radius: 12px;
+	background-color: var(--bg-card);
+	border-radius: 0.75rem; /* Slightly reduced border radius */
 	overflow: hidden;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 	transition: all 0.3s ease;
-	transform: translateY(0);
-	position: relative;
-	z-index: 1;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	max-height: 350px; /* Reduced maximum height */
   }
   
   .event-card:hover {
@@ -178,7 +198,7 @@
   /* Card image effects */
   .event-card img {
 	width: 100%;
-	height: 180px;
+	height: 130px;
 	object-fit: cover;
 	transition: transform 0.5s ease;
   }
@@ -189,18 +209,21 @@
   
   /* Card content styling */
   .event-card-content {
-	padding: 1.5rem;
+	padding: 1rem;
+	flex-grow: 1;
+  display: flex;
+  flex-direction: column;
   }
   
   .event-card-title {
-	font-size: 1.2rem;
+	font-size: 1.1rem;
 	font-weight: calc(600 * var(--font-weight-scale));
 	margin-bottom: 0.5rem;
 	color: var(--text-color);
   }
   
   .event-card-date {
-	font-size: 0.875rem;
+	font-size: 0.85rem;
 	color: var(--primary-color);
 	margin-bottom: 0.5rem;
 	display: flex;
@@ -520,4 +543,207 @@
   [data-font-size="large"] .event-card-description,
   [data-font-size="x-large"] .event-card-description {
 	line-height: 1.6;
+  }
+/* 
+  .view-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+  padding: 0.5rem;
+  background-color: var(--bg-secondary);
+  border-radius: 0.5rem;
+  animation: fadeInFromTop 0.6s ease-out;
+} */
+
+.view-controls {
+	display: flex;
+	justify-content: flex-end;
+	padding: 0.5rem;
+	background-color: var(--bg-secondary);
+	border-radius: 0.5rem;
+	animation: fadeInFromTop 0.6s ease-out;
+	margin-left: auto; /* Push to the right next to title */
+	min-width: 200px; /* Give it some minimum width */
+  }
+
+.view-mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-mode-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-weight: calc(500 * var(--font-weight-scale));
+  transition: all 0.3s ease;
+}
+
+.view-mode-button:hover {
+  background-color: rgba(var(--primary-rgb), 0.1);
+}
+
+.view-mode-button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.view-icon {
+  font-size: 1.2rem;
+}
+
+/* Section header styling */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.event-count {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: calc(400 * var(--font-weight-scale));
+  /* margin-left: 0.5rem; */
+  background-color: var(--bg-secondary, #f0f0f0);
+  border-radius: 1rem;
+  padding: 0.25rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* List view styling */
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  opacity: 0;
+  animation: fadeInStagger 0.8s ease-out forwards;
+  animation-delay: 0.3s;
+}
+
+.event-list-item {
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.event-list-item:hover {
+  transform: translateX(0.5rem);
+}
+
+.view-more-container {
+	display: flex;
+	justify-content: center;
+	margin-top: 2rem;
+	margin-bottom: 1rem; /* Added bottom margin */
+	width: 100%; /* Ensure full width */
+  }
+  
+
+  .view-more-button {
+	padding: 0.75rem 1.5rem;
+	background-color: var(--primary-color);
+	border: none;
+	border-radius: 2rem;
+	color: white;
+	font-weight: calc(500 * var(--font-weight-scale));
+	cursor: pointer;
+	transition: all 0.3s ease;
+	position: relative;
+	overflow: hidden;
+	min-width: 150px; /* Ensure minimum width */
+	box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Add shadow for visibility */
+  }
+
+  .view-more-button::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+	transition: left 0.7s ease;
+	z-index: 0;
+  }
+
+  .view-more-button:hover {
+	background-color: var(--primary-hover); /* Use hover color */
+	transform: translateY(-2px);
+	box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Enhanced shadow on hover */
+  }
+
+.view-more-button:hover::before {
+  left: 100%;
+}
+
+/* Empty state icon adjustment */
+.empty-state-icon {
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Enhanced media queries for view mode controls */
+@media screen and (max-width: 768px) {
+  .view-controls {
+    margin-bottom: 1.5rem;
+  }
+  
+  .view-text {
+    display: none;
+  }
+  
+  .view-mode-button {
+    padding: 0.5rem;
+  }
+  
+  .view-icon {
+    margin: 0;
+  }
+}
+
+/* Responsiveness for the view more button */
+@media screen and (max-width: 576px) {
+  .view-more-button {
+    width: 100%;
+    max-width: 20rem;
+    padding: 0.6rem 1rem;
+  }
+}
+
+/* Update for the event list item to stack properly on mobile */
+@media screen and (max-width: 576px) {
+  .event-list-item .event-card {
+    flex-direction: column;
+  }
+  
+  .event-list-item .event-card img {
+    width: 100%;
+    height: 12rem;
+  }
+}
+
+[data-theme="dark"] .event-count {
+	background-color: rgba(255, 255, 255, 0.1);
+	color: var(--text-secondary, #aaa);
   }

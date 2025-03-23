@@ -57,6 +57,11 @@
 	  }
 	},
 	"events": {
+	  "viewControls": "ವೀಕ್ಷಣೆ ಮೋಡ್ ಬದಲಾಯಿಸಿ",
+	  "gridView": "ಗ್ರಿಡ್ ವೀಕ್ಷಣೆ",
+	  "listView": "ಪಟ್ಟಿ ವೀಕ್ಷಣೆ",
+	  "viewMore": "{{count}} ಹೆಚ್ಚು ನೋಡಿ",
+	  "viewLess": "ಕಡಿಮೆ ನೋಡಿ",
 	  "pageTitle": "ಕಾರ್ಯಕ್ರಮಗಳು",
 	  "upcomingEvents": "ಮುಂಬರುವ ಕಾರ್ಯಕ್ರಮಗಳು",
 	  "pastEvents": "ಹಿಂದಿನ ಕಾರ್ಯಕ್ರಮಗಳು",

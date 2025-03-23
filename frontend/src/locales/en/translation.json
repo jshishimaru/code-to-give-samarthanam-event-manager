@@ -57,6 +57,11 @@
 	  }
 	},
 	"events": {
+	  "viewControls": "Change view mode",
+	  "gridView": "Grid View",
+	  "listView": "List View",
+	  "viewMore": "View {{count}} more",
+	  "viewLess": "View less",
 	  "pageTitle": "Events",
 	  "upcomingEvents": "Upcoming Events",
 	  "pastEvents": "Past Events",

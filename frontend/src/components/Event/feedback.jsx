@@ -44,6 +44,7 @@ const Feedback = () => {
         
         if (response.success) {
           setIsEligible(response.data.eligible);
+		//   console.log(response.data);
           if (!response.data.eligible) {
             setIneligibilityReason(response.data.reason || t('feedback.errors.notEligible'));
             
@@ -381,7 +382,150 @@ const Feedback = () => {
   return (
     <div className="feedback-container">
       <h2 className="feedback-title">{t('feedback.title')}</h2>
-      {/* Rest of the form remains unchanged */}
+      
+      <form className="feedback-form" onSubmit={handleSubmit}>
+        <div className="feedback-section">
+          <h3 className="section-title">{t('feedback.sections.ratings')}</h3>
+          
+          {/* Rating scales (1-10) */}
+          {renderRatingQuestion(
+            'overall_experience', 
+            t('feedback.fields.overallExperience'),
+            t('feedback.descriptions.overallExperience')
+          )}
+          
+          {renderRatingQuestion(
+            'organization_quality', 
+            t('feedback.fields.organizationQuality')
+          )}
+          
+          {renderRatingQuestion(
+            'communication', 
+            t('feedback.fields.communication')
+          )}
+          
+          {renderRatingQuestion(
+            'host_interaction', 
+            t('feedback.fields.hostInteraction')
+          )}
+          
+          {renderRatingQuestion(
+            'volunteer_support', 
+            t('feedback.fields.volunteerSupport')
+          )}
+          
+          {renderRatingQuestion(
+            'task_clarity', 
+            t('feedback.fields.taskClarity')
+          )}
+          
+          {renderRatingQuestion(
+            'impact_awareness', 
+            t('feedback.fields.impactAwareness')
+          )}
+          
+          {renderRatingQuestion(
+            'inclusivity', 
+            t('feedback.fields.inclusivity')
+          )}
+          
+          {renderRatingQuestion(
+            'time_management', 
+            t('feedback.fields.timeManagement')
+          )}
+          
+          {renderRatingQuestion(
+            'recognition', 
+            t('feedback.fields.recognition')
+          )}
+        </div>
+        
+        <div className="feedback-section">
+          <h3 className="section-title">{t('feedback.sections.textFeedback')}</h3>
+          
+          {/* Text feedback areas */}
+          <div className="feedback-text-question">
+            <label htmlFor="strengths" className="feedback-label">
+              {t('feedback.fields.strengths')}
+            </label>
+            <textarea
+              id="strengths"
+              name="strengths"
+              value={feedbackData.strengths}
+              onChange={handleTextChange}
+              placeholder={t('feedback.placeholders.strengths')}
+              rows={4}
+              className="feedback-textarea"
+            ></textarea>
+          </div>
+          
+          <div className="feedback-text-question">
+            <label htmlFor="improvements" className="feedback-label">
+              {t('feedback.fields.improvements')}
+            </label>
+            <textarea
+              id="improvements"
+              name="improvements"
+              value={feedbackData.improvements}
+              onChange={handleTextChange}
+              placeholder={t('feedback.placeholders.improvements')}
+              rows={4}
+              className="feedback-textarea"
+            ></textarea>
+          </div>
+          
+          <div className="feedback-text-question">
+            <label htmlFor="additional_comments" className="feedback-label">
+              {t('feedback.fields.additionalComments')}
+            </label>
+            <textarea
+              id="additional_comments"
+              name="additional_comments"
+              value={feedbackData.additional_comments}
+              onChange={handleTextChange}
+              placeholder={t('feedback.placeholders.additionalComments')}
+              rows={4}
+              className="feedback-textarea"
+            ></textarea>
+          </div>
+        </div>
+        
+        <div className="feedback-section">
+          <h3 className="section-title">{t('feedback.sections.futureParticipation')}</h3>
+          
+          {/* Would volunteer again checkbox */}
+          <div className="feedback-checkbox-question">
+            <input
+              type="checkbox"
+              id="would_volunteer_again"
+              name="would_volunteer_again"
+              checked={feedbackData.would_volunteer_again}
+              onChange={handleCheckboxChange}
+              className="feedback-checkbox"
+            />
+            <label htmlFor="would_volunteer_again" className="feedback-checkbox-label">
+              {t('feedback.fields.wouldVolunteerAgain')}
+            </label>
+          </div>
+        </div>
+        
+        <div className="feedback-actions">
+          <button 
+            type="submit" 
+            className="feedback-submit-btn" 
+            disabled={isSubmitting}
+            aria-busy={isSubmitting}
+          >
+            {isSubmitting ? t('feedback.submitting') : t('feedback.submit')}
+          </button>
+        </div>
+        
+        {submitSuccess && (
+          <div className="feedback-success" role="alert">
+            <p>{t('feedback.submitSuccess')}</p>
+          </div>
+        )}
+      </form>
     </div>
   );
 };

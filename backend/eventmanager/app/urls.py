@@ -10,18 +10,21 @@ from .views import tasks_views
 urlpatterns = [
     # Event endpoints (accessible without authentication)
     path('events/upcoming/', event_views.AllUpcomingEventsView.as_view(), name='all_upcoming_events'),
+    path('events/ongoing/', event_views.AllOngoingEventsView.as_view(), name='all_ongoing_events'),
     path('events/details/', event_views.EventDetailsView.as_view(), name='get_event_details'),
     
     # User-specific event endpoints (require authentication)
     path('user/events/enrolled/', event_views.UserEnrolledEventsView.as_view(), name='user_enrolled_events'),
     path('user/events/past/', event_views.UserPastEventsView.as_view(), name='user_past_events'),
     path('user/events/upcoming/', event_views.UserUpcomingEventsView.as_view(), name='user_upcoming_events'),
+    path('user/events/ongoing/', event_views.UserOngoingEventsView.as_view(), name='user_ongoing_events'),
     path('user/events/enroll/', event_views.EnrollUserView.as_view(), name='enroll_user_in_event'),
     path('user/events/unenroll/', event_views.UnenrollUserView.as_view(), name='unenroll_from_event'),
-	path('user/events/check-enrollment/', event_views.CheckUserEnrollmentView.as_view(), name='check_user_enrollment'),
+    path('user/events/check-enrollment/', event_views.CheckUserEnrollmentView.as_view(), name='check_user_enrollment'),
     
     # Host-specific event endpoints (require authentication as host)
     path('host/events/', event_views.HostEventsView.as_view(), name='host_events'),
+    path('host/events/ongoing/', event_views.HostOngoingEventsView.as_view(), name='host_ongoing_events'),
     path('host/events/create/', event_views.CreateEventView.as_view(), name='create_event'),
     path('host/events/update/', event_views.UpdateEventView.as_view(), name='update_event'),
 

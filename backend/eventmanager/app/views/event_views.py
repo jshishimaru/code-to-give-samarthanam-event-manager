@@ -884,3 +884,133 @@ class CheckUserEnrollmentView(View):
                 'message': str(e),
                 'enrolled': False
             }, status=500)
+ 
+@method_decorator(csrf_exempt, name='dispatch')
+class AllOngoingEventsView(View):
+    """
+    Get all currently ongoing events - accessible without authentication
+    """
+    def get(self, request):
+        try:
+            # Get all events with "In Progress" status
+            events = EventInfo.objects.filter(status='In Progress')
+            
+            # Only get event IDs instead of full serialization
+            event_ids = list(events.values_list('id', flat=True))
+            
+            # Get event count
+            event_count = len(event_ids)
+            
+            return JsonResponse({
+                'status': 'success',
+                'count': event_count,
+                'event_ids': event_ids
+            })
+            
+        except Exception as e:
+            print(f"Error in AllOngoingEventsView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    
+    def post(self, request):
+        # POST method can use the same logic as GET for this view
+        return self.get(request)
+    
+@method_decorator(csrf_exempt, name='dispatch')
+class UserOngoingEventsView(View):
+    """
+    Get currently ongoing events that the authenticated user is enrolled in
+    """
+    def get(self, request):
+        try:
+            # Get the authenticated user
+            user = request.user
+            
+            # Check if user is authenticated
+            if not user.is_authenticated:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Authentication required'
+                }, status=401)
+            
+            # Check if user is a host (hosts don't enroll in events)
+            if user.isHost:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Hosts do not enroll in events'
+                }, status=400)
+            
+            # Get ongoing events the user is enrolled in
+            events = user.enrolled_events.filter(status='In Progress')
+            
+            # Only get event IDs instead of full serialization
+            event_ids = list(events.values_list('id', flat=True))
+            
+            return JsonResponse({
+                'status': 'success',
+                'count': len(event_ids),
+                'event_ids': event_ids
+            })
+            
+        except Exception as e:
+            print(f"Error in UserOngoingEventsView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    
+    def post(self, request):
+        # POST method can use the same logic as GET for this view
+        return self.get(request)
+    
+@method_decorator(csrf_exempt, name='dispatch')
+class HostOngoingEventsView(View):
+    """
+    Get currently ongoing events created by the authenticated host
+    """
+    def get(self, request):
+        try:
+            # Get the authenticated user
+            user = request.user
+            
+            # Check if user is authenticated
+            if not user.is_authenticated:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Authentication required'
+                }, status=401)
+            
+            # Check if user is a host
+            if not user.isHost:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Only hosts can view their hosted events'
+                }, status=403)
+            
+            # Get ongoing events created by this host
+            events = EventInfo.objects.filter(host=user, status='In Progress')
+            
+            # Only get event IDs instead of full serialization
+            event_ids = list(events.values_list('id', flat=True))
+            
+            return JsonResponse({
+                'status': 'success',
+                'count': len(event_ids),
+                'event_ids': event_ids
+            })
+            
+        except Exception as e:
+            print(f"Error in HostOngoingEventsView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    
+    def post(self, request):
+        # POST method can use the same logic as GET for this view
+        return self.get(request)

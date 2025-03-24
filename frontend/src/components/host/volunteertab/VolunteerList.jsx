@@ -56,6 +56,7 @@ const VolunteerList = ({
         const response = await getEventVolunteers(eventId);
         
         if (response.success) {
+		//   console.log(response.data.volunteers);
           setVolunteers(response.data.volunteers);
           setEventName(response.data.eventName);
         } else {
@@ -202,21 +203,21 @@ const VolunteerList = ({
       </div>
       
       {/* Search active indicator */}
-      {isSearchMode && (
-        <div className="search-active-indicator">
-          <span>
-            {searchResults.length 
-              ? t('volunteerList.searchResultsFor', { query: searchQuery, count: searchResults.length }) 
-              : t('volunteerList.noSearchResults', { query: searchQuery })}
-          </span>
-          <button 
-            className="show-all-button"
-            onClick={handleClearSearch}
-          >
-            {t('volunteerList.showAllVolunteers')}
-          </button>
-        </div>
-      )}
+	  {isSearchMode && (
+		  <div className="search-active-indicator">
+		    <span>
+		      {searchResults.length > 0 
+		        ? `${t('volunteerList.foundResults', { count: searchResults.length })} "${searchQuery}"`
+		        : `${t('volunteerList.noResults')} "${searchQuery}"`}
+		    </span>
+		    <button 
+		      className="show-all-button"
+		      onClick={handleClearSearch}
+		    >
+		      {t('volunteerList.showAllVolunteers')}
+		    </button>
+		  </div>
+		)}
       
       {/* Error message */}
       {error && (
@@ -255,106 +256,128 @@ const VolunteerList = ({
         </div>
       )}
       
-      {/* Volunteer list */}
-      {!loading && !error && displayVolunteers.length > 0 && (
-        <div className={`volunteers-list ${isSimpleList ? 'simple' : 'grid'}`}>
-          {displayVolunteers.map(volunteer => (
-            <div 
-              key={volunteer.id} 
-              className={`volunteer-item ${isSimpleList ? 'simple' : 'card'} ${selectedVolunteerId === volunteer.id ? 'selected' : ''}`}
-              onClick={() => handleVolunteerClick(volunteer)}
-            >
-              {isSimpleList ? (
-                // Simple list item with just name and skills
-                <>
-                  <div className="volunteer-simple-header">
-                    <div className="volunteer-avatar">
-                      {volunteer.name ? volunteer.name.charAt(0).toUpperCase() : '?'}
-                    </div>
-                    <h3 className="volunteer-name">{volunteer.name}</h3>
-                  </div>
-                  
-                  {volunteer.skills && (
-                    <div className="volunteer-skills simple">
-                      {formatSkills(volunteer.skills).slice(0, 3).map((skill, index) => (
-                        <span key={index} className="skill-tag">{skill}</span>
-                      ))}
-                      {formatSkills(volunteer.skills).length > 3 && (
-                        <span className="skill-tag more-skills">+{formatSkills(volunteer.skills).length - 3}</span>
-                      )}
-                    </div>
-                  )}
-                </>
-              ) : (
-                // Original card design for non-simple view
-                <>
-                  <div className="volunteer-card-header">
-                    <div className="volunteer-avatar">
-                      {volunteer.name ? volunteer.name.charAt(0).toUpperCase() : '?'}
-                    </div>
-                    <div className="volunteer-info">
-                      <h3 className="volunteer-name">{volunteer.name}</h3>
-                      {volunteer.organization && (
-                        <span className="volunteer-organization">{volunteer.organization}</span>
-                      )}
-                      {volunteer.location && (
-                        <span className="volunteer-location">{volunteer.location}</span>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {volunteer.skills && (
-                    <div className="volunteer-skills">
-                      {formatSkills(volunteer.skills).slice(0, 3).map((skill, index) => (
-                        <span key={index} className="skill-tag">{skill}</span>
-                      ))}
-                      {formatSkills(volunteer.skills).length > 3 && (
-                        <span className="skill-tag more-skills">+{formatSkills(volunteer.skills).length - 3}</span>
-                      )}
-                    </div>
-                  )}
-                  
-                  {volunteer.assigned_task_count !== undefined && (
-                    <div className="volunteer-task-info">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                        <polyline points="10 9 9 9 8 9"></polyline>
-                      </svg>
-                      <span>
-                        {volunteer.assigned_task_count === 0
-                          ? t('volunteerList.noAssignedTasks')
-                          : t('volunteerList.assignedTasksCount', { count: volunteer.assigned_task_count })}
-                      </span>
-                    </div>
-                  )}
-                  
-                  {volunteer.skill_match_percent !== undefined && (
-                    <div className="volunteer-skill-match">
-                      <div className="skill-match-label">
-                        {t('volunteerList.skillMatch')}:
-                      </div>
-                      <div className="skill-match-value">
-                        {volunteer.skill_match_percent}%
-                      </div>
-                    </div>
-                  )}
-                  
-                  {showControls && (
-                    <div className="volunteer-card-actions">
-                      <button className="view-profile-btn">
-                        {t('volunteerList.viewProfile')}
-                      </button>
-                    </div>
-                  )}
-                </>
-              )}
+
+{/* Volunteer list */}
+{!loading && !error && displayVolunteers.length > 0 && (
+  <div className={`volunteers-list ${isSimpleList ? 'simple' : 'grid'}`}>
+    {displayVolunteers.map(volunteer => (
+      <div 
+        key={volunteer.id} 
+        className={`volunteer-item ${isSimpleList ? 'simple' : 'card'} ${selectedVolunteerId === volunteer.id ? 'selected' : ''}`}
+        onClick={() => handleVolunteerClick(volunteer)}
+      >
+        {isSimpleList ? (
+          // Simple list item with name, skills, and assigned task count
+          // Updated to align content to the right
+          <>
+            <div className="volunteer-simple-header">
+              <div className="volunteer-avatar">
+                {volunteer.name ? volunteer.name.charAt(0).toUpperCase() : '?'}
+              </div>
+              <div className="volunteer-simple-info">
+                <h3 className="volunteer-name">{volunteer.name}</h3>
+                
+                {/* Display assigned tasks count */}
+                <div className="volunteer-assigned-tasks">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                  <span>
+                    {volunteer.assigned_task_count === 0
+                      ? t('volunteerList.noAssignedTasks')
+                      : t('volunteerList.assignedTasksCount', { count: volunteer.assigned_task_count })}
+                  </span>
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-      )}
+            
+            {/* Fixed skills display */}
+            {volunteer.skills && (
+              <div className="volunteer-skills simple">
+                {formatSkills(volunteer.skills).slice(0, 3).map((skill, index) => (
+                  <span key={index} className="skill-tag">{skill}</span>
+                ))}
+                {formatSkills(volunteer.skills).length > 3 && (
+                  <span className="skill-tag more-skills">+{formatSkills(volunteer.skills).length - 3}</span>
+                )}
+              </div>
+            )}
+          </>
+        ) : (
+          // Original card design for non-simple view
+          <>
+            <div className="volunteer-card-header">
+              <div className="volunteer-avatar">
+                {volunteer.name ? volunteer.name.charAt(0).toUpperCase() : '?'}
+              </div>
+              <div className="volunteer-info">
+                <h3 className="volunteer-name">{volunteer.name}</h3>
+                {volunteer.organization && (
+                  <span className="volunteer-organization">{volunteer.organization}</span>
+                )}
+                {volunteer.location && (
+                  <span className="volunteer-location">{volunteer.location}</span>
+                )}
+              </div>
+            </div>
+            
+            {/* Fixed skills display */}
+            {volunteer.skills && (
+              <div className="volunteer-skills">
+                {formatSkills(volunteer.skills).slice(0, 3).map((skill, index) => (
+                  <span key={index} className="skill-tag">{skill}</span>
+                ))}
+                {formatSkills(volunteer.skills).length > 3 && (
+                  <span className="skill-tag more-skills">+{formatSkills(volunteer.skills).length - 3}</span>
+                )}
+              </div>
+            )}
+            
+            {volunteer.assigned_task_count !== undefined && (
+              <div className="volunteer-task-info">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span>
+                  {volunteer.assigned_task_count === 0
+                    ? t('volunteerList.noAssignedTasks')
+                    : t('volunteerList.assignedTasksCount', { count: volunteer.assigned_task_count })}
+                </span>
+              </div>
+            )}
+            
+            {volunteer.skill_match_percent !== undefined && (
+              <div className="volunteer-skill-match">
+                <div className="skill-match-label">
+                  {t('volunteerList.skillMatch')}:
+                </div>
+                <div className="skill-match-value">
+                  {volunteer.skill_match_percent}%
+                </div>
+              </div>
+            )}
+            
+            {showControls && (
+              <div className="volunteer-card-actions">
+                <button className="view-profile-btn">
+                  {t('volunteerList.viewProfile')}
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    ))}
+  </div>
+)}
     </div>
   );
 };

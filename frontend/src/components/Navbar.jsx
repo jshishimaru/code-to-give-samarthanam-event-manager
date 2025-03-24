@@ -6,7 +6,7 @@ import logoImage from '../assets/logo.png';
 import { checkAuth } from '../apiservice/auth';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
-import VolunteerProfile from './host/volunteer/VolunteerProfile';
+import VolunteerProfile from './host/volunteertab/VolunteerProfile';
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

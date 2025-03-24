@@ -38,7 +38,7 @@ const EventVolunteers = () => {
   return (
     <div className="event-volunteers-container">
       <div className="event-volunteers-content">
-        {/* Left column: Volunteer List */}
+        {/* Left column: Volunteer List - Now takes more space */}
         <div className="volunteers-column">
           <VolunteerList 
             eventId={eventId} 
@@ -49,13 +49,14 @@ const EventVolunteers = () => {
           />
         </div>
 
-        {/* Right column: Profile and Task Window */}
+        {/* Right column: Profile and Task Window - Now takes less space */}
         <div className="profile-column">
           {selectedVolunteer ? (
             <div className="profile-with-actions">
               <VolunteerProfile 
                 userId={selectedVolunteer.id}
-                showActions={true}
+                showActions={false} // Hide general actions
+                compact={true} // Use a more compact view
               />
               
               <div className="profile-action-buttons">

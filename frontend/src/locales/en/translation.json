@@ -521,13 +521,15 @@
   "clearSearch": "Clear search",
   "searchResultsFor": "Found {count} results for '{query}'",
   "noSearchResults": "No results found for '{query}'",
-  "showAllVolunteers": "Show all volunteers",
   "loading": "Loading volunteers...",
   "noVolunteers": "No volunteers enrolled in this event yet",
   "viewProfile": "View Profile",
   "skillMatch": "Skill Match",
   "noAssignedTasks": "No assigned tasks",
   "assignedTasksCount": "{count} tasks assigned",
+  "foundResults": "Found {{count}} results for",
+  "noResults": "No results found for",
+  "showAllVolunteers": "Show all volunteers",
   "errors": {
     "noEventId": "No event ID provided",
     "fetchFailed": "Failed to fetch volunteers",
@@ -559,5 +561,80 @@
 "eventVolunteers": {
   "assignTask": "Assign Task",
   "selectVolunteerPrompt": "Select a volunteer from the list to view their profile and assign tasks"
-}
+},
+"taskForm": {
+	"titles": {
+	  "create": "Create New Task",
+	  "edit": "Edit Task"
+	},
+	"aria": {
+	  "createForm": "Create new task form",
+	  "editForm": "Edit task form"
+	},
+	"fields": {
+	  "taskName": "Task Name",
+	  "description": "Description",
+	  "startTime": "Start Time",
+	  "endTime": "End Time",
+	  "status": "Status",
+	  "requiredSkills": "Required Skills"
+	},
+	"placeholders": {
+	  "taskName": "Enter task name",
+	  "description": "Provide a detailed description of the task",
+	  "requiredSkills": "e.g. Photography, Content Writing, Design"
+	},
+	"help": {
+	  "skills": "Separate skills with commas"
+	},
+	"status": {
+	  "pending": "Pending",
+	  "inProgress": "In Progress",
+	  "completed": "Completed",
+	  "cancelled": "Cancelled"
+	},
+	"buttons": {
+	  "cancel": "Cancel",
+	  "create": "Create Task",
+	  "creating": "Creating...",
+	  "update": "Update Task",
+	  "updating": "Updating...",
+	  "cancelAriaLabel": "Cancel and return to previous page"
+	},
+	"errors": {
+	  "nameRequired": "Task name is required",
+	  "startTimeRequired": "Start time is required",
+	  "endTimeRequired": "End time is required",
+	  "endTimeAfterStart": "End time must be after start time",
+	  "submitFailed": "Failed to save task. Please try again."
+	}
+  },
+"eventTasks": {
+	"tasks": "Tasks",
+	"tasksForEvent": "Tasks for {{eventName}}",
+	"addTask": "Add Task",
+	"addTaskAriaLabel": "Add a new task",
+	"loading": "Loading tasks...",
+	"noTasks": "No tasks have been created for this event yet",
+	"addFirstTask": "Create First Task",
+	"addFirstTaskAriaLabel": "Create the first task for this event",
+	"closeModal": "Close form",
+	"errors": {
+	  "noEventId": "No event ID provided",
+	  "fetchFailed": "Failed to fetch tasks"
+	}
+  },
+  "taskList": {
+	"taskName": "Task Name",
+	"dates": "Dates",
+	"status": "Status",
+	"volunteers": "Volunteers",
+	"actions": "Actions",
+	"start": "Start",
+	"end": "End",
+	"noVolunteers": "No volunteers assigned",
+	"volunteerCount": "{{count}} volunteers",
+	"editTask": "Edit",
+	"editTaskAriaLabel": "Edit task {{taskName}}"
+  }
   }

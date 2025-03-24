@@ -5,9 +5,12 @@
     height: 100vh;
     background-color: var(--sidebar-bg);
     transition: width var(--transition-speed) ease;
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
     z-index: 100;
     box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
   }
   
   .sidebar.expanded {

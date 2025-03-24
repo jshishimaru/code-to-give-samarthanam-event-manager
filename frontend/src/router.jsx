@@ -7,7 +7,13 @@ import FeedbackForm from './components/FeedbackForm';
 import MyEvents from './components/host/hostevents/MyEvents';
 import CreateEvent from './components/host/hostevents/CreateEvent';
 import HostEventDetails from './components/host/hostevents/HostEventDetails';
+<<<<<<< HEAD
 
+=======
+import EventVolunteers from './components/host/volunteertab/EventVolunteers';
+import EventTasks from './components/host/hosttask/EventTasks';
+import EventInfo from './components/host/hostevents/EventInfo';
+>>>>>>> tmp
 import Layout from './components/Layout'
 import HostLayout from './components/host/hostlayout/HostLayout';
 
@@ -32,6 +38,7 @@ const router = createBrowserRouter([
         path:'events/:eventId/feedback',
         element: <Layout><FeedbackForm /></Layout>
     },
+<<<<<<< HEAD
     {
         path:'/events',
         element: <Layout><EventPage /></Layout>
@@ -48,6 +55,39 @@ const router = createBrowserRouter([
         path:'/host/MyEvents/:eventId',
         element: <Layout><HostLayout /></Layout>
     }
+=======
+	{
+		path:'/events',
+		element: <Layout><EventPage /></Layout>
+	},
+	{
+		path:'/host/MyEvents',
+		element: <Layout><MyEvents /></Layout>
+
+	},
+	{
+		path:'/host/MyEvents/CreateEvent',
+		element: <Layout><CreateEvent /></Layout>
+
+	},
+	{
+		path:'/host/MyEvents/:eventId',
+		element: <Layout><HostEventDetails /></Layout>
+	},
+	{
+		path:'/host/MyEvents/:eventId/volunteers',
+		element: <Layout><EventVolunteers /></Layout>
+	},
+	{
+		path:'/host/MyEvents/:eventId/tasks',
+		element: <Layout><EventTasks /></Layout>
+	},
+	{
+		path: '/host/MyEvents/:eventId/event-info',
+		element: <Layout><EventInfo /></Layout>	
+	}
+
+>>>>>>> tmp
 ]);
 
 export default router;

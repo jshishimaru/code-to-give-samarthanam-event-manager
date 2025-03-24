@@ -1,21 +1,44 @@
-import React,  { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
-import '../../../styles/hostlayout/HostLayout.css';
+import '../../../styles/host/hostlayout/HostLayout.css';
 
 const HostLayout = ({ children }) => {
-  const [sidebarExpanded, setSidebarExpanded] = useState(true);
-  
-  // Handle sidebar state changes
-  const handleSidebarToggle = (expanded) => {
-    setSidebarExpanded(expanded);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
   };
 
+  // Listen for navbar scroll state
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 20;
+      if (isScrolled) {
+        document.body.classList.add('scrolled');
+      } else {
+        document.body.classList.remove('scrolled');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    // Initial check
+    handleScroll();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div className={`host-layout ${sidebarExpanded ? 'sidebar-expanded' : 'sidebar-collapsed'}`}>
-      <Sidebar onToggle={handleSidebarToggle} />
-      <main className="host-main-content">
-        {children}
-      </main>
+    <div className={`host-layout ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+      <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      
+      <div className="host-main-content" id="host-main-content">
+        <div className="host-main-content-inner">
+          {children}
+        </div>
+      </div>
     </div>
   );
 };

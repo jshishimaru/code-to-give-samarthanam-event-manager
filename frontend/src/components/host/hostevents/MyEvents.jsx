@@ -8,11 +8,11 @@ import {
     getHostUpcomingEvents,
     getHostPastEvents,
     getHostDraftEvents
-} from '../../apiservice/event';
-import { isAuthenticated, checkAuth } from '../../apiservice/auth';
-import EventCard from '../EventCard';
-import '../../styles/EventPage.css';
-import '../../styles/host/MyEvents.css';
+} from '../../../apiservice/event';
+import { isAuthenticated, checkAuth } from '../../../apiservice/auth';
+import EventCard from '../../EventCard';
+import '../../../styles/EventPage.css';
+import '../../../styles/host/hostevents/MyEvents.css';
 
 const MyEvents = () => {
     const { t } = useTranslation();

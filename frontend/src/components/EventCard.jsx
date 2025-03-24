@@ -114,7 +114,11 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
   // Check if the current user is the host of this event
   const isHostedEvent = () => {
     if (!event || !authState.userId) return false;
-    return event.host_id === authState.userId || event.organizer_id === authState.userId;
+    return (
+      event.host_id === authState.userId || 
+      event.organizer_id === authState.userId ||
+      (authState.currentUser && authState.currentUser.isHost)
+    );
   };
 
   // Determine component class based on view mode

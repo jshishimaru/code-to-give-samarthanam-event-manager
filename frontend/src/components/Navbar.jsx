@@ -51,12 +51,27 @@ const Navbar = () => {
     window.addEventListener('storage', handleStorageChange);
     
     // Add scroll event listener
+    // const handleScroll = () => {
+    //   if (window.scrollY > 50) {
+    //     setScrolled(true);
+    //   } else {
+    //     setScrolled(false);
+    //   }
+    // };
     const handleScroll = () => {
-      if (window.scrollY > 50) {
+      if (window.scrollY > 20) {
         setScrolled(true);
+        document.body.classList.add('navbar-scrolled');
       } else {
         setScrolled(false);
+        document.body.classList.remove('navbar-scrolled');
       }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
     };
 
     window.addEventListener('scroll', handleScroll);

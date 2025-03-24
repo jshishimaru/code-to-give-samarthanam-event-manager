@@ -1,0 +1,185 @@
+/* HostEventDetails.css */
+
+.host-event-details-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    width: 100%;
+  }
+  
+  .event-details-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 2rem;
+    gap: 1.5rem;
+    position: sticky;
+    top: 0;
+    background-color: var(--bg-color, #fff);
+    padding: 1rem 0;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0);
+    transition: padding 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .event-details-header.scrolled {
+    padding: 0.5rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .back-to-events-button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--primary-color, #0066cc);
+    padding: 0.5rem 0;
+    font-size: 1rem;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  
+  .back-to-events-button svg {
+    margin-right: 0.5rem;
+  }
+  
+  .back-to-events-button:hover {
+    color: var(--primary-hover, #0055aa);
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-color, #333);
+  }
+  
+  /* Loading and error states */
+  .event-details-loading,
+  .event-details-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--bg-color, #fff);
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .loading-spinner {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0.25rem solid #f3f3f3;
+    border-top: 0.25rem solid var(--primary-color, #0066cc);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .event-details-error p {
+    color: var(--error-color, #d32f2f);
+    margin-bottom: 1.5rem;
+  }
+  
+  .back-button {
+    background-color: var(--bg-secondary, #f2f2f2);
+    color: var(--text-color, #444);
+    border: 1px solid var(--input-border, #ddd);
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+  .back-button:hover {
+    background-color: var(--bg-secondary-hover, #e5e5e5);
+  }
+  
+  /* Notification styles */
+  .notification {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    min-width: 15rem;
+    max-width: 25rem;
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  .notification.success {
+    background-color: var(--success-bg, #e8f5e9);
+    color: var(--success-text, #1b5e20);
+    border-left: 0.25rem solid var(--success-color, #4caf50);
+  }
+  
+  .notification.error {
+    background-color: var(--error-bg, #fdecea);
+    color: var(--error-text, #b71c1c);
+    border-left: 0.25rem solid var(--error-color, #f44336);
+  }
+  
+  .close-notification {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: inherit;
+    margin-left: 0.5rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .close-notification:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .host-event-details-page {
+      padding: 0.75rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .notification {
+      top: auto;
+      bottom: 1rem;
+      left: 1rem;
+      right: 1rem;
+      max-width: none;
+    }
+    
+    .event-details-header {
+      flex-wrap: wrap;
+    }
+  }

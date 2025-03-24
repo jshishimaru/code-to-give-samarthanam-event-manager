@@ -1,0 +1,202 @@
+.sidebar {
+  width: 250px;
+  height: calc(100vh - var(--navbar-height, 5rem));
+  background-color: var(--sidebar-bg, #f5f5f5);
+  color: var(--sidebar-color, #333);
+  position: fixed;
+  top: var(--navbar-height+1.2rem, 5.2rem); /* Position below navbar */
+  left: 0;
+  transition: width var(--transition-speed, 0.3s) ease;
+  z-index: 900; /* Lower than navbar (1000) */
+  display: flex;
+  flex-direction: column;
+  font-family: var(--body-font-family);
+  font-size: calc(14px * var(--font-scale, 1));
+  font-weight: calc(400 * var(--font-weight-scale, 1));
+  overflow-y: auto;
+}
+
+.sidebar.closed {
+  margin: 0;
+  width: 64px;
+}
+
+/* When navbar is scrolled */
+body.scrolled .sidebar {
+  top: var(--navbar-height-scrolled, 3rem);
+  height: calc(100vh - var(--navbar-height-scrolled, 3rem));
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align toggle button to the right */
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.toggle-button {
+  background: transparent;
+  border: none;
+  color: var(--sidebar-color, #333);
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-button:focus {
+  outline: 2px solid var(--outline-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 1rem;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: var(--sidebar-color, #333);
+  text-decoration: none;
+  transition: all var(--transition-speed, 0.3s) ease;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--sidebar-hover-bg, #e0e0e0);
+  color: var(--sidebar-color, #333);
+}
+
+.sidebar-nav a.active {
+  background-color: var(--sidebar-active-bg, var(--primary-color, #ec5751));
+  color: var(--sidebar-active-color, white);
+  border-left-color: var(--outline-color, #ec5751);
+}
+
+/* Override theme-specific styles */
+[data-theme="dark"] .sidebar {
+  background-color: var(--bg-secondary, #111827);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="high-contrast-light"] .sidebar {
+  background-color: var(--bg-secondary, #f0f0f0);
+  color: var(--text-color, #000000);
+  border-right: 2px solid var(--text-color, #000000);
+}
+
+[data-theme="high-contrast-light"] .sidebar-nav a {
+  color: var(--text-color, #000000);
+  border-left: 3px solid transparent;
+}
+
+[data-theme="high-contrast-light"] .sidebar-nav a.active {
+  background-color: var(--primary-color, #d83a34);
+  color: #ffffff;
+  border-left-color: var(--text-color, #000000);
+}
+
+[data-theme="high-contrast-dark"] .sidebar {
+  background-color: var(--bg-secondary, #121212);
+  color: var(--text-color, #ffffff);
+  border-right: 2px solid var(--text-color, #ffffff);
+}
+
+[data-theme="high-contrast-dark"] .sidebar-nav a {
+  color: var(--text-color, #ffffff);
+}
+
+[data-theme="high-contrast-dark"] .sidebar-nav a.active {
+  background-color: var(--primary-color, #ff7b76);
+  color: var(--bg-color, #000000);
+  border-left-color: var(--text-color, #ffffff);
+}
+
+.icon {
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+}
+
+.closed .title {
+  display: none;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar {
+    transition: none;
+  }
+  
+  .sidebar-nav a {
+    transition: none;
+  }
+}
+
+/* Font size adaptations */
+[data-font-size="small"] .sidebar {
+  font-size: calc(12px * var(--font-scale, 0.85));
+}
+
+[data-font-size="large"] .sidebar {
+  font-size: calc(16px * var(--font-scale, 1.15));
+}
+
+[data-font-size="x-large"] .sidebar {
+  font-size: calc(18px * var(--font-scale, 1.3));
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    top: var(--navbar-height, 5rem);
+  }
+  
+  body.scrolled .sidebar {
+    top: var(--navbar-height-scrolled, 3rem);
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 0 0 15px var(--shadow-color, rgba(0, 0, 0, 0.5));
+    width: 250px; /* Ensure full width on mobile when open */
+  }
+  
+  .sidebar.closed {
+    width: 0;
+    transform: translateX(-100%);
+  }
+  
+  /* Make icons slightly larger on touch devices */
+  .icon {
+    width: 28px;
+  }
+  
+  /* Increase touch target size */
+  .sidebar-nav a {
+    padding: 0.85rem 1rem;
+  }
+  
+  .toggle-button {
+    padding: 8px;
+  }
+}

@@ -4,9 +4,9 @@ import SignUpForm from './components/SignUpForm';
 import EventPage from './components/EventPage';
 import EventDetails from './components/EventDetails';
 import FeedbackForm from './components/FeedbackForm';
-import MyEvents from './components/host/MyEvents';
-import CreateEvent from './components/host/CreateEvent';
-import HostEventDetails from './components/host/HostEventDetails';
+import MyEvents from './components/host/hostevents/MyEvents';
+import CreateEvent from './components/host/hostevents/CreateEvent';
+import HostEventDetails from './components/host/hostevents/HostEventDetails';
 
 import Layout from './components/Layout'
 const router = createBrowserRouter([

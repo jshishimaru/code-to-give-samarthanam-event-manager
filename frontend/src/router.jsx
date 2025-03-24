@@ -4,6 +4,8 @@ import SignUpForm from './components/SignUpForm';
 import EventPage from './components/EventPage';
 import EventDetails from './components/EventDetails';
 import FeedbackForm from './components/FeedbackForm';
+import MyEvents from './components/host/MyEvents';
+import CreateEvent from './components/host/CreateEvent';
 
 import Layout from './components/Layout'
 const router = createBrowserRouter([
@@ -32,6 +34,16 @@ const router = createBrowserRouter([
 	{
 		path:'/events',
 		element: <Layout><EventPage /></Layout>
+	},
+	{
+		path:'/host/MyEvents',
+		element: <Layout><MyEvents /></Layout>
+
+	},
+	{
+		path:'/host/MyEvents/CreateEvent',
+		element: <Layout><CreateEvent /></Layout>
+
 	}
 
 ]);

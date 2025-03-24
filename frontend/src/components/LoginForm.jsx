@@ -62,7 +62,7 @@ const LoginForm = ({ onSubmit }) => {
         if (formData.role === 'volunteer') {
           setTimeout(() => navigate('/events'), 1000);
         } else {
-          setTimeout(() => navigate('/host/events'), 1000);
+          setTimeout(() => navigate('/host/MyEvents'), 1000);
         }
         
         if (onSubmit) onSubmit(response, formData.role);

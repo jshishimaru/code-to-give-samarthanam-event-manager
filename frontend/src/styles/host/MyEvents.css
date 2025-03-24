@@ -1,0 +1,198 @@
+/* Tab container styles with Create Event button */
+.tabs-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .event-tabs {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    flex-grow: 1;
+  }
+  
+  .event-tab-button {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-weight: 600;
+    color: var(--text-secondary, #666);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    gap: 0.5rem;
+  }
+  
+  .event-tab-button:hover {
+    color: var(--primary-color, #4A90E2);
+    background-color: rgba(74, 144, 226, 0.05);
+  }
+  
+  .event-tab-button.active {
+    color: var(--primary-color, #4A90E2);
+    border-bottom-color: var(--primary-color, #4A90E2);
+  }
+  
+  .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    background-color: rgba(74, 144, 226, 0.1);
+    border-radius: 1rem;
+    padding: 0 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  
+  /* Enhanced Create Event button styling for the tab container */
+  .tab-create-button {
+    background-color: var(--primary-color, #4A90E2);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 0.65rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+    margin-left: 11rem;
+    margin-top: 0.1rem;
+    white-space: nowrap;
+    right: 0;
+    top: 0;
+    margin-right: -50%;
+  }
+  /* .tab-create-button {
+    background-color: var(--primary-color, #4A90E2);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 0.65rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+    white-space: nowrap;
+    position: absolute;
+    right: 0;
+    top: 0; 
+  } */
+  
+  .tab-create-button::before {
+    content: '+';
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+  }
+  
+  .tab-create-button:hover {
+    background-color: #3a7bc8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+  }
+  
+  .tab-create-button:hover::before {
+    transform: rotate(90deg);
+  }
+  
+  .tab-create-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(74, 144, 226, 0.3);
+  }
+  
+  /* Styling active tab panels */
+  .event-tab-panel {
+    display: none;
+  }
+  
+  .event-tab-panel.active {
+    display: block;
+    animation: fadeIn 0.4s ease-in-out;
+  }
+  
+  /* Media queries for responsive tab layout */
+  @media screen and (max-width: 768px) {
+    .tabs-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        position: relative;
+        padding-bottom: 60px; /* Add padding at the bottom for the button */
+      }
+      
+      .event-tabs {
+        width: 100%;
+        justify-content: space-between;
+        padding-right: 0; /* Remove the padding on smaller screens */
+      }
+      
+    
+    .event-tab-button {
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .tab-create-button {
+        position: absolute;
+        width: 100%;
+        right: 0;
+        top: auto; /* Override the top value */
+        bottom: 0; /* Position at the bottom */
+        justify-content: center;
+        margin-left: 0;
+        padding: 0.75rem 1rem;
+      }
+  }
+  
+  /* For very small screens, stack the tabs */
+  @media screen and (max-width: 576px) {
+    .event-tabs {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .event-tab-button {
+      flex: 1 1 calc(50% - 0.5rem);
+      text-align: center;
+      justify-content: center;
+      padding: 0.6rem 0.5rem;
+      font-size: 0.85rem;
+    }
+    .tabs-wrapper {
+        padding-bottom: 55px; /* Slightly reduce padding */
+      }
+      
+      .tab-create-button {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+      }
+  }
+  
+  /* Ensure the create button has good contrast in dark mode */
+  [data-theme="dark"] .tab-create-button {
+    background-color: var(--primary-color-dark, #5A9AE6);
+    box-shadow: 0 2px 8px rgba(90, 154, 230, 0.3);
+  }
+  
+  [data-theme="dark"] .tab-create-button:hover {
+    background-color: var(--primary-hover-dark, #6AA7EB);
+    box-shadow: 0 4px 12px rgba(90, 154, 230, 0.4);
+  }

@@ -269,3 +269,45 @@ export const getAllOngoingEvents = async () => {
 	  return { success: false, error: error.response?.data?.message || error.message };
 	}
   };
+
+  /**
+ * Get upcoming events for the host
+ * @returns {Promise<Object>} Response with success status and list of host's upcoming events
+ */
+export const getHostUpcomingEvents = async () => {
+  try {
+    const response = await axios.get(`${APP_API_URL}host/events/upcoming/`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error fetching host upcoming events:', error);
+    return { success: false, error: error.response?.data?.message || error.message };
+  }
+};
+
+/**
+ * Get past events for the host
+ * @returns {Promise<Object>} Response with success status and list of host's past events
+ */
+export const getHostPastEvents = async () => {
+  try {
+    const response = await axios.get(`${APP_API_URL}host/events/past/`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error fetching host past events:', error);
+    return { success: false, error: error.response?.data?.message || error.message };
+  }
+};
+
+/**
+ * Get draft events for the host
+ * @returns {Promise<Object>} Response with success status and list of host's draft events
+ */
+export const getHostDraftEvents = async () => {
+  try {
+    const response = await axios.get(`${APP_API_URL}host/events/draft/`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error fetching host draft events:', error);
+    return { success: false, error: error.response?.data?.message || error.message };
+  }
+};

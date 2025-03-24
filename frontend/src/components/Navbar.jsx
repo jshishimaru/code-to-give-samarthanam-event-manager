@@ -22,7 +22,7 @@ const Navbar = () => {
     const checkAuthStatus = async () => {
       try {
         const response = await checkAuth();
-		console.log(response.data);
+		    console.log(response.data);
         
         if (response.success && response.data.authenticated) {
           setIsLoggedIn(true);
@@ -76,7 +76,13 @@ const Navbar = () => {
         
         if (response.success && response.data.authenticated) {
           setIsLoggedIn(true);
-          setUserInfo(response.data.user);
+          const user = response.data.user;
+          setUserInfo({
+            ...user,
+            // Ensure role is set based on isHost property if not already present
+            role: user.role || (user.isHost ? 'organiser' : 'volunteer')
+          });
+
         } else {
           setIsLoggedIn(false);
           setUserInfo(null);
@@ -127,6 +133,13 @@ const Navbar = () => {
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
+  // Check if user is an organiser
+  const isOrganiser = userInfo?.role === 'organiser';
+  // const isOrganiser = user.isHost;
+  // console.log('User role:', userInfo?.role, 'Is organiser:', isOrganiser);
+
+
   
   return (
     <header className={`navbar ${scrolled ? 'scrolled' : ''}`} role="banner">
@@ -185,16 +198,20 @@ const Navbar = () => {
                 {t('navbar.events')}
               </Link>
             </li>
-            {/* <li role="none">
-              <Link 
-                to="/my-events"
-                onClick={closeMenu}
-                role="menuitem"
-                aria-current={location.pathname.includes('/my-events') ? 'page' : undefined}
-              >
-                {t('navbar.myEvents')}
-              </Link>
-            </li> */}
+            {/* Only show My Events link if user is an organiser */}
+            {(isLoggedIn && isOrganiser) && (
+              <li role="none">
+                <Link 
+                  to="/host/MyEvents"
+                  onClick={closeMenu}
+                  role="menuitem"
+                  aria-current={location.pathname.includes('/my-events') ? 'page' : undefined}
+                >
+                  {t('navbar.myEvents')}
+                </Link>
+              </li>
+            )}
+
             <li role="none">
               <a 
                 href="https://samarthanam.org/about-us/" 
@@ -206,14 +223,7 @@ const Navbar = () => {
               >
                 {t('navbar.about')}
               </a>
-              {/* <Link
-                to="/about"
-                onClick={closeMenu}
-                role="menuitem"
-                aria-current={location.pathname.includes('/about') ? 'page' : undefined}
-              >
-                {t('navbar.about')}
-              </Link> */}
+              
             </li>
             <li role="none">
               <a 
@@ -227,16 +237,7 @@ const Navbar = () => {
                 {t('navbar.contact')}
               </a>
             </li>
-            {/* <li role="none">
-              <Link
-                to="/contact"
-                onClick={closeMenu}
-                role="menuitem"
-                aria-current={location.pathname.includes('/contact') ? 'page' : undefined}
-              >
-                {t('navbar.contact')}
-              </Link>
-            </li> */}
+            
           </ul>
 
           <div 

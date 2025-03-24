@@ -1014,3 +1014,148 @@ class HostOngoingEventsView(View):
     def post(self, request):
         # POST method can use the same logic as GET for this view
         return self.get(request)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class HostUpcomingEventsView(View):
+    """
+    Get upcoming events created by the authenticated host
+    """
+    def get(self, request):
+        try:
+            # Get the authenticated user
+            user = request.user
+            
+            # Check if user is authenticated
+            if not user.is_authenticated:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Authentication required'
+                }, status=401)
+            
+            # Check if user is a host
+            if not user.isHost:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Only hosts can view their hosted events'
+                }, status=403)
+            
+            # Get upcoming events created by this host
+            events = EventInfo.objects.filter(host=user, status='Upcoming')
+            
+            # Only get event IDs instead of full serialization
+            event_ids = list(events.values_list('id', flat=True))
+            
+            return JsonResponse({
+                'status': 'success',
+                'count': len(event_ids),
+                'event_ids': event_ids
+            })
+            
+        except Exception as e:
+            print(f"Error in HostUpcomingEventsView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    
+    def post(self, request):
+        # POST method can use the same logic as GET for this view
+        return self.get(request)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class HostPastEventsView(View):
+    """
+    Get past (completed) events created by the authenticated host
+    """
+    def get(self, request):
+        try:
+            # Get the authenticated user
+            user = request.user
+            
+            # Check if user is authenticated
+            if not user.is_authenticated:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Authentication required'
+                }, status=401)
+            
+            # Check if user is a host
+            if not user.isHost:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Only hosts can view their hosted events'
+                }, status=403)
+            
+            # Get completed events created by this host
+            events = EventInfo.objects.filter(host=user, status='Completed')
+            
+            # Only get event IDs instead of full serialization
+            event_ids = list(events.values_list('id', flat=True))
+            
+            return JsonResponse({
+                'status': 'success',
+                'count': len(event_ids),
+                'event_ids': event_ids
+            })
+            
+        except Exception as e:
+            print(f"Error in HostPastEventsView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    
+    def post(self, request):
+        # POST method can use the same logic as GET for this view
+        return self.get(request)
+ 
+@method_decorator(csrf_exempt, name='dispatch')
+class HostDraftEventsView(View):
+    """
+    Get draft events created by the authenticated host
+    """
+    def get(self, request):
+        try:
+            # Get the authenticated user
+            user = request.user
+            
+            # Check if user is authenticated
+            if not user.is_authenticated:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Authentication required'
+                }, status=401)
+            
+            # Check if user is a host
+            if not user.isHost:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Only hosts can view their hosted events'
+                }, status=403)
+            
+            # Get draft events created by this host
+            events = EventInfo.objects.filter(host=user, status='Draft')
+            
+            # Only get event IDs instead of full serialization
+            event_ids = list(events.values_list('id', flat=True))
+            
+            return JsonResponse({
+                'status': 'success',
+                'count': len(event_ids),
+                'event_ids': event_ids
+            })
+            
+        except Exception as e:
+            print(f"Error in HostDraftEventsView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    
+    def post(self, request):
+        # POST method can use the same logic as GET for this view
+        return self.get(request)

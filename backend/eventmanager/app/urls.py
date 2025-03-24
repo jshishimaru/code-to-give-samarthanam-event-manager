@@ -26,8 +26,11 @@ urlpatterns = [
     # Host-specific event endpoints (require authentication as host)
     path('host/events/', event_views.HostEventsView.as_view(), name='host_events'),
     path('host/events/ongoing/', event_views.HostOngoingEventsView.as_view(), name='host_ongoing_events'),
+    path('host/events/upcoming/', event_views.HostUpcomingEventsView.as_view(), name='host_upcoming_events'),
+    path('host/events/past/', event_views.HostPastEventsView.as_view(), name='host_past_events'),
     path('host/events/create/', event_views.CreateEventView.as_view(), name='create_event'),
     path('host/events/update/', event_views.UpdateEventView.as_view(), name='update_event'),
+	path('host/events/draft/', event_views.HostDraftEventsView.as_view(), name='host_draft_events'),
 
     # Feedback endpoints
     path('feedback/event/', feeback_views.EventFeedbackListView.as_view(), name='event_feedback_list'),

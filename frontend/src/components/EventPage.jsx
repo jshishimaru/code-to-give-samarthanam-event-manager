@@ -10,7 +10,7 @@ import {
 import { checkAuth } from '../apiservice/auth';
 import { checkFeedbackEligibility } from '../apiservice/feedback';
 import { getRecommendedEvents , getEventsSortedByRelevance } from '../apiservice/ml';
-import EventCard from './EventCard';
+import EventCard from './Event/EventCard';
 import '../styles/EventPage.css';
 import Navbar from './Navbar';
 import { useTranslation } from 'react-i18next';

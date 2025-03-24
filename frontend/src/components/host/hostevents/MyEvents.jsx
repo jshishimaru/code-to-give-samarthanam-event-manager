@@ -10,7 +10,7 @@ import {
     getHostDraftEvents
 } from '../../../apiservice/event';
 import { isAuthenticated, checkAuth } from '../../../apiservice/auth';
-import EventCard from '../../EventCard';
+import EventCard from '../../Event/EventCard';
 import '../../../styles/EventPage.css';
 import '../../../styles/host/hostevents/MyEvents.css';
 

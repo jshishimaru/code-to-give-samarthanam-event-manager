@@ -287,3 +287,19 @@
 	height: 100%;
 	margin-bottom: 0;
   }
+
+  /* Add these styles to your existing EventCard.css file */
+
+.manage-event-link {
+	background-color: var(--primary-color) !important;
+	color: white !important;
+	font-weight: 500;
+	padding: 0.5rem 1rem;
+	border-radius: 4px;
+	transition: background-color 0.2s ease;
+  }
+  
+  .manage-event-link:hover, .manage-event-link:focus {
+	background-color: var(--primary-hover) !important;
+	text-decoration: none;
+  }

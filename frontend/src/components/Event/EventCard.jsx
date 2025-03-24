@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getEventDetails } from '../apiservice/event';
-import { checkAuth } from '../apiservice/auth';
-import '../styles/EventCard.css';
+import { getEventDetails } from '../../apiservice/event';
+import { checkAuth } from '../../apiservice/auth';
+import '../../styles/Event/EventCard.css';
 
 /**
  * EventCard component for displaying event information
@@ -13,6 +13,7 @@ import '../styles/EventCard.css';
  */
 const EventCard = ({ eventId, viewMode = 'grid' }) => {
   const { t, i18n } = useTranslation();
+  const location = useLocation();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,6 +22,11 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
     isOrganizer: false,
     userId: null
   });
+
+  // Check if currently on MyEvents page
+  const isOnMyEventsPage = location.pathname.includes('/host/MyEvents') && 
+                          !location.pathname.includes('/CreateEvent') && 
+                          !location.pathname.includes(`/${eventId}`);
 
   // Check authentication status
   useEffect(() => {
@@ -188,30 +194,34 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
         )}
         
         <div className="event-card__footer">
-          {authState.isAuthenticated && authState.isOrganizer && isHostedEvent() ? (
+          {/* Show "Manage Event" button when on the MyEvents page */}
+          {isOnMyEventsPage ? (
             <Link 
               to={`/host/MyEvents/${eventId}`} 
-              className="event-card__link"
-              aria-label={t('eventCard.edit.ariaLabel', { name: event.event_name })}
+              className="event-card__link manage-event-link"
+              aria-label={t('eventCard.manage.ariaLabel', { name: event.event_name })}
             >
-              {t('eventCard.review.label')}
-            </Link>
-          ) : authState.isAuthenticated ? (
-            <Link 
-              to={`/events/${eventId}`} 
-              className="event-card__link"
-              aria-label={t('eventCard.viewDetails.ariaLabel', { name: event.event_name })}
-            >
-              {t('eventCard.viewDetails.label')}
+              {t('eventCard.manage.label', 'Manage Event')}
             </Link>
           ) : (
-            <Link 
-              to={`/events/${eventId}`} 
-              className="event-card__link"
-              aria-label={t('eventCard.viewDetails.ariaLabel', { name: event.event_name })}
-            >
-              {t('eventCard.viewDetails.label')}
-            </Link>
+            // The original rendering logic for other pages
+            authState.isAuthenticated && authState.isOrganizer && isHostedEvent() ? (
+              <Link 
+                to={`/host/MyEvents/${eventId}`} 
+                className="event-card__link"
+                aria-label={t('eventCard.edit.ariaLabel', { name: event.event_name })}
+              >
+                {t('eventCard.review.label')}
+              </Link>
+            ) : (
+              <Link 
+                to={`/events/${eventId}`} 
+                className="event-card__link"
+                aria-label={t('eventCard.viewDetails.ariaLabel', { name: event.event_name })}
+              >
+                {t('eventCard.viewDetails.label')}
+              </Link>
+            )
           )}
         </div>
       </div>

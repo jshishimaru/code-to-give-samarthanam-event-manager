@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import EventVolunteers from '../volunteertab/EventVolunteers';
 import EventTasks from '../hosttask/EventTasks';
+import EventInfo from '../hostevents/EventInfo';
 import '../../../styles/host/hostlayout/HostLayout.css';
 
 const HostLayout = () => {
@@ -47,6 +48,7 @@ const HostLayout = () => {
       case 'tasks':
         return <EventTasks eventId={eventId} />;
       case 'info':
+        return <EventInfo eventId={eventId} />;
       default:
         return <div className="event-info-placeholder">Event information will be implemented later</div>;
     }

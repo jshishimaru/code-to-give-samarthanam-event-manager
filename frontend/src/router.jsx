@@ -9,7 +9,7 @@ import CreateEvent from './components/host/hostevents/CreateEvent';
 import HostEventDetails from './components/host/hostevents/HostEventDetails';
 import EventVolunteers from './components/host/volunteertab/EventVolunteers';
 import EventTasks from './components/host/hosttask/EventTasks';
-
+import EventInfo from './components/host/hostevents/EventInfo';
 import Layout from './components/Layout'
 const router = createBrowserRouter([
 	
@@ -59,8 +59,11 @@ const router = createBrowserRouter([
 	{
 		path:'/host/MyEvents/:eventId/tasks',
 		element: <Layout><EventTasks /></Layout>
+	},
+	{
+		path: '/host/MyEvents/:eventId/event-info',
+		element: <Layout><EventInfo /></Layout>	
 	}
-
 
 ]);
 

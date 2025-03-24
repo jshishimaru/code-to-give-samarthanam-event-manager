@@ -1,0 +1,362 @@
+.volunteer-profile-card {
+	width: 100%;
+	max-width: 450px;
+	background-color: var(--bg-card, #fff);
+	border-radius: 12px;
+	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+	overflow: hidden;
+	position: relative;
+	font-family: var(--font-family, 'Roboto', sans-serif);
+	transition: all 0.3s ease;
+  }
+  
+  /* Loading State */
+  .volunteer-profile-card.loading {
+	min-height: 200px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+  }
+  
+  .profile-loading-spinner {
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+	border: 3px solid rgba(0, 0, 0, 0.1);
+	border-radius: 50%;
+	border-top-color: var(--primary-color, #0d6efd);
+	animation: spin 1s linear infinite;
+	margin-bottom: 1rem;
+  }
+  
+  @keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+  }
+  
+  .loading-text {
+	font-size: 0.9rem;
+	color: var(--text-muted, #6c757d);
+  }
+  
+  /* Error State */
+  .volunteer-profile-card.error,
+  .volunteer-profile-card.not-found {
+	min-height: 200px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+	text-align: center;
+  }
+  
+  .error-icon,
+  .not-found-icon {
+	font-size: 2.5rem;
+	margin-bottom: 1rem;
+  }
+  
+  .error-title,
+  .not-found-title {
+	font-size: 1.2rem;
+	margin-bottom: 0.5rem;
+	color: var(--error-color, #dc3545);
+  }
+  
+  .error-message,
+  .not-found-message {
+	font-size: 0.9rem;
+	color: var(--text-muted, #6c757d);
+	margin-bottom: 1.5rem;
+  }
+  
+  /* Close Button */
+  .close-profile-btn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	background-color: rgba(0, 0, 0, 0.05);
+	border: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.5rem;
+	color: var(--text-muted, #6c757d);
+	cursor: pointer;
+	transition: all 0.2s ease;
+	z-index: 3;
+  }
+  
+  .close-profile-btn:hover {
+	background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Profile Header */
+  .profile-header {
+	display: flex;
+	align-items: center;
+	padding: 1.5rem;
+	background: linear-gradient(to right, var(--primary-light, #e6f2ff), var(--primary-lighter, #f0f7ff));
+	border-bottom: 1px solid var(--border-color, #e9ecef);
+  }
+  
+  .profile-avatar {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	background-color: var(--primary-color, #0d6efd);
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.8rem;
+	font-weight: bold;
+	margin-right: 1rem;
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-identity {
+	flex: 1;
+  }
+  
+  .profile-name {
+	font-size: 1.5rem;
+	font-weight: 600;
+	margin: 0 0 0.2rem 0;
+	color: var(--heading-color, #212529);
+  }
+  
+  .profile-label {
+	display: inline-block;
+	padding: 0.2rem 0.6rem;
+	background-color: rgba(var(--primary-rgb, 13, 110, 253), 0.1);
+	border-radius: 12px;
+	font-size: 0.75rem;
+	font-weight: 500;
+	color: var(--primary-color, #0d6efd);
+  }
+  
+  /* Profile Body */
+  .profile-body {
+	padding: 1.5rem;
+  }
+  
+  .profile-section {
+	margin-bottom: 1.5rem;
+  }
+  
+  .profile-section:last-child {
+	margin-bottom: 0;
+  }
+  
+  .section-title {
+	font-size: 1rem;
+	font-weight: 600;
+	margin: 0 0 1rem 0;
+	color: var(--heading-color, #212529);
+	padding-bottom: 0.5rem;
+	border-bottom: 1px solid var(--border-color, #e9ecef);
+  }
+  
+  .profile-field {
+	display: flex;
+	margin-bottom: 0.7rem;
+	line-height: 1.4;
+  }
+  
+  .profile-field:last-child {
+	margin-bottom: 0;
+  }
+  
+  .field-label {
+	flex: 0 0 40%;
+	font-weight: 600;
+	color: var(--text-muted, #6c757d);
+	font-size: 0.9rem;
+  }
+  
+  .field-value {
+	flex: 1;
+	color: var(--text-color, #343a40);
+	font-size: 0.9rem;
+	word-break: break-word;
+  }
+  
+  /* Skills Section */
+  .skills-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: 0.5rem;
+  }
+  
+  .skill-badge {
+	display: inline-block;
+	padding: 0.3rem 0.7rem;
+	background-color: rgba(var(--primary-rgb, 13, 110, 253), 0.05);
+	color: var(--primary-color, #0d6efd);
+	border: 1px solid rgba(var(--primary-rgb, 13, 110, 253), 0.2);
+	border-radius: 16px;
+	font-size: 0.8rem;
+	font-weight: 500;
+	transition: all 0.2s ease;
+  }
+  
+  .skill-badge:hover {
+	background-color: rgba(var(--primary-rgb, 13, 110, 253), 0.1);
+  }
+  
+  /* Profile Actions */
+  .profile-actions {
+	display: flex;
+	gap: 0.5rem;
+	padding: 1rem 1.5rem;
+	background-color: var(--bg-light, #f8f9fa);
+	border-top: 1px solid var(--border-color, #e9ecef);
+  }
+  
+  .action-button {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.4rem;
+	padding: 0.5rem 0;
+	border-radius: 8px;
+	border: none;
+	font-size: 0.9rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s ease;
+  }
+  
+  .action-button svg {
+	width: 16px;
+	height: 16px;
+  }
+  
+  .action-button.contact {
+	background-color: var(--primary-color, #0d6efd);
+	color: white;
+  }
+  
+  .action-button.contact:hover {
+	background-color: var(--primary-dark, #0b5ed7);
+  }
+  
+  .action-button.message {
+	background-color: var(--secondary-color, #6c757d);
+	color: white;
+  }
+  
+  .action-button.message:hover {
+	background-color: var(--secondary-dark, #5a6268);
+  }
+  
+  .action-button.view-events {
+	background-color: rgba(var(--primary-rgb, 13, 110, 253), 0.1);
+	color: var(--primary-color, #0d6efd);
+  }
+  
+  .action-button.view-events:hover {
+	background-color: rgba(var(--primary-rgb, 13, 110, 253), 0.2);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+	.volunteer-profile-card {
+	  max-width: 100%;
+	  border-radius: 0;
+	}
+	
+	.profile-field {
+	  flex-direction: column;
+	}
+	
+	.field-label {
+	  flex: 0 0 100%;
+	  margin-bottom: 0.2rem;
+	}
+	
+	.profile-actions {
+	  flex-direction: column;
+	}
+	
+	.action-button {
+	  padding: 0.7rem 0;
+	}
+  }
+
+  /* Add these styles to /home/jshishimaru/code-to-give-samarthanam-event-manager/frontend/src/styles/host/volunteer/VolunteerProfile.css */
+
+/* Compact version styling */
+.volunteer-profile-card.compact {
+	max-width: 320px;
+	font-size: 0.95rem;
+  }
+  
+  .volunteer-profile-card.compact .profile-header {
+	padding: 1rem;
+  }
+  
+  .volunteer-profile-card.compact .profile-avatar {
+	width: 50px;
+	height: 50px;
+	font-size: 1.4rem;
+  }
+  
+  .volunteer-profile-card.compact .profile-name {
+	font-size: 1.2rem;
+  }
+  
+  .volunteer-profile-card.compact .profile-body {
+	padding: 1rem;
+  }
+  
+  .volunteer-profile-card.compact .section-title {
+	font-size: 0.9rem;
+	margin-bottom: 0.7rem;
+  }
+  
+  .volunteer-profile-card.compact .profile-section {
+	margin-bottom: 1rem;
+  }
+  
+  .volunteer-profile-card.compact .profile-field {
+	margin-bottom: 0.5rem;
+  }
+  
+  .volunteer-profile-card.compact .field-label,
+  .volunteer-profile-card.compact .field-value {
+	font-size: 0.85rem;
+  }
+  
+  .volunteer-profile-card.compact .skills-container {
+	gap: 0.4rem;
+  }
+  
+  .volunteer-profile-card.compact .skill-badge {
+	padding: 0.2rem 0.6rem;
+	font-size: 0.75rem;
+  }
+  
+  .volunteer-profile-card.compact .more-skills {
+	color: var(--text-muted, #6c757d);
+	background-color: var(--bg-light, #f8f9fa);
+	border-color: var(--border-color, #e9ecef);
+  }
+  
+  .volunteer-profile-card.compact .profile-actions {
+	padding: 0.7rem 1rem;
+  }
+  
+  .volunteer-profile-card.compact .action-button {
+	font-size: 0.8rem;
+	padding: 0.4rem 0;
+  }

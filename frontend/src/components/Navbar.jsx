@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext'; 
 import '../styles/Navbar.css';
@@ -6,12 +6,17 @@ import logoImage from '../assets/logo.png';
 import { checkAuth } from '../apiservice/auth';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
+import VolunteerProfile from './host/volunteer/VolunteerProfile';
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileDropdownRef = useRef(null);
+  const profileButtonRef = useRef(null);
+  
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, fontSize, fontWeight, textContrast } = useTheme();
@@ -22,7 +27,6 @@ const Navbar = () => {
     const checkAuthStatus = async () => {
       try {
         const response = await checkAuth();
-		    console.log(response.data);
         
         if (response.success && response.data.authenticated) {
           setIsLoggedIn(true);
@@ -112,6 +116,40 @@ const Navbar = () => {
     checkAuthStatus();
   }, [location.pathname]);
 
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isProfileOpen &&
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target) &&
+        profileButtonRef.current &&
+        !profileButtonRef.current.contains(event.target)
+      ) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isProfileOpen]);
+
+  // Close profile dropdown when pressing Escape
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && isProfileOpen) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isProfileOpen]);
+
   const handleLogout = async () => {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/auth/logout/', {
@@ -123,6 +161,7 @@ const Navbar = () => {
         localStorage.removeItem('token');
         setIsLoggedIn(false);
         setUserInfo(null);
+        setIsProfileOpen(false);
         navigate('/login');
       } else {
         console.error('Logout failed');
@@ -149,12 +188,22 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
+  const toggleProfileDropdown = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
+
   // Check if user is an organiser
   const isOrganiser = userInfo?.role === 'organiser';
-  // const isOrganiser = user.isHost;
-  // console.log('User role:', userInfo?.role, 'Is organiser:', isOrganiser);
-
-
+  
+  // Get initials for avatar
+  const getInitials = () => {
+    if (!userInfo || !userInfo.name) return '?';
+    
+    const names = userInfo.name.split(' ');
+    if (names.length === 1) return names[0].charAt(0).toUpperCase();
+    
+    return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+  };
   
   return (
     <header className={`navbar ${scrolled ? 'scrolled' : ''}`} role="banner">
@@ -261,17 +310,51 @@ const Navbar = () => {
             aria-label="User authentication"
           >
             {isLoggedIn ? (
-              <>
-                <span className="user-greeting">Hello, { userInfo?.name?.split(' ')[0] }</span>
-                <button 
-                  className="btn btn-logout" 
-                  onClick={handleLogout}
-                  aria-label={t('navbar.logoutAria')}
-                  type="button"
+              <div className="profile-container">
+                <button
+                  ref={profileButtonRef}
+                  className="profile-avatar-button"
+                  onClick={toggleProfileDropdown}
+                  aria-expanded={isProfileOpen}
+                  aria-haspopup="dialog"
+                  aria-label={t('navbar.openProfile', 'Open profile menu')}
                 >
-                  {t('navbar.logout')}
+                  <div className="navbar-avatar">
+                    {getInitials()}
+                  </div>
                 </button>
-              </>
+                
+                {isProfileOpen && (
+				  <div 
+				    ref={profileDropdownRef}
+				    className="profile-dropdown"
+				    role="dialog"
+				    aria-label={t('navbar.profileMenu', 'Profile menu')}
+				  >
+				    <div className="profile-dropdown-content">
+				      <VolunteerProfile 
+				        userId={userInfo.id} 
+				        showActions={false} 
+				        compact={true}
+				      />
+				      
+				      <div className="dropdown-footer">
+				        <button 
+				          className="btn-profile-action logout full-width"
+				          onClick={handleLogout}
+				        >
+				          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+				            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+				            <polyline points="16 17 21 12 16 7"></polyline>
+				            <line x1="21" y1="12" x2="9" y2="12"></line>
+				          </svg>
+				          {t('navbar.logout')}
+				        </button>
+				      </div>
+				    </div>
+				  </div>
+				)}
+              </div>
             ) : (
               <>
                 <Link 

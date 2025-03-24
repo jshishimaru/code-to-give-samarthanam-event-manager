@@ -235,3 +235,77 @@ export const checkAuth = async () => {
     }
   }
 };
+
+/**
+ * Fetch a user's profile by their ID
+ * @param {string|number} userId - The ID of the user whose profile to fetch
+ * @returns {Promise<Object>} Object with success status and user profile data
+ */
+export const getUserProfile = async (userId) => {
+	try {
+	  if (!userId) {
+		return {
+		  success: false,
+		  data: { 
+			message: 'User ID is required',
+			status: 400
+		  }
+		};
+	  }
+  
+	  const response = await axios.get(`${API_URL}auth/user-profile/`, {
+		params: { id: userId },
+		withCredentials: true
+	  });
+	  
+	  if (response.data.status === 'success') {
+		return {
+		  success: true,
+		  data: {
+			profile: response.data.profile,
+			message: 'Profile retrieved successfully'
+		  }
+		};
+	  } else {
+		return {
+		  success: false,
+		  data: {
+			message: response.data.message || 'Failed to retrieve profile',
+			status: response.status
+		  }
+		};
+	  }
+	} catch (error) {
+	  console.error('Error fetching user profile:', error);
+	  
+	  // Handle different types of errors
+	  if (error.response) {
+		// The server responded with an error status code
+		return {
+		  success: false,
+		  data: {
+			message: error.response.data.message || 'Failed to retrieve profile',
+			status: error.response.status
+		  }
+		};
+	  } else if (error.request) {
+		// The request was made but no response was received
+		return {
+		  success: false,
+		  data: {
+			message: 'No response received from server',
+			status: 0
+		  }
+		};
+	  } else {
+		// Something happened in setting up the request that triggered an error
+		return {
+		  success: false,
+		  data: {
+			message: error.message || 'Error fetching profile',
+			status: 0
+		  }
+		};
+	  }
+	}
+  };

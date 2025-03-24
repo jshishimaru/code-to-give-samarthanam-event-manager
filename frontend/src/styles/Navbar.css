@@ -307,3 +307,166 @@
       font-size: 0.9rem;
     }
   }
+
+  /* Add these styles to /home/jshishimaru/code-to-give-samarthanam-event-manager/frontend/src/styles/Navbar.css */
+
+/* Profile avatar button */
+.profile-container {
+	position: relative;
+	margin-left: 1rem;
+  }
+  
+  .profile-avatar-button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: transform 0.2s ease;
+  }
+  
+  .profile-avatar-button:hover {
+	transform: scale(1.05);
+  }
+  
+  .profile-avatar-button:focus {
+	outline: 2px solid var(--primary-color, #0d6efd);
+	outline-offset: 2px;
+  }
+  
+  .navbar-avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: var(--primary-color, #0d6efd);
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+	font-weight: 600;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	transition: all 0.2s ease;
+  }
+  
+  /* Profile dropdown */
+  .profile-dropdown {
+	position: absolute;
+	top: calc(100% + 10px);
+	right: 0;
+	z-index: 1000;
+	width: 350px;
+	background-color: white;
+	border-radius: 12px;
+	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+	overflow: hidden;
+	animation: fade-in 0.2s ease-out;
+  }
+  
+  @keyframes fade-in {
+	from { opacity: 0; transform: translateY(-10px); }
+	to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .profile-dropdown-content {
+	display: flex;
+	flex-direction: column;
+  }
+  
+  /* Override volunteer profile styles to fit in navbar */
+  .profile-dropdown .volunteer-profile-card {
+	box-shadow: none;
+	border-radius: 0;
+	max-width: 100%;
+  }
+  
+  /* Dropdown footer with actions */
+  .dropdown-footer {
+	display: flex;
+	padding: 12px 16px;
+	border-top: 1px solid var(--border-color, #e9ecef);
+	background-color: var(--bg-light, #f8f9fa);
+  }
+  
+  .btn-profile-action {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 16px;
+	border-radius: 6px;
+	border: none;
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s ease;
+  }
+  
+  .btn-profile-action svg {
+	width: 16px;
+	height: 16px;
+  }
+  
+  .btn-profile-action.view-full-profile {
+	background-color: rgba(var(--primary-rgb, 13, 110, 253), 0.1);
+	color: var(--primary-color, #0d6efd);
+	margin-right: 8px;
+	flex: 1;
+  }
+  
+  .btn-profile-action.view-full-profile:hover {
+	background-color: rgba(var(--primary-rgb, 13, 110, 253), 0.2);
+  }
+  
+  .btn-profile-action.logout {
+	background-color: rgba(var(--danger-rgb, 220, 53, 69), 0.1);
+	color: var(--danger-color, #dc3545);
+	flex: 1;
+  }
+  
+  .btn-profile-action.logout:hover {
+	background-color: rgba(var(--danger-rgb, 220, 53, 69), 0.2);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+	.profile-dropdown {
+	  position: fixed;
+	  top: auto;
+	  bottom: 0;
+	  left: 0;
+	  right: 0;
+	  width: 100%;
+	  border-radius: 12px 12px 0 0;
+	  animation: slide-up 0.3s ease-out;
+	}
+  
+	@keyframes slide-up {
+	  from { transform: translateY(100%); }
+	  to { transform: translateY(0); }
+	}
+	
+	.navbar-avatar {
+	  width: 36px;
+	  height: 36px;
+	  font-size: 14px;
+	}
+  }
+  
+  /* Add to existing .auth-buttons in mobile menu */
+  .primary-navigation.active .auth-buttons {
+	flex-direction: column;
+	align-items: center;
+  }
+  
+  .primary-navigation.active .profile-container {
+	margin: 1rem 0;
+  }
+  
+  .primary-navigation.active .profile-dropdown {
+	position: relative;
+	top: 10px;
+	width: 100%;
+	max-width: 350px;
+  }

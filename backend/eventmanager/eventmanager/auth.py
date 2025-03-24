@@ -367,6 +367,75 @@ class IsAuthenticatedView(View):
         """Handle POST requests by delegating to GET"""
         return self.get(request)
 
+@method_decorator(csrf_exempt, name='dispatch')
+class UserProfileByIdView(View):
+    """
+    Get a user's profile by their ID
+    Allows any authenticated user to view another user's profile
+    """
+    def get(self, request):
+        # Check if the user is authenticated
+        if not request.user.is_authenticated:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Authentication required'
+            }, status=401)
+        
+        # Get the user ID from the query parameters
+        user_id = request.GET.get('id')
+        
+        if not user_id:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'User ID is required'
+            }, status=400)
+        
+        try:
+            # Try to get the user by ID
+            target_user = User.objects.get(id=user_id)
+            
+            # Build the profile data with all available fields
+            profile_data = {
+                'id': target_user.id,
+                'email': target_user.email,
+                'name': target_user.name,
+                'contact': target_user.contact,
+                'isHost': target_user.isHost,
+                'date_joined': target_user.date_joined,
+            }
+            
+            # Add regular user fields if not a host
+            if not target_user.isHost:
+                profile_data.update({
+                    'skills': target_user.skills,
+                    'age': target_user.age,
+                    'location': target_user.location,
+                    'organization': target_user.organization,
+                })
+            
+            return JsonResponse({
+                'status': 'success',
+                'profile': profile_data
+            })
+            
+        except User.DoesNotExist:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'User not found'
+            }, status=404)
+        except Exception as e:
+            print(f"Error in UserProfileByIdView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    
+    def post(self, request):
+        """Handle POST requests by delegating to GET"""
+        return self.get(request)
+
+
 # For backwards compatibility - these functions call the class-based views
 def user_login(request):
     """Compatibility function for user_login"""

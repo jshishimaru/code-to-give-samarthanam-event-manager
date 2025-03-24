@@ -17,7 +17,11 @@
 	  "logoutAria": "Log out of your account",
 	  "registerAria": "Create a new account",
 	  "greeting": "Hello, {{name}}",
-	  "user": "User"
+	  "user": "User",
+	  "openProfile": "Open profile menu",
+	  "profileMenu": "Profile menu",
+	  "viewProfile": "View Full Profile",
+	  "closeProfile": "Close profile"
 	},
 	"auth": {
 	  "loginTitle": "Account Login",
@@ -479,5 +483,81 @@
 	  "viewAll": "View All",
 	  "basedOnSkills": "Based on your skills",
 	  "notPersonalized": "Showing popular events. Update your skills for personalized recommendations."
-	}
+	},
+	"profile": {
+  "loadingProfile": "Loading profile...",
+  "errorTitle": "Profile Error",
+  "notFound": "User Not Found",
+  "volunteerNotFound": "The volunteer profile could not be found.",
+  "closeProfile": "Close profile",
+  "volunteer": "Volunteer",
+  "contactInfo": "Contact Information",
+  "personalInfo": "Personal Information",
+  "email": "Email",
+  "contact": "Phone",
+  "location": "Location",
+  "organization": "Organization",
+  "age": "Age",
+  "memberSince": "Member Since",
+  "skills": "Skills",
+  "errors": {
+    "missingId": "User ID is required to view profile",
+    "fetchFailed": "Failed to load profile"
+  },
+  "actions": {
+    "contact": "Contact",
+    "message": "Message",
+    "viewEvents": "View Events"
+  }
+},
+"volunteerList": {
+  "volunteers": "Volunteers",
+  "volunteersFor": "Volunteers for",
+  "volunteer": "volunteer",
+  "volunteersCount": "volunteers",
+  "searchPlaceholder": "Search by name, skills, location...",
+  "searchAriaLabel": "Search volunteers",
+  "search": "Search",
+  "clearSearch": "Clear search",
+  "searchResultsFor": "Found {count} results for '{query}'",
+  "noSearchResults": "No results found for '{query}'",
+  "showAllVolunteers": "Show all volunteers",
+  "loading": "Loading volunteers...",
+  "noVolunteers": "No volunteers enrolled in this event yet",
+  "viewProfile": "View Profile",
+  "skillMatch": "Skill Match",
+  "noAssignedTasks": "No assigned tasks",
+  "assignedTasksCount": "{count} tasks assigned",
+  "errors": {
+    "noEventId": "No event ID provided",
+    "fetchFailed": "Failed to fetch volunteers",
+    "searchFailed": "Failed to search volunteers"
+  }
+},
+"taskWindow": {
+  "assignTaskTo": "Assign Task to {{name}}",
+  "searchTasksPlaceholder": "Search tasks...",
+  "loading": "Loading tasks...",
+  "noTasks": "No tasks available for this event",
+  "noSearchResults": "No tasks found matching '{{query}}'",
+  "assignTask": "Assign Task",
+  "assigning": "Assigning...",
+  "assignSuccess": "Task assigned successfully!",
+  "assignedVolunteersCount": "{{count}} volunteers assigned",
+  "status": {
+    "open": "Open",
+    "in-progress": "In Progress",
+    "notified": "Completed (Pending)",
+    "completed": "Completed"
+  },
+  "errors": {
+    "noEventId": "No event ID provided",
+    "fetchFailed": "Failed to fetch tasks",
+    "assignFailed": "Failed to assign task"
+  }
+},
+"eventVolunteers": {
+  "assignTask": "Assign Task",
+  "selectVolunteerPrompt": "Select a volunteer from the list to view their profile and assign tasks"
+}
   }

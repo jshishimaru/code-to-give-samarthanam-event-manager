@@ -6,6 +6,7 @@ import EventDetails from './components/EventDetails';
 import FeedbackForm from './components/FeedbackForm';
 import MyEvents from './components/host/MyEvents';
 import CreateEvent from './components/host/CreateEvent';
+import HostEventDetails from './components/host/HostEventDetails';
 
 import Layout from './components/Layout'
 const router = createBrowserRouter([
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
 		path:'/host/MyEvents/CreateEvent',
 		element: <Layout><CreateEvent /></Layout>
 
+	},
+	{
+		path:'/host/MyEvents/:eventId',
+		element: <Layout><HostEventDetails /></Layout>
 	}
 
 ]);

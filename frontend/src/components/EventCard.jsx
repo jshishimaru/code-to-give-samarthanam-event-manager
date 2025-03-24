@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getEventDetails } from '../apiservice/event';
+import { checkAuth } from '../apiservice/auth';
 import '../styles/EventCard.css';
 
 /**
@@ -15,6 +16,42 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [authState, setAuthState] = useState({
+    isAuthenticated: false,
+    isOrganizer: false,
+    userId: null
+  });
+
+  // Check authentication status
+  useEffect(() => {
+    const verifyAuth = async () => {
+      try {
+        const authResponse = await checkAuth();
+        if (authResponse.success && authResponse.data.authenticated) {
+          setAuthState({
+            isAuthenticated: true,
+            isOrganizer: authResponse.data.user.isHost || false,
+            userId: authResponse.data.user.id || null
+          });
+        } else {
+          setAuthState({
+            isAuthenticated: false,
+            isOrganizer: false,
+            userId: null
+          });
+        }
+      } catch (err) {
+        console.error('Auth check failed:', err);
+        setAuthState({
+          isAuthenticated: false,
+          isOrganizer: false,
+          userId: null
+        });
+      }
+    };
+
+    verifyAuth();
+  }, []);
 
   useEffect(() => {
     const fetchEventDetails = async () => {
@@ -23,7 +60,7 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
         const response = await getEventDetails(eventId);
         
         if (response.success) {
-          setEvent(response.data.event);
+          setEvent(response.data.event || response.data);
         } else {
           setError(t('eventCard.errors.fetchFailed'));
         }
@@ -72,6 +109,12 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
         minute: '2-digit'
       });
     }
+  };
+
+  // Check if the current user is the host of this event
+  const isHostedEvent = () => {
+    if (!event || !authState.userId) return false;
+    return event.host_id === authState.userId || event.organizer_id === authState.userId;
   };
 
   // Determine component class based on view mode
@@ -141,13 +184,31 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
         )}
         
         <div className="event-card__footer">
-          <Link 
-            to={`/events/${eventId}`} 
-            className="event-card__link"
-            aria-label={t('eventCard.viewDetails.ariaLabel', { name: event.event_name })}
-          >
-            {t('eventCard.viewDetails.label')}
-          </Link>
+          {authState.isAuthenticated && authState.isOrganizer && isHostedEvent() ? (
+            <Link 
+              to={`/host/MyEvents/${eventId}`} 
+              className="event-card__link"
+              aria-label={t('eventCard.edit.ariaLabel', { name: event.event_name })}
+            >
+              {t('eventCard.review.label')}
+            </Link>
+          ) : authState.isAuthenticated ? (
+            <Link 
+              to={`/events/${eventId}`} 
+              className="event-card__link"
+              aria-label={t('eventCard.viewDetails.ariaLabel', { name: event.event_name })}
+            >
+              {t('eventCard.viewDetails.label')}
+            </Link>
+          ) : (
+            <Link 
+              to={`/events/${eventId}`} 
+              className="event-card__link"
+              aria-label={t('eventCard.viewDetails.ariaLabel', { name: event.event_name })}
+            >
+              {t('eventCard.viewDetails.label')}
+            </Link>
+          )}
         </div>
       </div>
     </article>

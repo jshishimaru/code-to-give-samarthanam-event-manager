@@ -1,6 +1,14 @@
 @import url('https://rsms.me/inter/inter.css');
 /* Theme variables */
 :root {
+
+  --sidebar-bg: #f5f5f5;
+  --sidebar-color: #333;
+  --sidebar-active-bg: #0056b3;
+  --sidebar-active-color: #fff;
+  --sidebar-hover-bg: #e0e0e0;
+  --transition-speed: 0.3s;
+  
   /* Light theme (default) with coral/red primary color */
   --bg-color: #ffffff;
   --bg-secondary: #f5f7fa;

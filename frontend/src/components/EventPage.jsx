@@ -9,6 +9,7 @@ import {
 } from '../apiservice/event';
 import { checkAuth } from '../apiservice/auth';
 import { checkFeedbackEligibility } from '../apiservice/feedback';
+import { getRecommendedEvents , getEventsSortedByRelevance } from '../apiservice/ml';
 import EventCard from './EventCard';
 import '../styles/EventPage.css';
 import Navbar from './Navbar';
@@ -21,12 +22,14 @@ const EventPage = () => {
   // User authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   
   // State for different event categories
   const [enrolledEvents, setEnrolledEvents] = useState([]);
   const [ongoingEvents, setOngoingEvents] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [pastEvents, setPastEvents] = useState([]);
+  const [featuredEvents, setFeaturedEvents] = useState([]);
   
   // Track feedback status for past events
   const [feedbackStatus, setFeedbackStatus] = useState({});
@@ -44,13 +47,17 @@ const EventPage = () => {
   
   // Number of events to show initially per section
   const INITIAL_EVENTS_TO_SHOW = 4;
+
+  // Computed property for showing featured tab
+  const showFeaturedTab = isAuthenticated && userRole !== 'host';
   
   // State to track expanded sections
   const [expandedSections, setExpandedSections] = useState({
     enrolled: false,
     ongoing: false,
     upcoming: false,
-    past: false
+    past: false,
+    featured: false
   });
   
   // Loading and error states
@@ -58,13 +65,16 @@ const EventPage = () => {
     enrolled: true,
     ongoing: true,
     upcoming: true,
-    past: true
+    past: true,
+    featured: true
   });
+  
   const [error, setError] = useState({
     enrolled: null,
     ongoing: null,
     upcoming: null,
-    past: null
+    past: null,
+    featured: null
   });
 
   // Check user authentication status
@@ -75,13 +85,17 @@ const EventPage = () => {
         if (response.success && response.data.authenticated) {
           setIsAuthenticated(true);
           setUserId(response.data.user.id);
+          // Set user role based on isHost flag
+          setUserRole(response.data.user.isHost ? 'host' : 'volunteer');
         } else {
           setIsAuthenticated(false);
           setUserId(null);
+          setUserRole(null);
         }
       } catch (err) {
         console.error('Error checking authentication:', err);
         setIsAuthenticated(false);
+        setUserRole(null);
       }
     };
 
@@ -126,6 +140,68 @@ const EventPage = () => {
       setLoading(prev => ({ ...prev, enrolled: false }));
     }
   }, [userId, t]);
+
+  const [detailedEventData, setDetailedEventData] = useState({});
+
+  // Update the fetchFeaturedEvents function to store the detailed event data
+  useEffect(() => {
+	const fetchFeaturedEvents = async () => {
+	  // Only fetch featured events for volunteers, not for hosts
+	  if (!isAuthenticated || (isAuthenticated && userRole === 'host')) {
+		setLoading(prev => ({ ...prev, featured: false }));
+		return;
+	  }
+	  
+	  try {
+		// Use the new sorted-by-relevance endpoint, which works better for personalization
+		const response = await getEventsSortedByRelevance({ 
+		  status: 'active',
+		  limit: 10,
+		  includePast: false
+		});
+		
+		if (response.success) {
+		  // Extract the event IDs from the recommendations
+		  const eventIds = response.data.events.map(event => event.id);
+		  setFeaturedEvents(eventIds);
+		  
+		  // Store detailed event data
+		  const detailedData = {};
+		  response.data.events.forEach(event => {
+			detailedData[event.id] = {
+			  matchScore: event.relevance_score || event.skill_match_percent,
+			  matchingSkills: event.matching_skills || [],
+			  extractedSkills: event.extracted_skills || []
+			};
+		  });
+		  setDetailedEventData(detailedData);
+		  
+		  // Update UI to show message if events are not personalized
+		  if (!response.data.personalized && response.data.message) {
+			setError(prev => ({ 
+			  ...prev, 
+			  featured: response.data.message
+			}));
+		  }
+		} else {
+		  setError(prev => ({ 
+			...prev, 
+			featured: response.error || t('events.errors.featuredLoadFailed') 
+		  }));
+		}
+	  } catch (err) {
+		console.error('Error fetching featured events:', err);
+		setError(prev => ({ 
+		  ...prev, 
+		  featured: t('events.errors.connectionError') 
+		}));
+	  } finally {
+		setLoading(prev => ({ ...prev, featured: false }));
+	  }
+	};
+  
+	fetchFeaturedEvents();
+  }, [isAuthenticated, userRole, t]);
 
   // Fetch ongoing events - use appropriate API based on authentication status
   useEffect(() => {
@@ -172,7 +248,7 @@ const EventPage = () => {
     fetchUpcomingEvents();
   }, [t]);
 
-  // Fetch past events
+  // Fetch past events and check feedback status
   useEffect(() => {
     const fetchPastEvents = async () => {
       try {
@@ -277,122 +353,141 @@ const EventPage = () => {
 
   // Render event section with appropriate loading and error states
   const renderEventSection = (title, eventIds, loadingState, errorState, emptyMessage, section) => {
-    const visibleEvents = getVisibleEvents(eventIds, section);
-    const hasMoreEvents = eventIds.length > INITIAL_EVENTS_TO_SHOW;
-    
-    return (
-      <section 
-        className="event-section" 
-        aria-labelledby={`${section}-section-heading`}
-      >
-        <div className="section-header">
-          <h2 
-            id={`${section}-section-heading`} 
-            className="section-title"
-          >
-            {title}
-          </h2>
-          <span 
-            className="event-count" 
-            aria-label={`${eventIds.length} ${t('events.countLabel')}`}
-          >
-            ({eventIds.length})
-          </span>
-        </div>
-        
-        {loadingState ? (
-          <div className="loading-container" aria-live="polite" aria-busy="true">
-            <div className="loading-spinner" role="status"></div>
-            <span className="sr-only">{t('common.loading')}</span>
-          </div>
-        ) : errorState ? (
-          <div className="error-container" role="alert">
-            <p className="error-message">{errorState}</p>
-          </div>
-        ) : eventIds.length === 0 ? (
-          <div className="empty-state" aria-live="polite">
-            <div className="empty-state-icon" aria-hidden="true">📅</div>
-            <p className="empty-state-text">{emptyMessage}</p>
-          </div>
-        ) : (
-          <>
-            <div 
-              id={`${section}-events-collection`}
-              className={`event-collection ${viewMode === 'grid' ? 'event-grid' : 'event-list'}`} 
-              role="list"
-              aria-label={`${title} events in ${viewMode} view`}
-            >
-              {visibleEvents.map(eventId => (
-                <div 
-                  key={eventId} 
-                  className={`event-item ${viewMode === 'list' ? 'event-list-item' : ''}`} 
-                  role="listitem"
-                >
-                  <div className="event-card-container">
-                    <EventCard eventId={eventId} viewMode={viewMode} />
-                    
-                    {/* Add feedback buttons for past events */}
-                    {section === 'past' && !feedbackStatusLoading && (
-                      <div className="event-feedback-actions">
-                        {/* <button 
-                          className="view-details-btn"
-                          onClick={() => navigate(`/events/${eventId}`)}
-                        >
-                          {t('events.viewDetails')}
-                        </button> */}
-                        
-                        {feedbackStatus[eventId] && (
-						      <button 
-							  className={`event-feedback-btn ${feedbackStatus[eventId].existingFeedbackId ? 'view-feedback' : 'submit-feedback'}`}
-							  onClick={() => handleFeedbackClick(eventId)}
-							  aria-label={feedbackStatus[eventId].existingFeedbackId 
-								? t('events.viewFeedback.ariaLabel', 'View your feedback for this event') 
-								: t('events.submitFeedback.ariaLabel', 'Submit feedback for this event')}
-							>
-							  {/* Add appropriate icons */}
-							  {feedbackStatus[eventId].existingFeedbackId ? (
-								<>
-								  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-									<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-									<circle cx="12" cy="12" r="3"></circle>
-								  </svg>
-								  {t('events.viewFeedback', 'View Feedback')}
-								</>
-							  ) : (
-								<>
-								  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-									<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-								  </svg>
-								  {t('events.submitFeedback', 'Submit Feedback')}
-								</>
+	const visibleEvents = getVisibleEvents(eventIds, section);
+	const hasMoreEvents = eventIds.length > INITIAL_EVENTS_TO_SHOW;
+	
+	return (
+	  <section 
+		className="event-section" 
+		aria-labelledby={`${section}-section-heading`}
+	  >
+		<div className="section-header">
+		  <h2 
+			id={`${section}-section-heading`} 
+			className="section-title"
+		  >
+			{title}
+		  </h2>
+		  <span 
+			className="event-count" 
+			aria-label={`${eventIds.length} ${t('events.countLabel')}`}
+		  >
+			({eventIds.length})
+		  </span>
+		</div>
+		
+		{loadingState ? (
+		  <div className="loading-container" aria-live="polite" aria-busy="true">
+			<div className="loading-spinner" role="status"></div>
+			<span className="sr-only">{t('common.loading')}</span>
+		  </div>
+		) : errorState ? (
+		  <div className="error-container" role="alert">
+			<p className="error-message">{errorState}</p>
+		  </div>
+		) : eventIds.length === 0 ? (
+		  <div className="empty-state" aria-live="polite">
+			<div className="empty-state-icon" aria-hidden="true">📅</div>
+			<p className="empty-state-text">{emptyMessage}</p>
+		  </div>
+		) : (
+		  <>
+			<div 
+			  id={`${section}-events-collection`}
+			  className={`event-collection ${viewMode === 'grid' ? 'event-grid' : 'event-list'}`} 
+			  role="list"
+			  aria-label={`${title} events in ${viewMode} view`}
+			>
+			  {visibleEvents.map(eventId => (
+				<div 
+				  key={eventId} 
+				  className={`event-item ${viewMode === 'list' ? 'event-list-item' : ''}`} 
+				  role="listitem"
+				>
+				  <div className="event-card-container">
+					<EventCard eventId={eventId} viewMode={viewMode} />
+					
+					{/* Show match score and matching skills for featured events */}
+					{section === 'featured' && detailedEventData[eventId] && (
+					  <div className="event-match-details">
+						{detailedEventData[eventId].matchScore && (
+						  <div className="event-match-score">
+							<span>{t('recommendations.matchLabel')}:</span>
+							<span className="match-value">{Math.round(detailedEventData[eventId].matchScore)}%</span>
+						  </div>
+						)}
+						
+						{detailedEventData[eventId].matchingSkills && detailedEventData[eventId].matchingSkills.length > 0 && (
+						  <div className="event-matching-skills">
+							<span>{t('recommendations.skillsLabel')}:</span>
+							<div className="skills-tags">
+							  {detailedEventData[eventId].matchingSkills.slice(0, 3).map((skill, index) => (
+								<span key={index} className="skill-tag">{skill}</span>
+							  ))}
+							  {detailedEventData[eventId].matchingSkills.length > 3 && (
+								<span className="more-skills">+{detailedEventData[eventId].matchingSkills.length - 3}</span>
 							  )}
-							</button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="view-more-container">
-              {hasMoreEvents && (
-                <button 
-                  className="view-more-button" 
-                  onClick={() => toggleSectionExpansion(section)}
-                  aria-expanded={expandedSections[section]}
-                  aria-controls={`${section}-events-collection`}
-                >
-                  {expandedSections[section] 
-                    ? t('events.viewLess', 'View Less') 
-                    : t('events.viewMore', { count: eventIds.length - INITIAL_EVENTS_TO_SHOW })}
-                </button>
-              )}
-            </div>
-          </>
-        )}
-      </section>
-    );
+							</div>
+						  </div>
+						)}
+					  </div>
+					)}
+					
+					{/* Add feedback buttons for past events */}
+					{section === 'past' && !feedbackStatusLoading && (
+					  <div className="event-feedback-actions">
+						{feedbackStatus[eventId] && (
+						  <button 
+							className={`event-feedback-btn ${feedbackStatus[eventId].existingFeedbackId ? 'view-feedback' : 'submit-feedback'}`}
+							onClick={() => handleFeedbackClick(eventId)}
+							aria-label={feedbackStatus[eventId].existingFeedbackId 
+							  ? t('events.viewFeedback.ariaLabel', 'View your feedback for this event') 
+							  : t('events.submitFeedback.ariaLabel', 'Submit feedback for this event')}
+						  >
+							{/* Add appropriate icons */}
+							{feedbackStatus[eventId].existingFeedbackId ? (
+							  <>
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+								  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+								  <circle cx="12" cy="12" r="3"></circle>
+								</svg>
+								{t('events.viewFeedback', 'View Feedback')}
+							  </>
+							) : (
+							  <>
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+								  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+								</svg>
+								{t('events.submitFeedback', 'Submit Feedback')}
+							  </>
+							)}
+						  </button>
+						)}
+					  </div>
+					)}
+				  </div>
+				</div>
+			  ))}
+			</div>
+			
+			<div className="view-more-container">
+			  {hasMoreEvents && (
+				<button 
+				  className="view-more-button" 
+				  onClick={() => toggleSectionExpansion(section)}
+				  aria-expanded={expandedSections[section]}
+				  aria-controls={`${section}-events-collection`}
+				>
+				  {expandedSections[section] 
+					? t('events.viewLess', 'View Less') 
+					: t('events.viewMore', { count: eventIds.length - INITIAL_EVENTS_TO_SHOW })}
+				</button>
+			  )}
+			</div>
+		  </>
+		)}
+	  </section>
+	);
   };
 
   return (
@@ -448,6 +543,19 @@ const EventPage = () => {
           role="tablist" 
           aria-label={t('events.tabsLabel', 'Event categories')}
         >
+          {showFeaturedTab && (
+            <button 
+              role="tab"
+              className={`event-tab-button ${activeTab === 'featured' ? 'active' : ''}`}
+              id="featured-tab"
+              aria-selected={activeTab === 'featured'}
+              aria-controls="featured-tab-panel"
+              onClick={() => changeTab('featured')}
+            >
+              <span>{t('events.featuredEvents', 'Featured For You')}</span>
+              <span className="tab-count">{featuredEvents.length}</span>
+            </button>
+          )}
           <button 
             role="tab"
             className={`event-tab-button ${activeTab === 'enrolled' ? 'active' : ''}`}
@@ -500,6 +608,25 @@ const EventPage = () => {
       
       {/* Tab panels */}
       <div className="event-tab-panels">
+        {showFeaturedTab && (
+          <div 
+            role="tabpanel"
+            id="featured-tab-panel"
+            aria-labelledby="featured-tab"
+            className={`event-tab-panel ${activeTab === 'featured' ? 'active' : ''}`}
+            hidden={activeTab !== 'featured'}
+          >
+            {renderEventSection(
+              t('events.featuredEvents', 'Featured For You'), 
+              featuredEvents, 
+              loading.featured, 
+              error.featured, 
+              t('events.noFeaturedEvents', 'No personalized event recommendations available at the moment.'),
+              'featured'
+            )}
+          </div>
+        )}
+        
         {/* Enrolled Events Section */}
         <div 
           role="tabpanel"

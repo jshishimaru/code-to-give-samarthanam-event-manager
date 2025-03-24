@@ -1,0 +1,40 @@
+# Django and REST framework
+Django==5.1.1
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+
+# Database
+# Using SQLite by default, but add these if needed
+# psycopg2-binary==2.9.9  # For PostgreSQL
+# mysqlclient==2.2.1  # For MySQL
+
+# ML and data science dependencies
+langchain==0.1.5
+langchain-community==0.0.20  # Added to fix HuggingFaceEmbeddings import error
+scikit-learn==1.3.2
+sentence-transformers==2.5.1
+pandas==2.1.4
+numpy==1.26.2
+huggingface-hub==0.19.4
+transformers==4.36.2  # Added for better HuggingFace transformer support
+
+# For image handling
+Pillow==10.1.0
+
+# Utilities
+python-dateutil==2.8.2
+pytz==2023.3
+
+# For development and testing
+pytest==7.4.3
+pytest-django==4.7.0
+
+# For production (optional)
+# gunicorn==21.2.0
+# whitenoise==6.6.0
+
+# Environment management
+python-dotenv==1.0.0
+
+# Additional ML dependencies
+torch>=2.0.0  # Required for sentence-transformers

@@ -35,8 +35,10 @@
 	  "emailPlaceholder": "Enter your email",
 	  "passwordPlaceholder": "Enter your password",
 	  "volunteerRole": "Volunteer",
+	  "hostRole": "Host",
 	  "adminRole": "Admin",
 	  "loginAsVolunteer": "Login as volunteer",
+	  "loginAsHost": "Login as host",
 	  "loginAsAdmin": "Login as admin",
 	  "selectRole": "Select your role",
 	  "userRole": "User role",
@@ -53,7 +55,10 @@
 		"requiredFields": "Please fill in all required fields",
 		"name": "Full name is required",
 		"contact": "Contact number is required",
-		"invalidEmail": "Please enter a valid email address"
+		"invalidEmail": "Please enter a valid email address",
+		"passwordTooShort": "Password must be at least 8 characters long",
+		"emailAlreadyRegistered": "This email is already registered",
+		"contactAlreadyRegistered": "This contact number is already registered"
 	  }
 	},
 	"events": {
@@ -63,9 +68,13 @@
 	  "viewMore": "View {{count}} more",
 	  "viewLess": "View less",
 	  "pageTitle": "Events",
+	  "tabsLabel": "Event categories",
+	  "countLabel": "events",
 	  "upcomingEvents": "Upcoming Events",
 	  "pastEvents": "Past Events",
 	  "enrolledEvents": "Enrolled Events",
+	  "ongoingEvents": "Ongoing Events",
+	  "featuredEvents": "Featured For You",
 	  "registerForEvent": "Register for Event",
 	  "eventDetails": "Event Details",
 	  "date": "Date",
@@ -73,10 +82,12 @@
 	  "location": "Location",
 	  "organizer": "Organizer",
 	  "noEvents": "No events found",
+	  "noFeaturedEvents": "No personalized event recommendations available at the moment.",
 	  "loadMore": "Load More",
 	  "noUpcomingEvents": "No upcoming events available.",
 	  "noPastEvents": "No past events found.",
 	  "noEnrolledEvents": "You are not enrolled in any events yet.",
+	  "noOngoingEvents": "No ongoing events at the moment.",
 	  "errorLoadingEvent": "Error Loading Event",
 	  "eventNotFound": "Event not found",
 	  "eventImageAlt": "Image for {{title}} event",
@@ -92,8 +103,11 @@
 	  "organizerNotSpecified": "Organizer not specified",
 	  "shareEventText": "Check out this event: {{title}}",
 	  "shareLinkCopied": "Share link copied to clipboard!",
-	    "submitFeedback": "Submit Feedback",
-	    "viewFeedback": "View Feedback",
+	  "submitFeedback": "Submit Feedback",
+	  "viewFeedback": "View Feedback",
+	  "submitFeedback.ariaLabel": "Submit feedback for this event",
+	  "viewFeedback.ariaLabel": "View your feedback for this event",
+	  "authRequired": "You need to be logged in to see your events.",
 	  "tabs": {
 		"event": "Event",
 		"location": "Location",
@@ -112,30 +126,33 @@
 	  "tasksContent": "Tasks will be shown here",
 	  "errors": {
 		"loadFailed": "Failed to load events",
-		"connectionError": "Connection error, please try again"
+		"connectionError": "Connection error, please try again",
+		"featuredLoadFailed": "Failed to load personalized recommendations"
 	  }
 	},
 	"tasks": {
-		"title": "Assigned Tasks",
-		"loading": "Loading tasks...",
-		"noTasksVolunteer": "No tasks have been assigned to you for this event.",
-		"noTasksHost": "No tasks have been created for this event yet.",
-		"listAriaLabel": "List of assigned tasks",
-		"viewDetails": "View details for {{task}}",
-		"noDate": "No due date",
-		"status": {
-		  "pending": "Pending",
-		  "inProgress": "In Progress",
-		  "completed": "Completed",
-		  "notificationSent": "Completed (Pending Verification)"
-		},
-		"addTask": {
-		  "label": "Add Task",
-		  "ariaLabel": "Add a new task"
+	  "title": "Assigned Tasks",
+	  "loading": "Loading tasks...",
+	  "noTasksVolunteer": "No tasks have been assigned to you for this event.",
+	  "noTasksHost": "No tasks have been created for this event yet.",
+	  "listAriaLabel": "List of assigned tasks",
+	  "viewDetails": "View details for {{task}}",
+	  "noDate": "No due date",
+	  "status": {
+		"pending": "Pending",
+		"inProgress": "In Progress",
+		"completed": "Completed",
+		"notificationSent": "Completed (Pending Verification)"
+	  },
+	  "addTask": {
+		"label": "Add Task",
+		"ariaLabel": "Add a new task"
 	  },
 	  "errors": {
 		"auth": "You need to be logged in to view tasks",
-		"fetchFailed": "Failed to load tasks. Please try again."
+		"fetchFailed": "Failed to load tasks. Please try again.",
+		"loadFailed": "Failed to load events",
+		"connectionError": "Connection error. Please try again later."
 	  }
 	},
 	"common": {
@@ -195,73 +212,73 @@
 	  "boldFontWeight": "Bold font weight",
 	  "bolderFontWeight": "Bolder font weight"
 	},
-		"eventDetails": {
-		  "defaultTitle": "Event Details",
-		  "tabs": {
-			"event": "Event",
-			"chat": "Community Chat",
-			"feedback": "Feedback",
-			"tasks": "Tasks"
-		  },
-		  "tablist": {
-			"label": "Event information tabs"
-		  },
-		  "actions": {
-			"join": {
-			  "label": "Join",
-			  "labelEnrolled": "Joined",
-			  "labelLoading": "Joining...",
-			  "ariaLabel": "Join this event",
-			  "ariaLabelEnrolled": "You are enrolled in this event",
-			  "loginPrompt": "You need to login to join this event. Would you like to login now?",
-			  "success": "Successfully joined the event!",
-			  "failure": "Failed to join the event. Please try again.",
-			  "error": "An error occurred. Please try again later.",
-			  "alreadyEnrolled": "You are already enrolled in this event."
-			},
-			"back": {
-		        "label": "Back to Events",
-		        "ariaLabel": "Go back to events page"
-		    },
-			"unenroll": {
-			  "label": "Unenroll",
-			  "ariaLabel": "Unenroll from this event",
-			  "success": "Successfully unenrolled from the event!",
-			  "failure": "Failed to unenroll from the event. Please try again.",
-			  "error": "An error occurred. Please try again later."
-			},
-			"share": {
-			  "label": "Share",
-			  "ariaLabel": "Share this event",
-			  "defaultTitle": "Event Details",
-			  "text": "Check out this event: {{title}}",
-			  "copyMessage": "Event link copied to clipboard!",
-			  "copyError": "Failed to copy link. Please try again.",
-			  "success": "Event shared successfully!"
-			},
-			"feedback": {
-			  "label": "Submit Feedback",
-			  "ariaLabel": "Submit feedback for this event",
-			  "success": "Redirecting to feedback form...",
-			  "error": "Failed to open feedback form. Please try again."
-			},
-			"loading": "Processing..."
-		  },
-		  "loading": {
-			"main": "Loading event details...",
-			"tabContent": "Loading event information..."
-		  },
-		  "errors": {
-			"fetchFailed": "Failed to fetch event details",
-			"generalError": "An error occurred while fetching event details",
-			"notFound": "Event not found"
-		  },
-		  "share": {
-			"defaultTitle": "Event from Samarthanam Trust",
-			"text": "Check out this event: {{title}}",
-			"copyMessage": "Event link copied to clipboard!"
-		  }
+	"eventDetails": {
+	  "defaultTitle": "Event Details",
+	  "tabs": {
+		"event": "Event",
+		"chat": "Community Chat",
+		"feedback": "Feedback",
+		"tasks": "Tasks"
+	  },
+	  "tablist": {
+		"label": "Event information tabs"
+	  },
+	  "actions": {
+		"join": {
+		  "label": "Join",
+		  "labelEnrolled": "Joined",
+		  "labelLoading": "Joining...",
+		  "ariaLabel": "Join this event",
+		  "ariaLabelEnrolled": "You are enrolled in this event",
+		  "loginPrompt": "You need to login to join this event. Would you like to login now?",
+		  "success": "Successfully joined the event!",
+		  "failure": "Failed to join the event. Please try again.",
+		  "error": "An error occurred. Please try again later.",
+		  "alreadyEnrolled": "You are already enrolled in this event."
 		},
+		"back": {
+		  "label": "Back to Events",
+		  "ariaLabel": "Go back to events page"
+		},
+		"unenroll": {
+		  "label": "Unenroll",
+		  "ariaLabel": "Unenroll from this event",
+		  "success": "Successfully unenrolled from the event!",
+		  "failure": "Failed to unenroll from the event. Please try again.",
+		  "error": "An error occurred. Please try again later."
+		},
+		"share": {
+		  "label": "Share",
+		  "ariaLabel": "Share this event",
+		  "defaultTitle": "Event Details",
+		  "text": "Check out this event: {{title}}",
+		  "copyMessage": "Event link copied to clipboard!",
+		  "copyError": "Failed to copy link. Please try again.",
+		  "success": "Event shared successfully!"
+		},
+		"feedback": {
+		  "label": "Submit Feedback",
+		  "ariaLabel": "Submit feedback for this event",
+		  "success": "Redirecting to feedback form...",
+		  "error": "Failed to open feedback form. Please try again."
+		},
+		"loading": "Processing..."
+	  },
+	  "loading": {
+		"main": "Loading event details...",
+		"tabContent": "Loading event information..."
+	  },
+	  "errors": {
+		"fetchFailed": "Failed to fetch event details",
+		"generalError": "An error occurred while fetching event details",
+		"notFound": "Event not found"
+	  },
+	  "share": {
+		"defaultTitle": "Event from Samarthanam Trust",
+		"text": "Check out this event: {{title}}",
+		"copyMessage": "Event link copied to clipboard!"
+	  }
+	},
 	"communityChat": {
 	  "title": "Community Chat for {{event}}",
 	  "defaultEventTitle": "This Event",
@@ -322,131 +339,145 @@
 		"ariaLabel": "View details for {{name}}"
 	  }
 	},
-		"feedback": {
-		  "title": "Event Feedback",
-		  "loading": "Loading feedback form...",
-		  "authChecking": "Verifying your account...",
-		  "backToEvents": "Back to Events",
-		  "backToEventsButton": "Return to Events",
-		  "viewFeedbackTitle": "Your Feedback",
-		  "yourFeedbackFor": "Your feedback for",
-		  "provideFeedbackFor": "Provide your feedback for",
-		  "defaultEventName": "Event",
-		  "notEligibleTitle": "Cannot Submit Feedback",
-		  "pageTitle": "Event Feedback",
-		  "submit": "Submit Feedback",
-		  "submitting": "Submitting...",
-		  "submitSuccess": "Feedback submitted successfully!",
-		  "cancel": "Cancel",
-		  "errorTitle": "Error",
-		  "stars": "stars",
-		  "alreadySubmitted": "You have already submitted feedback for this event.",
-		  "ratingsOverview": "Ratings Overview",
-		  "submittedOn": "Submitted on",
-		  "wouldVolunteerAgainYes": "Yes, I would volunteer again",
-		  "wouldVolunteerAgainNo": "No, I would not volunteer again",
-		  
-		  "sections": {
-			"ratings": "Rate Your Experience",
-			"textFeedback": "Detailed Feedback",
-			"futureParticipation": "Future Participation"
-		  },
-		  
-		  "fields": {
-			"overallExperience": "Overall Experience",
-			"organizationQuality": "Event Organization",
-			"communication": "Communication",
-			"hostInteraction": "Interaction with Event Host",
-			"volunteerSupport": "Volunteer Support",
-			"taskClarity": "Task Clarity",
-			"impactAwareness": "Impact Awareness",
-			"inclusivity": "Inclusivity",
-			"timeManagement": "Time Management",
-			"recognition": "Volunteer Recognition",
-			"strengths": "What went well?",
-			"improvements": "What could be improved?",
-			"additionalComments": "Additional Comments",
-			"wouldVolunteerAgain": "I would volunteer for similar events in the future"
-		  },
-		  
-		  "descriptions": {
-			"overallExperience": "Rate your overall experience with this event"
-		  },
-		  
-		  "placeholders": {
-			"strengths": "Share what aspects of the event were particularly positive or effective...",
-			"improvements": "Suggest any areas that could be improved for future events...",
-			"additionalComments": "Share any other thoughts about your experience..."
-		  },
-		  
-		  "errors": {
-			"authRequired": "You need to be logged in to submit feedback. Redirecting to login...",
-			"authFailed": "Failed to verify your authentication. Please try logging in again.",
-			"generalError": "Something went wrong. Please try again later.",
-			"eligibilityCheckFailed": "Unable to check if you can submit feedback for this event.",
-			"notEligible": "You are not eligible to submit feedback for this event.",
-			"submissionFailed": "Failed to submit feedback. Please try again.",
-			"eventLoadFailed": "Failed to load event details."
-		  }
-		},
-		"taskDetail": {
-		  "backToTasks": "Back to Tasks",
-		  "backToEvent": "Back to Event",
-		  "loading": "Loading task details...",
-		  "progress": "Completion Progress",
-		  "completionProgress": "Task completion progress: {{percentage}}%",
-		  "startDate": "Start",
-		  "dueDate": "Due",
-		  "noDate": "No date set",
-		  "description": "Description",
-		  "assignedVolunteers": "Assigned Volunteers",
-		  "you": "You",
-		  "subtasks": "Subtasks",
-		  "notifyCompletion": "Notify Completion",
-		  "notifying": "Notifying...",
-		  "completionNotified": "Completion notified at {{time}}",
-		  "closeNotification": "Close notification",
-		  "status": {
-			"pending": "Pending",
-			"inProgress": "In Progress",
-			"completed": "Completed",
-			"notificationSent": "Pending Verification",
-			"unknown": "Unknown Status"
-		  },
-		  "notifications": {
-			"completed": "Completion notification sent successfully!",
-			"alreadyNotified": "This task has already been notified as completed."
-		  },
-		  "errors": {
-			"auth": "You need to be logged in to view task details",
-			"fetchFailed": "Failed to load task details. Please try again.",
-			"notFound": "Task not found. It may have been deleted.",
-			"notificationFailed": "Failed to send completion notification. Please try again.",
-			"notAuthorized": "You are not authorized to view this task."
-		  },
-		  "comingSoon": "Task details are coming soon",
-		  "implementationNote": "This feature is currently being implemented"
-		},
-		"taskChat": {
-			"title": "Task Chat",
-			"loading": "Loading chat...",
-			"loadMore": "Load earlier messages",
-			"loadingMore": "Loading...",
-			"retry": "Retry",
-			"noMessages": "No messages yet. Start the conversation!",
-			"messagePlaceholder": "Type a message...",
-			"send": "Send",
-			"host": "Host",
-			"you": "You",
-			"justNow": "just now",
-			"minutesAgo": "{{count}}m ago",
-			"hoursAgo": "{{count}}h ago",
-			"daysAgo": "{{count}}d ago",
-			"errors": {
-			  "auth": "You need to be logged in to use the chat",
-			  "fetchFailed": "Failed to load chat messages",
-			  "sendFailed": "Failed to send message",
-			  "loadMoreFailed": "Failed to load more messages"
-			}
-		}
+	"feedback": {
+	  "title": "Event Feedback",
+	  "loading": "Loading feedback form...",
+	  "authChecking": "Verifying your account...",
+	  "backToEvents": "Back to Events",
+	  "backToEventsButton": "Return to Events",
+	  "viewFeedbackTitle": "Your Feedback",
+	  "yourFeedbackFor": "Your feedback for",
+	  "provideFeedbackFor": "Provide your feedback for",
+	  "defaultEventName": "Event",
+	  "notEligibleTitle": "Cannot Submit Feedback",
+	  "pageTitle": "Event Feedback",
+	  "submit": "Submit Feedback",
+	  "submitting": "Submitting...",
+	  "submitSuccess": "Feedback submitted successfully!",
+	  "cancel": "Cancel",
+	  "errorTitle": "Error",
+	  "stars": "stars",
+	  "alreadySubmitted": "You have already submitted feedback for this event.",
+	  "ratingsOverview": "Ratings Overview",
+	  "submittedOn": "Submitted on",
+	  "wouldVolunteerAgainYes": "Yes, I would volunteer again",
+	  "wouldVolunteerAgainNo": "No, I would not volunteer again",  
+	  "sections": {
+		"ratings": "Rate Your Experience",
+		"textFeedback": "Detailed Feedback",
+		"futureParticipation": "Future Participation"
+	  },
+	  "fields": {
+		"overallExperience": "Overall Experience",
+		"organizationQuality": "Event Organization",
+		"communication": "Communication",
+		"hostInteraction": "Interaction with Event Host",
+		"volunteerSupport": "Volunteer Support",
+		"taskClarity": "Task Clarity",
+		"impactAwareness": "Impact Awareness",
+		"inclusivity": "Inclusivity",
+		"timeManagement": "Time Management",
+		"recognition": "Volunteer Recognition",
+		"strengths": "What went well?",
+		"improvements": "What could be improved?",
+		"additionalComments": "Additional Comments",
+		"wouldVolunteerAgain": "I would volunteer for similar events in the future"
+	  },
+	  "descriptions": {
+		"overallExperience": "Rate your overall experience with this event"
+	  },
+	  "placeholders": {
+		"strengths": "Share what aspects of the event were particularly positive or effective...",
+		"improvements": "Suggest any areas that could be improved for future events...",
+		"additionalComments": "Share any other thoughts about your experience..."
+	  },
+	  "errors": {
+		"authRequired": "You need to be logged in to submit feedback. Redirecting to login...",
+		"authFailed": "Failed to verify your authentication. Please try logging in again.",
+		"generalError": "Something went wrong. Please try again later.",
+		"eligibilityCheckFailed": "Unable to check if you can submit feedback for this event.",
+		"notEligible": "You are not eligible to submit feedback for this event.",
+		"submissionFailed": "Failed to submit feedback. Please try again.",
+		"eventLoadFailed": "Failed to load event details."
+	  }
+	},
+	"taskDetail": {
+	  "backToTasks": "Back to Tasks",
+	  "backToEvent": "Back to Event",
+	  "loading": "Loading task details...",
+	  "progress": "Completion Progress",
+	  "completionProgress": "Task completion progress: {{percentage}}%",
+	  "startDate": "Start",
+	  "dueDate": "Due",
+	  "noDate": "No date set",
+	  "description": "Description",
+	  "assignedVolunteers": "Assigned Volunteers",
+	  "you": "You",
+	  "subtasks": "Subtasks",
+	  "notifyCompletion": "Notify Completion",
+	  "notifying": "Notifying...",
+	  "completionNotified": "Completion notified at {{time}}",
+	  "closeNotification": "Close notification",
+	  "requiredSkills": "Required Skills",
+	  "skillMatchLabel": "Skill Match",
+	  "skillMatch": "You have this skill",
+	  "missingSkills": "Skills to develop",
+	  "noRequiredSkills": "No specific skills required for this task",
+	  "status": {
+		"pending": "Pending",
+		"inProgress": "In Progress",
+		"completed": "Completed",
+		"notificationSent": "Pending Verification",
+		"unknown": "Unknown Status"
+	  },
+	  "notifications": {
+		"completed": "Completion notification sent successfully!",
+		"alreadyNotified": "This task has already been notified as completed."
+	  },
+	  "errors": {
+		"auth": "You need to be logged in to view task details",
+		"fetchFailed": "Failed to load task details. Please try again.",
+		"notFound": "Task not found. It may have been deleted.",
+		"notificationFailed": "Failed to send completion notification. Please try again.",
+		"notAuthorized": "You are not authorized to view this task."
+	  },
+	  "comingSoon": "Task details are coming soon",
+	  "implementationNote": "This feature is currently being implemented"
+	},
+	"taskChat": {
+	  "title": "Task Chat",
+	  "loading": "Loading chat...",
+	  "loadMore": "Load earlier messages",
+	  "loadingMore": "Loading...",
+	  "retry": "Retry",
+	  "noMessages": "No messages yet. Start the conversation!",
+	  "messagePlaceholder": "Type a message...",
+	  "send": "Send",
+	  "host": "Host",
+	  "you": "You",
+	  "justNow": "just now",
+	  "minutesAgo": "{{count}}m ago",
+	  "hoursAgo": "{{count}}h ago",
+	  "daysAgo": "{{count}}d ago",
+	  "errors": {
+		"auth": "You need to be logged in to use the chat",
+		"fetchFailed": "Failed to load chat messages",
+		"sendFailed": "Failed to send message",
+		"loadMoreFailed": "Failed to load more messages"
+	  }
+	},
+	"recommendations": {
+	  "personalizedTitle": "Recommended For You",
+	  "featuredTitle": "Featured Events",
+	  "loading": "Loading recommendations...",
+	  "fetchError": "Failed to fetch recommendations",
+	  "matchLabel": "Match",
+	  "skillsLabel": "Matching skills",
+	  "noRecommendations": "No recommendations available",
+	  "updateProfile": "Update your profile to get personalized recommendations",
+	  "recommendedTasks": "Recommended Tasks",
+	  "viewAll": "View All",
+	  "basedOnSkills": "Based on your skills",
+	  "notPersonalized": "Showing popular events. Update your skills for personalized recommendations."
+	}
   }

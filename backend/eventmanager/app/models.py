@@ -133,6 +133,9 @@ class TaskInfo(models.Model):
     end_time = models.DateTimeField()
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Pending')
     
+    # New skills field
+    required_skills = models.TextField(blank=True, help_text="Comma-separated list of skills required for this task")
+    
     # Notification field (for volunteers to notify host)
     completion_notified = models.BooleanField(default=False, 
                                            help_text="Indicates if volunteers have notified that the task is completed")
@@ -145,31 +148,13 @@ class TaskInfo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        try:
-            event_name = self.event.event_name if self.event_id else "Unknown Event"
-            return f"{event_name} - {self.task_name}"
-        except (EventInfo.DoesNotExist, AttributeError):
-            return f"Task: {self.task_name or 'New Task'}"
+    # ...existing methods...
     
-    @property
-    def all_subtasks_complete(self):
-        """Check if all subtasks are complete"""
-        # Don't try to check subtasks if the task hasn't been saved yet
-        if not self.pk:
-            return True
-            
-        subtasks = self.subtasks.all()
-        if not subtasks.exists():
-            return True  # No subtasks means this check passes by default
-        return not subtasks.exclude(status='Completed').exists()
-    
-    def save(self, *args, **kwargs):
-        # If all subtasks are complete, we can automatically update the task status
-        if self.pk and self.all_subtasks_complete and self.subtasks.exists() and self.status != 'Completed':
-            self.status = 'Completed'
-        
-        super().save(*args, **kwargs)
+    def get_skills_list(self):
+        """Return the skills as a list"""
+        if not self.required_skills:
+            return []
+        return [skill.strip() for skill in self.required_skills.split(',')]
 
 
 class SubTask(models.Model):

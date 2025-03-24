@@ -32,6 +32,13 @@ const TaskDetail = ({ taskId, eventId, onBack }) => {
   const [completionProgress, setCompletionProgress] = useState(0);
   const [notifying, setNotifying] = useState({ taskId: null, type: null });
   const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
+  // Add new state for required skills
+  const [requiredSkills, setRequiredSkills] = useState([]);
+  const [skillMatch, setSkillMatch] = useState({
+    matchPercentage: 0,
+    matchingSkills: [],
+    missingSkills: []
+  });
 
   // Fetch current user info
   useEffect(() => {
@@ -43,7 +50,8 @@ const TaskDetail = ({ taskId, eventId, onBack }) => {
             id: response.data.user.id,
             name: response.data.user.name || response.data.user.username,
             email: response.data.user.email,
-            isHost: response.data.user.is_event_host || false
+            isHost: response.data.user.is_event_host || false,
+            skills: response.data.user.skills ? response.data.user.skills.split(',').map(s => s.trim()) : []
           });
         } else {
           setError(t('taskDetail.errors.auth'));
@@ -84,8 +92,25 @@ const TaskDetail = ({ taskId, eventId, onBack }) => {
             volunteers: taskData.volunteers || [],
             completion_notified: taskData.completion_notified || false,
             notification_message: taskData.notification_message || '',
-            notification_time: taskData.notification_time || null
+            notification_time: taskData.notification_time || null,
+            required_skills: taskData.required_skills || ''
           };
+          
+          // Extract required skills from task data or skills_list if available
+          let skillsList = [];
+          if (response.data.skills && response.data.skills.required_skills) {
+            skillsList = response.data.skills.required_skills;
+          } else if (taskData.skills_list) {
+            skillsList = taskData.skills_list;
+          } else if (taskData.required_skills) {
+            // Split comma-separated skills
+            skillsList = taskData.required_skills
+              .split(',')
+              .map(skill => skill.trim())
+              .filter(skill => skill.length > 0);
+          }
+          
+          setRequiredSkills(skillsList);
           
           // Get and normalize subtasks
           let subtasksData = [];
@@ -111,6 +136,18 @@ const TaskDetail = ({ taskId, eventId, onBack }) => {
           ).length + (normalizedTask.status.toLowerCase().includes('complet') ? 1 : 0);
           
           const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+          
+          // Check for volunteer skill match if response includes this data
+          if (response.data.volunteers && Array.isArray(response.data.volunteers)) {
+            const currentVolunteerData = response.data.volunteers.find(v => v.id === currentUser.id);
+            if (currentVolunteerData) {
+              setSkillMatch({
+                matchPercentage: currentVolunteerData.match_percentage || 0,
+                matchingSkills: currentVolunteerData.matching_skills || [],
+                missingSkills: currentVolunteerData.missing_skills || []
+              });
+            }
+          }
           
           setTask(normalizedTask);
           setSubtasks(subtasksData);
@@ -327,6 +364,7 @@ const TaskDetail = ({ taskId, eventId, onBack }) => {
   const canNotifyCompletion = isUserAssigned() && !task.completion_notified && 
                              !task.status.toLowerCase().includes('complet');
   const hasSubtasks = subtasks && subtasks.length > 0;
+  const hasRequiredSkills = requiredSkills && requiredSkills.length > 0;
 
   return (
     <div className="task-detail-container">
@@ -413,10 +451,44 @@ const TaskDetail = ({ taskId, eventId, onBack }) => {
               </div>
             </div>
 
-            {/* Rest of the component remains the same */}
-            {/* ... */}
-            
-            {/* Add all the remaining code from the existing Task Detail component */}
+            {/* Add Required Skills section */}
+            {hasRequiredSkills && (
+              <div className="task-required-skills">
+                <h2>{t('taskDetail.requiredSkills')}</h2>
+                <div className="skills-container">
+                  {requiredSkills.map((skill, index) => (
+                    <span key={index} className="skill-tag">
+                      {skill}
+                      {isUserAssigned() && skillMatch.matchingSkills.includes(skill) && (
+                        <span className="skill-match-indicator" title={t('taskDetail.skillMatch')}>✓</span>
+                      )}
+                    </span>
+                  ))}
+                </div>
+                
+                {/* Add skill match information for volunteers */}
+                {isUserAssigned() && skillMatch.matchPercentage > 0 && (
+                  <div className="skill-match-info">
+                    <div className="skill-match-percentage">
+                      <span>{t('taskDetail.skillMatchLabel')}:</span>
+                      <span className="match-value">{skillMatch.matchPercentage}%</span>
+                    </div>
+                    
+                    {skillMatch.missingSkills.length > 0 && (
+                      <div className="missing-skills">
+                        <span>{t('taskDetail.missingSkills')}:</span>
+                        <div className="missing-skills-list">
+                          {skillMatch.missingSkills.map((skill, index) => (
+                            <span key={index} className="missing-skill-tag">{skill}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
             {task.description && (
               <div className="task-description">
                 <h2>{t('taskDetail.description')}</h2>

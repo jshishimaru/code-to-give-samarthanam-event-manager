@@ -6,7 +6,8 @@ class TaskInfoSerializer(serializers.ModelSerializer):
     event_name = serializers.SerializerMethodField()
     subtask_count = serializers.SerializerMethodField()
     completed_subtasks = serializers.SerializerMethodField()
-    
+    skills_list = serializers.SerializerMethodField()
+
     class Meta:
         model = TaskInfo
         fields = '__all__'
@@ -23,6 +24,9 @@ class TaskInfoSerializer(serializers.ModelSerializer):
         
     def get_completed_subtasks(self, obj):
         return obj.subtasks.filter(status='Completed').count()
+    
+    def get_skills_list(self, obj):
+    	return obj.get_skills_list()
 
 
 class SubTaskSerializer(serializers.ModelSerializer):

@@ -154,9 +154,9 @@ const EventDetails = () => {
     ];
     
     // Only show tasks tab if user is enrolled
-    if (isEnrolled) {
-      baseTabs.splice(1, 0, { id: 'tasks', label: t('eventDetails.tabs.tasks'), component: <Tasks eventId={eventId} /> });
-    }
+	if (isEnrolled === true) {
+		baseTabs.splice(1, 0, { id: 'tasks', label: t('eventDetails.tabs.tasks'), component: <Tasks eventId={eventId} /> });
+	  }
     
     return baseTabs;
   };
@@ -315,6 +315,17 @@ const EventDetails = () => {
       )}
       
       <header className="event-details-header">
+	  <button 
+        className="back-to-events-button" 
+        onClick={() => navigate('/events')}
+        aria-label={t('eventDetails.actions.back.ariaLabel', 'Go back to events page')}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>{t('eventDetails.actions.back.label', 'Back to Events')}</span>
+      </button>
         <h1 className="event-name">
           {event?.title || event?.event_name || t('eventDetails.defaultTitle')}
         </h1>

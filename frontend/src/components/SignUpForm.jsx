@@ -134,54 +134,89 @@ const SignUpForm = ({ onSubmit }) => {
     return newErrors;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    const formErrors = validateForm();
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-      toast.error("Please fix the errors in the form.");
-      return;
-    }
-    
-    setIsSubmitting(true);
-    
-    try {
-      // Convert skills array to comma-separated string for the API
-      const skillsString = formData.skills.join(", ");
-      
-      // Destructure the formData to match the expected parameters
-      const { name, password, email, contact, age, location, organization } = formData;
-      
-      // Call the signup function with the parameters in the correct order
-      const response = await signup(name, password, email, contact, skillsString, age, location, organization);
-      
-      if (response && response.success) {
-        toast.success("Signup successful!");
-
-        if (onSubmit) onSubmit(formData);
-        
-        // Clear form after successful submission
-        setFormData({
-          name: "",
-          email: "",
-          password: "",
-          contact: "",
-          age: "",
-          location: "",
-          organization: "",
-          skills: []
-        });
-        setErrors({});
-     	navigate('/login');
-      } else {
-        toast.error(response?.data?.message || "Failed to sign up. Please try again.");
-      }
-    } catch (error) {
-      toast.error(error.message || "Failed to sign up. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+	const handleSubmit = async (e) => {
+	e.preventDefault();
+	
+	const formErrors = validateForm();
+	if (Object.keys(formErrors).length > 0) {
+	  setErrors(formErrors);
+	  toast.error("Please fix the errors in the form.");
+	  return;
+	}
+	
+	setIsSubmitting(true);
+	
+	try {
+	  // Convert skills array to comma-separated string for the API
+	  const skillsString = formData.skills.join(", ");
+	  
+	  // Destructure the formData to match the expected parameters
+	  const { name, password, email, contact, age, location, organization } = formData;
+	  
+	  // Call the signup function with the parameters in the correct order
+	  const response = await signup(name, password, email, contact, skillsString, age, location, organization);
+	  
+	  if (response && response.success) {
+		toast.success("Signup successful!");
+  
+		if (onSubmit) onSubmit(formData);
+		
+		// Clear form after successful submission
+		setFormData({
+		  name: "",
+		  email: "",
+		  password: "",
+		  contact: "",
+		  age: "",
+		  location: "",
+		  organization: "",
+		  skills: []
+		});
+		setErrors({});
+		navigate('/login');
+	  } else {
+		// Extract the specific error message from the response
+		const errorMessage = response?.data?.message || "Failed to sign up. Please try again.";
+		
+		// Handle specific error cases and update form errors accordingly
+		if (errorMessage.includes("Email already registered")) {
+		  setErrors(prev => ({ 
+			...prev, 
+			email: "This email is already registered" 
+		  }));
+		  toast.error("This email is already registered. Please use a different email or login to your existing account.");
+		} 
+		else if (errorMessage.includes("Contact already registered")) {
+		  setErrors(prev => ({ 
+			...prev, 
+			contact: "This contact number is already registered" 
+		  }));
+		  toast.error("This contact number is already registered. Please use a different number or login to your existing account.");
+		}
+		else {
+		  // Show the exact error message from the server for other cases
+		  toast.error(errorMessage);
+		}
+	  }
+	} catch (error) {
+	  // Handle network or unexpected errors
+	  console.error("Signup error:", error);
+	  
+	  // Extract error message in a more robust way
+	  let errorMessage = "Failed to sign up. Please try again.";
+	  
+	  if (error.response && error.response.data) {
+		// If it's an axios error with a response from the server
+		errorMessage = error.response.data.message || errorMessage;
+	  } else if (error.message) {
+		// If it has a readable message property
+		errorMessage = error.message;
+	  }
+	  
+	  toast.error(errorMessage);
+	} finally {
+	  setIsSubmitting(false);
+	}
   };
 
   return (

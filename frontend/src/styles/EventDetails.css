@@ -439,3 +439,49 @@
 	  font-size: 0.85rem;
 	}
   }
+
+  /* Back button styles */
+.back-to-events-button {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 16px;
+	margin-bottom: 16px;
+	background-color: transparent;
+	border: 1px solid var(--border-color);
+	border-radius: 4px;
+	color: var(--text-color);
+	font-size: 0.9rem;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	align-self: flex-start;
+  }
+  
+  .back-to-events-button:hover {
+	background-color: var(--bg-hover);
+	transform: translateX(-2px);
+  }
+  
+  .back-to-events-button:focus {
+	outline: 2px solid var(--focus-color);
+	outline-offset: 2px;
+  }
+  
+  .back-to-events-button svg {
+	transition: transform 0.2s ease;
+  }
+  
+  .back-to-events-button:hover svg {
+	transform: translateX(-2px);
+  }
+  
+  /* Update header layout to include back button */
+  .event-details-header {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 24px;
+  }
+  
+  .event-name {
+	margin-top: 0;
+  }

@@ -80,41 +80,79 @@ export const loginHost = async (email, password) => {
 };
 
 // The signup function is already correctly checking for error status
+// Update the signup function to better handle error responses
 export const signup = async (name, password, email, contact, skills, age, location, organization) => {
-  try {
-    const data = qs.stringify({
-      name,
-      password,
-      email,
-      contact,
-      skills,
-      age,
-      location,
-      organization
-    });
-    
-    const response = await axios.post(`${API_URL}auth/user/signup/`, data, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-    
-    const return_data = {
-      'status': response.data.status,
-      'user_id': response.data.user_id,
-      'message': response.data.message,
-    }
-    
-    if (response.data.status === 'error') {
-      return {success: false, data: return_data};
-    }
-    
-    return {success: true, data: return_data};
-  } catch (error) {
-    console.error('Error signing up:', error);
-    throw error;
-  }
-};
+	try {
+	  const data = qs.stringify({
+		name,
+		password,
+		email,
+		contact,
+		skills,
+		age,
+		location,
+		organization
+	  });
+	  
+	  const response = await axios.post(`${API_URL}auth/user/signup/`, data, {
+		headers: {
+		  'Content-Type': 'application/x-www-form-urlencoded',
+		},
+	  });
+	  
+	  // Check status in the response
+	  if (response.data.status === 'error') {
+		return {
+		  success: false, 
+		  data: {
+			message: response.data.message,
+			status: response.status
+		  }
+		};
+	  }
+	  
+	  return {
+		success: true, 
+		data: {
+		  user_id: response.data.user_id,
+		  message: response.data.message,
+		  status: response.data.status
+		}
+	  };
+	} catch (error) {
+	  console.error('Error signing up:', error);
+	  
+	  // Extract and structure the error information for better handling in the UI
+	  if (error.response) {
+		// The server responded with an error status code
+		return {
+		  success: false,
+		  data: {
+			message: error.response.data.message || "Server error. Please try again.",
+			status: error.response.status
+		  }
+		};
+	  } else if (error.request) {
+		// The request was made but no response was received
+		return {
+		  success: false,
+		  data: {
+			message: "No response from server. Please check your connection.",
+			status: 0
+		  }
+		};
+	  } else {
+		// Something happened in setting up the request
+		return {
+		  success: false,
+		  data: {
+			message: error.message || "Request failed. Please try again.",
+			status: 0
+		  }
+		};
+	  }
+	}
+  };
 
 /**
  * Check if the user is authenticated
@@ -185,7 +223,7 @@ export const checkAuth = async () => {
           message: 'No response from authentication server'
         }
       };
-    } else {
+    } else { 	
       // Something happened in setting up the request that triggered an Error
       return {
         success: false,

@@ -219,6 +219,10 @@
 			  "error": "An error occurred. Please try again later.",
 			  "alreadyEnrolled": "You are already enrolled in this event."
 			},
+			"back": {
+		        "label": "Back to Events",
+		        "ariaLabel": "Go back to events page"
+		    },
 			"unenroll": {
 			  "label": "Unenroll",
 			  "ariaLabel": "Unenroll from this event",

@@ -1205,3 +1205,73 @@
 	}
   }
   
+
+  /* Add to /home/jshishimaru/code-to-give-samarthanam-event-manager/frontend/src/styles/EventPage.css */
+
+.event-card-container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+  }
+  
+  .event-feedback-actions {
+	display: flex;
+	gap: 0.5rem;
+	margin-top: 0.5rem;
+	padding: 0 1rem 1rem;
+  }
+  
+  .event-feedback-btn {
+	flex: 1;
+	padding: 0.5rem 0.75rem;
+	font-size: 0.9rem;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-weight: 500;
+	text-align: center;
+	transition: all 0.2s ease;
+  }
+  
+  .submit-feedback {
+	background-color: var(--primary-color);
+	color: white;
+  }
+  
+  .submit-feedback:hover {
+	background-color: var(--primary-hover);
+  }
+  
+  .view-feedback {
+	background-color: var(--bg-tertiary);
+	color: var(--text-color);
+	border: 1px solid var(--border-color);
+  }
+  
+  .view-feedback:hover {
+	background-color: var(--bg-hover);
+  }
+  
+  /* Adjust list view for feedback buttons */
+  .event-list-item .event-feedback-actions {
+	padding: 0.5rem 1rem;
+	margin-top: 0;
+  }
+  
+  /* Loading state for feedback status */
+  .feedback-status-loading {
+	display: inline-block;
+	width: 1rem;
+	height: 1rem;
+	border: 2px solid rgba(var(--primary-rgb), 0.3);
+	border-radius: 50%;
+	border-top-color: var(--primary-color);
+	animation: spin 1s linear infinite;
+	margin-left: 0.5rem;
+  }
+  
+  @keyframes spin {
+	to {
+	  transform: rotate(360deg);
+	}
+  }

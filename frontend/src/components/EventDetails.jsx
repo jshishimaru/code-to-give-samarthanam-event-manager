@@ -5,7 +5,6 @@ import { getEventDetails, enrollUserInEvent, unenrollUserFromEvent, checkUserEnr
 import { checkAuth } from '../apiservice/auth';
 import '../styles/EventDetails.css';
 import Event from './Event/Event';
-import Feedback from './Event/feedback';
 import CommunityChat from './Event/CommunityChat';
 import Tasks from './Event/tasks';
 
@@ -151,8 +150,7 @@ const EventDetails = () => {
   const getTabs = () => {
     const baseTabs = [
       { id: 'event', label: t('eventDetails.tabs.event'), component: tabsReady ? <Event eventData={event} /> : <Event eventData={null} /> },
-      { id: 'chat', label: t('eventDetails.tabs.chat'), component: <CommunityChat eventId={eventId} eventTitle={event?.title || event?.event_name} /> },
-      { id: 'feedback', label: t('eventDetails.tabs.feedback'), component: <Feedback /> }
+      { id: 'chat', label: t('eventDetails.tabs.chat'), component: <CommunityChat eventId={eventId} eventTitle={event?.title || event?.event_name} /> }
     ];
     
     // Only show tasks tab if user is enrolled
@@ -268,12 +266,17 @@ const EventDetails = () => {
     }
   };
 
-  // Loading placeholder for tab content
-  const TabLoadingPlaceholder = () => (
-    <div className="tab-loading-placeholder">
-      <p>{t('eventDetails.loading.tabContent')}</p>
-    </div>
-  );
+  // Check if the event is in the past
+  const isEventPast = () => {
+    if (!event || !event.end_time) return false;
+    const endTime = new Date(event.end_time);
+    return endTime < new Date();
+  };
+
+  // Handle feedback button click
+  const handleFeedbackClick = () => {
+    navigate(`/events/${eventId}/feedback`);
+  };
 
   if (loading) {
     return (
@@ -336,22 +339,37 @@ const EventDetails = () => {
           </div>
           
           <div className="event-action-buttons">
-            <button 
-              className={`event-action-btn ${isEnrolled ? 'unenroll-btn' : 'join-btn'} ${enrollmentLoading ? 'loading' : ''}`}
-              onClick={handleJoinEvent}
-              disabled={enrollmentLoading}
-              aria-label={isEnrolled 
-                ? t('eventDetails.actions.unenroll.ariaLabel') 
-                : t('eventDetails.actions.join.ariaLabel')}
-            >
-              {enrollmentLoading ? (
-                <span className="loading-text">{t('eventDetails.actions.loading')}</span>
-              ) : isEnrolled ? (
-                t('eventDetails.actions.unenroll.label')
-              ) : (
-                t('eventDetails.actions.join.label')
-              )}
-            </button>
+            {/* Only show join/unenroll button for upcoming events */}
+            {!isEventPast() && (
+              <button 
+                className={`event-action-btn ${isEnrolled ? 'unenroll-btn' : 'join-btn'} ${enrollmentLoading ? 'loading' : ''}`}
+                onClick={handleJoinEvent}
+                disabled={enrollmentLoading}
+                aria-label={isEnrolled 
+                  ? t('eventDetails.actions.unenroll.ariaLabel') 
+                  : t('eventDetails.actions.join.ariaLabel')}
+              >
+                {enrollmentLoading ? (
+                  <span className="loading-text">{t('eventDetails.actions.loading')}</span>
+                ) : isEnrolled ? (
+                  t('eventDetails.actions.unenroll.label')
+                ) : (
+                  t('eventDetails.actions.join.label')
+                )}
+              </button>
+            )}
+            
+            {/* Show feedback button for past events user was enrolled in */}
+            {isEventPast() && isEnrolled && (
+              <button 
+                className="event-action-btn feedback-btn"
+                onClick={handleFeedbackClick}
+                aria-label={t('eventDetails.actions.feedback.ariaLabel')}
+              >
+                {t('eventDetails.actions.feedback.label')}
+              </button>
+            )}
+            
             <button 
               className="event-action-btn share-btn"
               onClick={handleShareEvent}

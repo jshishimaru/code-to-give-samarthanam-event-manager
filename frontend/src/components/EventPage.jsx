@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   getUserEnrolledEvents, 
   allUpcomingEvents, 
@@ -7,6 +8,7 @@ import {
   getUserOngoingEvents
 } from '../apiservice/event';
 import { checkAuth } from '../apiservice/auth';
+import { checkFeedbackEligibility } from '../apiservice/feedback';
 import EventCard from './EventCard';
 import '../styles/EventPage.css';
 import Navbar from './Navbar';
@@ -14,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 
 const EventPage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   
   // User authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -24,6 +27,10 @@ const EventPage = () => {
   const [ongoingEvents, setOngoingEvents] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [pastEvents, setPastEvents] = useState([]);
+  
+  // Track feedback status for past events
+  const [feedbackStatus, setFeedbackStatus] = useState({});
+  const [feedbackStatusLoading, setFeedbackStatusLoading] = useState(false);
   
   // View mode: 'grid' or 'list'
   const [viewMode, setViewMode] = useState('grid');
@@ -171,7 +178,13 @@ const EventPage = () => {
       try {
         const response = await getUserPastEvents(userId);
         if (response.success) {
-          setPastEvents(response.data.event_ids || []);
+          const pastEventIds = response.data.event_ids || [];
+          setPastEvents(pastEventIds);
+          
+          // Check feedback status for all past events
+          if (pastEventIds.length > 0) {
+            checkFeedbackStatusForEvents(pastEventIds);
+          }
         } else {
           setError(prev => ({ ...prev, past: t('events.errors.loadFailed') }));
         }
@@ -189,6 +202,46 @@ const EventPage = () => {
       setLoading(prev => ({ ...prev, past: false }));
     }
   }, [userId, t]);
+
+  // Check feedback eligibility status for past events
+  const checkFeedbackStatusForEvents = async (eventIds) => {
+    setFeedbackStatusLoading(true);
+    
+    const statusMap = {};
+    
+    try {
+      // Check status for each event (could be optimized with a batch API endpoint)
+      for (const eventId of eventIds) {
+        const response = await checkFeedbackEligibility(eventId);
+        
+        if (response.success) {
+          statusMap[eventId] = {
+            eligible: response.data.eligible,
+            reason: response.data.reason,
+            existingFeedbackId: response.data.existing_feedback_id
+          };
+        } else {
+          // If check fails, assume not eligible
+          statusMap[eventId] = {
+            eligible: false,
+            reason: "Unable to check status",
+            existingFeedbackId: null
+          };
+        }
+      }
+      
+      setFeedbackStatus(statusMap);
+    } catch (err) {
+      console.error('Error checking feedback status for events:', err);
+    } finally {
+      setFeedbackStatusLoading(false);
+    }
+  };
+  
+  // Handle feedback button click
+  const handleFeedbackClick = (eventId) => {
+    navigate(`/events/${eventId}/feedback`);
+  };
 
   // Toggle expanded state for a section
   const toggleSectionExpansion = (section) => {
@@ -275,7 +328,32 @@ const EventPage = () => {
                   className={`event-item ${viewMode === 'list' ? 'event-list-item' : ''}`} 
                   role="listitem"
                 >
-                  <EventCard eventId={eventId} viewMode={viewMode} />
+                  <div className="event-card-container">
+                    <EventCard eventId={eventId} viewMode={viewMode} />
+                    
+                    {/* Add feedback buttons for past events */}
+                    {section === 'past' && !feedbackStatusLoading && (
+                      <div className="event-feedback-actions">
+                        <button 
+                          className="view-details-btn"
+                          onClick={() => navigate(`/events/${eventId}`)}
+                        >
+                          {t('events.viewDetails')}
+                        </button>
+                        
+                        {feedbackStatus[eventId] && (
+                          <button 
+                            className={`event-feedback-btn ${feedbackStatus[eventId].existingFeedbackId ? 'view-feedback' : 'submit-feedback'}`}
+                            onClick={() => handleFeedbackClick(eventId)}
+                          >
+                            {feedbackStatus[eventId].existingFeedbackId 
+                              ? t('events.viewFeedback') 
+                              : t('events.submitFeedback')}
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

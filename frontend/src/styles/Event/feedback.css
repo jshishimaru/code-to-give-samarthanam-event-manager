@@ -331,3 +331,130 @@
 	outline-offset: 2px;
 	border-radius: 0.25rem;
   }
+
+  /* Add this to your feedback.css file */
+
+.feedback-header {
+	margin-bottom: 2rem;
+  }
+  
+  .back-button {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	background: none;
+	border: none;
+	color: var(--text-secondary);
+	font-size: 0.9rem;
+	cursor: pointer;
+	padding: 0.5rem;
+	border-radius: 4px;
+	transition: all 0.2s ease;
+	margin-bottom: 1rem;
+  }
+  
+  .back-button:hover {
+	color: var(--primary-color);
+	background-color: var(--bg-hover);
+  }
+  
+  .feedback-subtitle {
+	color: var(--text-secondary);
+	margin-top: 0.5rem;
+  }
+  
+  .feedback-actions {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+	margin-top: 2rem;
+  }
+  
+  .feedback-cancel-btn {
+	padding: 0.75rem 1.5rem;
+	background-color: var(--bg-tertiary);
+	color: var(--text-secondary);
+	border: 1px solid var(--border-color);
+	border-radius: 4px;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: all 0.2s ease;
+  }
+  
+  .feedback-cancel-btn:hover {
+	background-color: var(--bg-hover);
+	color: var(--text-color);
+  }
+  
+  .back-to-event-btn {
+	padding: 0.75rem 1.5rem;
+	background-color: var(--primary-color);
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: all 0.2s ease;
+  }
+  
+  .back-to-event-btn:hover {
+	background-color: var(--primary-hover);
+  }
+  
+  .feedback-header {
+	text-align: left;
+  }
+  
+  .feedback-submission-date {
+	margin-top: 2rem;
+	color: var(--text-tertiary);
+	font-style: italic;
+  }
+  /* Add to your feedback.css file */
+
+.feedback-event-info {
+	margin-bottom: 1.5rem;
+	padding: 1rem;
+	background-color: var(--bg-secondary);
+	border-radius: 6px;
+	border-left: 4px solid var(--primary-color);
+  }
+  
+  .feedback-event-info h3 {
+	margin-top: 0;
+	margin-bottom: 0.5rem;
+	color: var(--primary-dark);
+	font-weight: 600;
+	font-size: 1.1rem;
+  }
+  
+  .event-date {
+	margin: 0;
+	color: var(--text-secondary);
+	font-size: 0.9rem;
+  }
+  
+  .feedback-submission-date {
+	margin-top: 2rem;
+	padding: 0.75rem;
+	background-color: var(--bg-tertiary);
+	border-radius: 4px;
+	text-align: center;
+	font-style: italic;
+	color: var(--text-secondary);
+  }
+  
+  /* Add this to ensure loading state shows correctly */
+  .feedback-loading {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 200px;
+  }
+  
+  .feedback-loading p {
+	padding: 1rem;
+	background-color: var(--bg-secondary);
+	border-radius: 4px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }

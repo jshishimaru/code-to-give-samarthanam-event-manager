@@ -92,6 +92,8 @@
 	  "organizerNotSpecified": "Organizer not specified",
 	  "shareEventText": "Check out this event: {{title}}",
 	  "shareLinkCopied": "Share link copied to clipboard!",
+	    "submitFeedback": "Submit Feedback",
+	    "viewFeedback": "View Feedback",
 	  "tabs": {
 		"event": "Event",
 		"location": "Location",
@@ -193,58 +195,69 @@
 	  "boldFontWeight": "Bold font weight",
 	  "bolderFontWeight": "Bolder font weight"
 	},
-	"eventDetails": {
-	  "defaultTitle": "Event Details",
-	  "tabs": {
-		"event": "Event",
-		"chat": "Community Chat",
-		"feedback": "Feedback",
-		"tasks": "Tasks"
-	  },
-	  "tablist": {
-		"label": "Event information tabs"
-	  },
-	  "actions": {
-		"join": {
-		  "label": "Join",
-		  "labelEnrolled": "Joined",
-		  "labelLoading": "Joining...",
-		  "ariaLabel": "Join this event",
-		  "ariaLabelEnrolled": "You are enrolled in this event",
-		  "loginPrompt": "You need to login to join this event. Would you like to login now?",
-		  "success": "Successfully joined the event!",
-		  "failure": "Failed to join the event. Please try again.",
-		  "error": "An error occurred. Please try again later.",
-		  "alreadyEnrolled": "You are already enrolled in this event."
-		},
-		"unenroll": {
-		  "label": "Unenroll",
-		  "ariaLabel": "Unenroll from this event",
-		  "success": "Successfully unenrolled from the event!",
-		  "failure": "Failed to unenroll from the event. Please try again.",
-		  "error": "An error occurred. Please try again later."
-		},
-		"share": {
-		  "label": "Share",
-		  "ariaLabel": "Share this event",
+		"eventDetails": {
 		  "defaultTitle": "Event Details",
-		  "text": "Check out this event: {{title}}",
-		  "copyMessage": "Event link copied to clipboard!",
-		  "copyError": "Failed to copy link. Please try again.",
-		  "success": "Event shared successfully!"
+		  "tabs": {
+			"event": "Event",
+			"chat": "Community Chat",
+			"feedback": "Feedback",
+			"tasks": "Tasks"
+		  },
+		  "tablist": {
+			"label": "Event information tabs"
+		  },
+		  "actions": {
+			"join": {
+			  "label": "Join",
+			  "labelEnrolled": "Joined",
+			  "labelLoading": "Joining...",
+			  "ariaLabel": "Join this event",
+			  "ariaLabelEnrolled": "You are enrolled in this event",
+			  "loginPrompt": "You need to login to join this event. Would you like to login now?",
+			  "success": "Successfully joined the event!",
+			  "failure": "Failed to join the event. Please try again.",
+			  "error": "An error occurred. Please try again later.",
+			  "alreadyEnrolled": "You are already enrolled in this event."
+			},
+			"unenroll": {
+			  "label": "Unenroll",
+			  "ariaLabel": "Unenroll from this event",
+			  "success": "Successfully unenrolled from the event!",
+			  "failure": "Failed to unenroll from the event. Please try again.",
+			  "error": "An error occurred. Please try again later."
+			},
+			"share": {
+			  "label": "Share",
+			  "ariaLabel": "Share this event",
+			  "defaultTitle": "Event Details",
+			  "text": "Check out this event: {{title}}",
+			  "copyMessage": "Event link copied to clipboard!",
+			  "copyError": "Failed to copy link. Please try again.",
+			  "success": "Event shared successfully!"
+			},
+			"feedback": {
+			  "label": "Submit Feedback",
+			  "ariaLabel": "Submit feedback for this event",
+			  "success": "Redirecting to feedback form...",
+			  "error": "Failed to open feedback form. Please try again."
+			},
+			"loading": "Processing..."
+		  },
+		  "loading": {
+			"main": "Loading event details...",
+			"tabContent": "Loading event information..."
+		  },
+		  "errors": {
+			"fetchFailed": "Failed to fetch event details",
+			"generalError": "An error occurred while fetching event details",
+			"notFound": "Event not found"
+		  },
+		  "share": {
+			"defaultTitle": "Event from Samarthanam Trust",
+			"text": "Check out this event: {{title}}",
+			"copyMessage": "Event link copied to clipboard!"
+		  }
 		},
-		"loading": "Processing..."
-	  },
-	  "loading": {
-		"main": "Loading event details...",
-		"tabContent": "Loading event information..."
-	  },
-	  "errors": {
-		"fetchFailed": "Failed to fetch event details",
-		"generalError": "An error occurred while fetching event details",
-		"notFound": "Event not found"
-	  }
-	},
 	"communityChat": {
 	  "title": "Community Chat for {{event}}",
 	  "defaultEventTitle": "This Event",
@@ -305,58 +318,73 @@
 		"ariaLabel": "View details for {{name}}"
 	  }
 	},
-	"feedback": {
-	  "title": "Event Feedback",
-	  "submittedTitle": "Your Feedback",
-	  "notEligibleTitle": "Feedback Not Available",
-	  "errorTitle": "Error",
-	  "loading": "Checking feedback eligibility...",
-	  "submit": "Submit Feedback",
-	  "submitting": "Submitting...",
-	  "submitSuccess": "Thank you for your feedback!",
-	  "stars": "stars",
-	  "alreadySubmitted": "You have already submitted feedback for this event.",
-	  "submittedDescription": "Thank you for sharing your thoughts about this event. Your feedback helps improve future events.",
-	  "ratingsOverview": "Your Ratings",
-	  "submittedOn": "Submitted on {{date}}",
-	  "wouldVolunteerAgainYes": "Yes, you indicated that you would volunteer for similar events in the future.",
-	  "wouldVolunteerAgainNo": "No, you indicated that you would not volunteer for similar events in the future.",
-	  "sections": {
-		"ratings": "Event Ratings",
-		"textFeedback": "Detailed Feedback",
-		"futureParticipation": "Future Participation"
-	  },
-	  "fields": {
-		"overallExperience": "Overall Experience",
-		"organizationQuality": "Organization Quality",
-		"communication": "Communication",
-		"hostInteraction": "Host Interaction",
-		"volunteerSupport": "Volunteer Support",
-		"taskClarity": "Task Clarity",
-		"impactAwareness": "Impact Awareness",
-		"inclusivity": "Inclusivity",
-		"timeManagement": "Time Management",
-		"recognition": "Volunteer Recognition",
-		"strengths": "Event Strengths",
-		"improvements": "Suggested Improvements",
-		"additionalComments": "Additional Comments",
-		"wouldVolunteerAgain": "I would volunteer for similar events in the future"
-	  },
-	  "descriptions": {
-		"overallExperience": "Rate your overall experience volunteering for this event"
-	  },
-	  "placeholders": {
-		"strengths": "What aspects of the event worked particularly well?",
-		"improvements": "What aspects could be improved for future events?",
-		"additionalComments": "Any other comments or suggestions you would like to share"
-	  },
-	  "errors": {
-		"notEligible": "You are not eligible to submit feedback for this event.",
-		"eligibilityCheckFailed": "Failed to check feedback eligibility.",
-		"submissionFailed": "Failed to submit feedback. Please try again.",
-		"generalError": "An error occurred. Please try again later."
-	  }
-	},
+		"feedback": {
+		  "title": "Event Feedback",
+		  "loading": "Loading feedback form...",
+		  "authChecking": "Verifying your account...",
+		  "backToEvents": "Back to Events",
+		  "backToEventsButton": "Return to Events",
+		  "viewFeedbackTitle": "Your Feedback",
+		  "yourFeedbackFor": "Your feedback for",
+		  "provideFeedbackFor": "Provide your feedback for",
+		  "defaultEventName": "Event",
+		  "notEligibleTitle": "Cannot Submit Feedback",
+		  "pageTitle": "Event Feedback",
+		  "submit": "Submit Feedback",
+		  "submitting": "Submitting...",
+		  "submitSuccess": "Feedback submitted successfully!",
+		  "cancel": "Cancel",
+		  "errorTitle": "Error",
+		  "stars": "stars",
+		  "alreadySubmitted": "You have already submitted feedback for this event.",
+		  "ratingsOverview": "Ratings Overview",
+		  "submittedOn": "Submitted on",
+		  "wouldVolunteerAgainYes": "Yes, I would volunteer again",
+		  "wouldVolunteerAgainNo": "No, I would not volunteer again",
+		  
+		  "sections": {
+			"ratings": "Rate Your Experience",
+			"textFeedback": "Detailed Feedback",
+			"futureParticipation": "Future Participation"
+		  },
+		  
+		  "fields": {
+			"overallExperience": "Overall Experience",
+			"organizationQuality": "Event Organization",
+			"communication": "Communication",
+			"hostInteraction": "Interaction with Event Host",
+			"volunteerSupport": "Volunteer Support",
+			"taskClarity": "Task Clarity",
+			"impactAwareness": "Impact Awareness",
+			"inclusivity": "Inclusivity",
+			"timeManagement": "Time Management",
+			"recognition": "Volunteer Recognition",
+			"strengths": "What went well?",
+			"improvements": "What could be improved?",
+			"additionalComments": "Additional Comments",
+			"wouldVolunteerAgain": "I would volunteer for similar events in the future"
+		  },
+		  
+		  "descriptions": {
+			"overallExperience": "Rate your overall experience with this event"
+		  },
+		  
+		  "placeholders": {
+			"strengths": "Share what aspects of the event were particularly positive or effective...",
+			"improvements": "Suggest any areas that could be improved for future events...",
+			"additionalComments": "Share any other thoughts about your experience..."
+		  },
+		  
+		  "errors": {
+			"authRequired": "You need to be logged in to submit feedback. Redirecting to login...",
+			"authFailed": "Failed to verify your authentication. Please try logging in again.",
+			"generalError": "Something went wrong. Please try again later.",
+			"eligibilityCheckFailed": "Unable to check if you can submit feedback for this event.",
+			"notEligible": "You are not eligible to submit feedback for this event.",
+			"submissionFailed": "Failed to submit feedback. Please try again.",
+			"eventLoadFailed": "Failed to load event details."
+		  }
+		},
 		"taskDetail": {
 		  "backToTasks": "Back to Tasks",
 		  "backToEvent": "Back to Event",

@@ -190,3 +190,61 @@ body.scrolled .host-layout {
     padding: 0;
   }
 }
+
+/* Add these styles to your existing HostLayout.css file */
+
+.event-details-container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+  }
+  
+  .event-tabs {
+	display: flex;
+	border-bottom: 1px solid var(--input-border);
+	background-color: var(--bg-color);
+	position: sticky;
+	top: 0;
+	z-index: 10;
+  }
+  
+  .tab-button {
+	padding: 1rem 1.5rem;
+	background: none;
+	border: none;
+	border-bottom: 3px solid transparent;
+	color: var(--text-secondary);
+	font-weight: 500;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: all 0.2s ease;
+  }
+  
+  .tab-button:hover {
+	color: var(--text-color);
+	background-color: var(--bg-secondary);
+  }
+  
+  .tab-button.active {
+	color: var(--primary-color);
+	border-bottom-color: var(--primary-color);
+  }
+  
+  .tab-content {
+	flex: 1;
+	overflow: auto;
+	padding: 1rem 0;
+  }
+  
+  .event-info-placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 300px;
+	background-color: var(--bg-secondary);
+	border-radius: 8px;
+	color: var(--text-secondary);
+	font-size: 1.2rem;
+	margin: 1rem;
+  }

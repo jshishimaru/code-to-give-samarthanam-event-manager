@@ -7,61 +7,47 @@ import FeedbackForm from './components/FeedbackForm';
 import MyEvents from './components/host/hostevents/MyEvents';
 import CreateEvent from './components/host/hostevents/CreateEvent';
 import HostEventDetails from './components/host/hostevents/HostEventDetails';
-import EventVolunteers from './components/host/volunteertab/EventVolunteers';
-import EventTasks from './components/host/hosttask/EventTasks';
 
 import Layout from './components/Layout'
+import HostLayout from './components/host/hostlayout/HostLayout';
+
 const router = createBrowserRouter([
-	
-	{	
-		path: '/',
-		element: <Layout><LoginForm /></Layout>
-	},
-	{	
-		path: '/login',
-		element: <Layout><LoginForm /></Layout>
-	},
-	{
-		path:'/signup',
-		element: <Layout><SignUpForm /></Layout>
-	},
-	
-	{
-		path:'events/:eventId',
-		element: <Layout><EventDetails /></Layout>
-	},
+    {	
+        path: '/',
+        element: <Layout><LoginForm /></Layout>
+    },
+    {	
+        path: '/login',
+        element: <Layout><LoginForm /></Layout>
+    },
+    {
+        path:'/signup',
+        element: <Layout><SignUpForm /></Layout>
+    },
+    {
+        path:'events/:eventId',
+        element: <Layout><EventDetails /></Layout>
+    },
     {
         path:'events/:eventId/feedback',
         element: <Layout><FeedbackForm /></Layout>
     },
-	{
-		path:'/events',
-		element: <Layout><EventPage /></Layout>
-	},
-	{
-		path:'/host/MyEvents',
-		element: <Layout><MyEvents /></Layout>
-
-	},
-	{
-		path:'/host/MyEvents/CreateEvent',
-		element: <Layout><CreateEvent /></Layout>
-
-	},
-	{
-		path:'/host/MyEvents/:eventId',
-		element: <Layout><HostEventDetails /></Layout>
-	},
-	{
-		path:'/host/MyEvents/:eventId/volunteers',
-		element: <Layout><EventVolunteers /></Layout>
-	},
-	{
-		path:'/host/MyEvents/:eventId/tasks',
-		element: <Layout><EventTasks /></Layout>
-	}
-
-
+    {
+        path:'/events',
+        element: <Layout><EventPage /></Layout>
+    },
+    {
+        path:'/host/MyEvents',
+        element: <Layout><MyEvents /></Layout>
+    },
+    {
+        path:'/host/MyEvents/CreateEvent',
+        element: <Layout><CreateEvent /></Layout>
+    },
+    {
+        path:'/host/MyEvents/:eventId',
+        element: <Layout><HostLayout /></Layout>
+    }
 ]);
 
 export default router;

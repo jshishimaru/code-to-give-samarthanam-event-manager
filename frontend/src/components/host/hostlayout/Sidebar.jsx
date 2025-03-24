@@ -2,11 +2,11 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import '../../../styles/host/hostlayout/Sidebar.css';
 
-const Sidebar = ({ isOpen, toggleSidebar }) => {
+const Sidebar = ({ isOpen, toggleSidebar, onTabChange, activeTab }) => {
   const menuItems = [
     {
       title: 'Event Info',
-      path: '/host/event-info',
+      id: 'info',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -17,8 +17,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       )
     },
     {
-      title: 'Event Tasks',
-      path: '/host/event-tasks',
+      title: 'Tasks',
+      id: 'tasks',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M9 11l3 3L22 4"></path>
@@ -28,7 +28,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     },
     {
       title: 'Volunteers',
-      path: '/host/volunteers',
+      id: 'volunteers',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -37,42 +37,23 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
         </svg>
       )
-    },
-    {
-      title: 'Event Stats',
-      path: '/host/event-stats',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="18" y1="20" x2="18" y2="10"></line>
-          <line x1="12" y1="20" x2="12" y2="4"></line>
-          <line x1="6" y1="20" x2="6" y2="14"></line>
-          <line x1="0" y1="20" x2="24" y2="20"></line>
-        </svg>
-      )
-    },
-    {
-      title: 'Notifications',
-      path: '/host/notifications',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-        </svg>
-      )
     }
+    // Removed Event Stats and Notifications for simplicity
   ];
 
   return (
     <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
       <div className="sidebar-header">
-        <button className="toggle-button" onClick={toggleSidebar} aria-label={isOpen ? "Close sidebar" : "Open sidebar"}>
+        <button className="toggle-button" onClick={toggleSidebar} aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             {isOpen ? (
+              // Left-pointing arrow (collapse) icon when sidebar is open
               <>
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
               </>
             ) : (
+              // Hamburger menu icon when sidebar is closed
               <>
                 <line x1="3" y1="12" x2="21" y2="12"></line>
                 <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -84,16 +65,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       </div>
       <nav className="sidebar-nav">
         <ul>
-          {menuItems.map((item, index) => (
-            <li key={index}>
-              <NavLink 
-                to={item.path} 
-                className={({ isActive }) => isActive ? 'active' : ''}
-                end={item.path === '/host/event-info'}
+          {menuItems.map((item) => (
+            <li key={item.id}>
+              <button 
+                className={`sidebar-button ${activeTab === item.id ? 'active' : ''}`}
+                onClick={() => onTabChange(item.id)}
               >
                 <span className="icon">{item.icon}</span>
                 <span className="title">{item.title}</span>
-              </NavLink>
+              </button>
             </li>
           ))}
         </ul>

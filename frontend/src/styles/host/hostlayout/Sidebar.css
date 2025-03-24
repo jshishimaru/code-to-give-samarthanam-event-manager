@@ -200,3 +200,49 @@ body.scrolled .sidebar {
     padding: 8px;
   }
 }
+
+/* Add this to your existing Sidebar.css file */
+
+.sidebar-button {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	width: 100%;
+	padding: 0.75rem 1rem;
+	color: var(--sidebar-color);
+	background: none;
+	border: none;
+	text-align: left;
+	font-size: 0.95rem;
+	cursor: pointer;
+	transition: all var(--transition-speed) ease;
+	border-radius: 0.25rem;
+	text-decoration: none;
+  }
+  
+  .sidebar-button:hover {
+	background-color: var(--sidebar-hover-bg);
+	color: var(--text-color);
+  }
+  
+  .sidebar-button.active {
+	background-color: var(--sidebar-active-bg);
+	color: var(--sidebar-active-color);
+  }
+  
+  .sidebar-button .icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+  }
+  
+  .sidebar-button .title {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+  }
+  
+  /* For when sidebar is closed */
+  .sidebar.closed .sidebar-button .title {
+	display: none;
+  }

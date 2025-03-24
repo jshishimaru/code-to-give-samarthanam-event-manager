@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getTasksForEvent } from '../../../apiservice/task';
 import TaskList from './TaskList';
@@ -9,8 +8,7 @@ import '../../../styles/host/hosttask/EventTasks.css';
 /**
  * EventTasks component displays all tasks for an event and allows adding/editing tasks
  */
-const EventTasks = () => {
-  const { eventId } = useParams();
+const EventTasks = ({ eventId }) => {
   const { t } = useTranslation();
   
   // States

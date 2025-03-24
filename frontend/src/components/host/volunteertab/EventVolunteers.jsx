@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import VolunteerList from './VolunteerList';
 import VolunteerProfile from './VolunteerProfile';
@@ -10,8 +9,7 @@ import '../../../styles/host/volunteer/EventVolunteers.css';
  * A container component that displays volunteers for an event,
  * allows viewing volunteer profiles and assigning tasks
  */
-const EventVolunteers = () => {
-  const { eventId } = useParams();
+const EventVolunteers = ({ eventId }) => {
   const { t } = useTranslation();
 
   const [selectedVolunteer, setSelectedVolunteer] = useState(null);
@@ -38,7 +36,7 @@ const EventVolunteers = () => {
   return (
     <div className="event-volunteers-container">
       <div className="event-volunteers-content">
-        {/* Left column: Volunteer List - Now takes more space */}
+        {/* Left column: Volunteer List - Takes more space */}
         <div className="volunteers-column">
           <VolunteerList 
             eventId={eventId} 
@@ -49,14 +47,14 @@ const EventVolunteers = () => {
           />
         </div>
 
-        {/* Right column: Profile and Task Window - Now takes less space */}
+        {/* Right column: Profile and Task Window - Takes less space */}
         <div className="profile-column">
           {selectedVolunteer ? (
             <div className="profile-with-actions">
               <VolunteerProfile 
                 userId={selectedVolunteer.id}
-                showActions={false} // Hide general actions
-                compact={true} // Use a more compact view
+                showActions={false}
+                compact={true}
               />
               
               <div className="profile-action-buttons">

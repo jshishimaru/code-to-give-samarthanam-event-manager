@@ -124,7 +124,11 @@ const VolunteerProfile = ({ userId, onClose, showActions = true, compact = false
         </div>
         <div className="profile-identity">
           <h2 className="profile-name">{profile.name}</h2>
-          <div className="profile-label">{t('profile.volunteer')}</div>
+          <div className="profile-label">
+            {profile.role 
+              ? t(`profile.roles.${profile.role.toLowerCase()}`) 
+              : t('profile.volunteer')}
+          </div>
         </div>
       </div>
 

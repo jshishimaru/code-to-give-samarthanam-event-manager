@@ -487,6 +487,11 @@
 	  "notPersonalized": "Showing popular events. Update your skills for personalized recommendations."
 	},
 	"profile": {
+
+	"volunteer": "Volunteer",
+	"organiser": "Organizer",
+	"admin": "Administrator",
+	"participant": "Participant",
 	  "loadingProfile": "Loading profile...",
 	  "errorTitle": "Profile Error",
 	  "notFound": "User Not Found",
@@ -512,6 +517,7 @@
 		"viewEvents": "View Events"
 	  }
 	},
+	
 	"volunteerList": {
 	  "volunteers": "Volunteers",
 	  "volunteersFor": "Volunteers for",
@@ -779,4 +785,5 @@
 	  "assignFailed": "Failed to assign volunteers"
 	}
   }
-  }
+  
+}

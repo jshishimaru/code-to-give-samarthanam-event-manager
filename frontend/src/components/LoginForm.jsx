@@ -84,14 +84,6 @@ const LoginForm = ({ onSubmit }) => {
 
   return (
     <div className="page-container">
-      <div className="logo-container">
-        <img 
-          src={logoImage} 
-          alt="Company Logo" 
-          className="logo-image"
-        />
-        <h2 className="logo-tagline">Welcome back</h2>
-      </div>
       <main className="login-container">
         <ToastContainer position="top-right" autoClose={3000} />
         

@@ -543,19 +543,6 @@ const EventPage = () => {
           role="tablist" 
           aria-label={t('events.tabsLabel', 'Event categories')}
         >
-          {showFeaturedTab && (
-            <button 
-              role="tab"
-              className={`event-tab-button ${activeTab === 'featured' ? 'active' : ''}`}
-              id="featured-tab"
-              aria-selected={activeTab === 'featured'}
-              aria-controls="featured-tab-panel"
-              onClick={() => changeTab('featured')}
-            >
-              <span>{t('events.featuredEvents', 'Featured For You')}</span>
-              <span className="tab-count">{featuredEvents.length}</span>
-            </button>
-          )}
           <button 
             role="tab"
             className={`event-tab-button ${activeTab === 'enrolled' ? 'active' : ''}`}
@@ -563,11 +550,25 @@ const EventPage = () => {
             aria-selected={activeTab === 'enrolled'}
             aria-controls="enrolled-tab-panel"
             onClick={() => changeTab('enrolled')}
-          >
+            >
             <span>{t('events.enrolledEvents', 'Enrolled Events')}</span>
             <span className="tab-count">{enrolledEvents.length}</span>
           </button>
           
+            {showFeaturedTab && (
+              <button 
+                role="tab"
+                className={`event-tab-button ${activeTab === 'featured' ? 'active' : ''}`}
+                id="featured-tab"
+                aria-selected={activeTab === 'featured'}
+                aria-controls="featured-tab-panel"
+                onClick={() => changeTab('featured')}
+              >
+                <span>{t('events.featuredEvents', 'Featured For You')}</span>
+                <span className="tab-count">{featuredEvents.length}</span>
+              </button>
+            )}
+            
           <button 
             role="tab"
             className={`event-tab-button ${activeTab === 'ongoing' ? 'active' : ''}`}

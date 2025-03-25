@@ -9,7 +9,7 @@ body {
     font-weight: calc(400 * var(--font-weight-scale));
   }
   
-  /* Page container - new */
+
   .page-container {
     width: 100%;
     min-height: 100vh;
@@ -22,16 +22,7 @@ body {
     background-color: var(--bg-secondary);
   }
   
-  /* Logo container styling - new */
-  .logo-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 3rem;
-    text-align: center;
-    animation: fadeIn 0.8s ease-in-out;
-    max-width: 90%;
-  }
+  
   
   @keyframes fadeIn {
     from {
@@ -44,33 +35,12 @@ body {
     }
   }
   
-  .logo-image {
-    width: 480px;
-    height: auto;
-    max-width: 90%;
-    margin-bottom: 1.5rem;
-    transition: transform 0.3s ease;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
-  }
   
-  .logo-image:hover {
-    transform: scale(1.05);
-  }
-  
-  .logo-tagline {
-    font-size: clamp(1.1rem, 3vw, 1.5rem);
-    color: var(--text-color);
-    font-weight: calc(600 * var(--font-weight-scale));
-    margin: 0;
-    opacity: 0.9;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
   
   /* Base container styling - updated */
   .signup-container {
     width: 90%;
-    max-width: 40rem;
+    max-width: 60rem;
     margin: 0 auto;
     padding: 2.5rem 5%;
     background-color: var(--bg-color);
@@ -103,23 +73,48 @@ body {
     height: 0.25rem;
     background: linear-gradient(to right, var(--primary-color), var(--primary-hover));
   }
+
+  .signup-header {
+    text-align: center;
+    margin-top: -2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .signup-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5rem;
+    height: 0.25rem;
+    background: linear-gradient(to right, var(--primary-color), var(--primary-hover));
+    border-radius: 1rem;
+  }
   
   /* Typography - updated */
-  .signup-title {
-    font-size: clamp(1.75rem, 5vw, 2.25rem);
-    color: var(--text-color);
-    margin-bottom: 0.75rem;
-    font-weight: calc(700 * var(--font-weight-scale));
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-  }
+  
+.signup-title {
+  font-size: clamp(1.75rem, 5vw, 2.25rem);
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+  font-weight: calc(700 * var(--font-weight-scale));
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
   
   .signup-description {
     font-size: clamp(0.875rem, 2vw, 1rem);
     color: var(--text-secondary);
-    margin-bottom: 2rem;
+    margin-bottom: 0;
     line-height: 1.6;
     font-weight: calc(400 * var(--font-weight-scale));
+    max-width: 30rem;
   }
   
   /* Theme switcher styling */
@@ -661,4 +656,49 @@ body {
     .date-field {
       width: 100%;
     }
+  }
+
+  .skills-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .skills-input {
+    flex: 1;
+    padding-right: 2.5rem; /* Make space for the toggle button */
+  }
+  
+  .dropdown-toggle-btn {
+    position: absolute;
+    right: 0.5rem;
+    background: transparent;
+    border: none;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+  }
+  
+  .dropdown-toggle-btn:hover {
+    background-color: var(--bg-secondary);
+  }
+  
+  .dropdown-toggle-btn:focus-visible {
+    outline: 2px solid var(--outline-color);
+    outline-offset: 2px;
+  }
+  
+  .dropdown-arrow {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .dropdown-arrow.open {
+    transform: rotate(180deg);
   }

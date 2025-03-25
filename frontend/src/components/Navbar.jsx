@@ -252,16 +252,6 @@ const Navbar = () => {
             role="menubar"
             aria-orientation="horizontal"
           >
-            <li role="none">
-              <Link 
-                to="/events" 
-                onClick={closeMenu}
-                role="menuitem"
-                aria-current={location.pathname.includes('/events') ? 'page' : undefined}
-              >
-                {t('navbar.events')}
-              </Link>
-            </li>
             {/* Only show My Events link if user is an organiser */}
             {(isLoggedIn && isOrganiser) && (
               <li role="none">
@@ -269,12 +259,25 @@ const Navbar = () => {
                   to="/host/MyEvents"
                   onClick={closeMenu}
                   role="menuitem"
-                  aria-current={location.pathname.includes('/my-events') ? 'page' : undefined}
+                  className={location.pathname.includes('/host/MyEvents') ? 'active-link' : ''}
+                  aria-current={location.pathname.includes('/host/MyEvents') ? 'page' : undefined}
                 >
                   {t('navbar.myEvents')}
                 </Link>
               </li>
             )}
+
+            <li role="none">
+              <Link 
+                to="/events" 
+                onClick={closeMenu}
+                role="menuitem"
+                className={location.pathname.includes('/events') && !location.pathname.includes('/host/MyEvents') ? 'active-link' : ''}
+                aria-current={location.pathname.includes('/events') && !location.pathname.includes('/host/MyEvents') ? 'page' : undefined}
+              >
+                {t('navbar.events')}
+              </Link>
+            </li>
 
             <li role="none">
               <a 
@@ -287,8 +290,8 @@ const Navbar = () => {
               >
                 {t('navbar.about')}
               </a>
-              
             </li>
+            
             <li role="none">
               <a 
                 href="https://samarthanam.org/contact-us/" 
@@ -301,7 +304,6 @@ const Navbar = () => {
                 {t('navbar.contact')}
               </a>
             </li>
-            
           </ul>
 
           <div 
@@ -357,6 +359,7 @@ const Navbar = () => {
               </div>
             ) : (
               <>
+              {location.pathname !== "/login" && (
                 <Link 
                   to="/login" 
                   className="btn btn-login"
@@ -366,15 +369,7 @@ const Navbar = () => {
                 >
                   {t('navbar.login')}
                 </Link>
-                <Link 
-                  to="/signup" 
-                  className="btn btn-primary"
-                  onClick={closeMenu}
-                  aria-label={t('navbar.registerAria')}
-                  role="button"
-                >
-                  {t('navbar.register')}
-                </Link>
+              )}
               </>
             )}
           </div>

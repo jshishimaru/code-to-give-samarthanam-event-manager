@@ -79,7 +79,6 @@ class ExportVolunteersToExcelView(View):
                     completed_tasks = assigned_tasks.filter(status='Completed')
                     
                     # Get main feedback if provided
-                    from ..models import Feedback
                     feedback = Feedback.objects.filter(
                         event=event,
                         user=volunteer
@@ -98,7 +97,8 @@ class ExportVolunteersToExcelView(View):
                         'Completed Tasks': completed_tasks.count(),
                         'Completion Rate': f"{(completed_tasks.count() / assigned_tasks.count() * 100) if assigned_tasks.count() > 0 else 0:.1f}%",
                         'Feedback Submitted': 'Yes' if feedback else 'No',
-                        'Overall Rating': feedback.rating if feedback else '-',
+                        'Overall Rating': f"{feedback.average_rating:.1f}" if feedback else '-',
+                        'Would Volunteer Again': 'Yes' if feedback and feedback.would_volunteer_again else 'No' if feedback else '-',
                         'Signup Date': volunteer.date_joined.strftime('%Y-%m-%d')
                     }
                     volunteer_data.append(volunteer_info)
@@ -177,14 +177,22 @@ class ExportVolunteersToExcelView(View):
                     feedback_info = {
                         'Volunteer Name': feedback.user.name,
                         'Volunteer ID': feedback.user.id,
-                        'Rating': feedback.rating,
-                        'Comment': feedback.comment,
-                        'Submitted At': feedback.created_at.strftime('%Y-%m-%d %H:%M'),
-                        'Event Experience': feedback.event_experience,
-                        'Task Satisfaction': feedback.task_satisfaction,
-                        'Organization Rating': feedback.organization_rating,
-                        'Communication Rating': feedback.communication_rating,
-                        'Would Volunteer Again': feedback.would_volunteer_again
+                        'Overall Experience': feedback.overall_experience if feedback.overall_experience is not None else '-',
+                        'Organization Quality': feedback.organization_quality if feedback.organization_quality is not None else '-',
+                        'Communication': feedback.communication if feedback.communication is not None else '-',
+                        'Host Interaction': feedback.host_interaction if feedback.host_interaction is not None else '-',
+                        'Volunteer Support': feedback.volunteer_support if feedback.volunteer_support is not None else '-',
+                        'Task Clarity': feedback.task_clarity if feedback.task_clarity is not None else '-',
+                        'Impact Awareness': feedback.impact_awareness if feedback.impact_awareness is not None else '-',
+                        'Inclusivity': feedback.inclusivity if feedback.inclusivity is not None else '-',
+                        'Time Management': feedback.time_management if feedback.time_management is not None else '-',
+                        'Recognition': feedback.recognition if feedback.recognition is not None else '-',
+                        'Strengths': feedback.strengths,
+                        'Improvements': feedback.improvements,
+                        'Additional Comments': feedback.additional_comments,
+                        'Would Volunteer Again': 'Yes' if feedback.would_volunteer_again else 'No',
+                        'Average Rating': f"{feedback.average_rating:.1f}",
+                        'Submitted At': feedback.created_at.strftime('%Y-%m-%d %H:%M')
                     }
                     feedback_data.append(feedback_info)
                 
@@ -201,8 +209,8 @@ class ExportVolunteersToExcelView(View):
                     for col_num, value in enumerate(feedback_df.columns.values):
                         worksheet.write(0, col_num, value, header_format)
                         
-                        # Make comment column wider
-                        if value == 'Comment' or value == 'Event Experience':
+                        # Make text columns wider
+                        if value in ['Strengths', 'Improvements', 'Additional Comments']:
                             worksheet.set_column(col_num, col_num, 40)
                         else:
                             worksheet.set_column(col_num, col_num, max(len(value) + 2, 12))
@@ -220,6 +228,11 @@ class ExportVolunteersToExcelView(View):
                     count = TaskInfo.objects.filter(event=event, status=status).count()
                     task_status_counts[status] = count
                 
+                # Calculate average rating across all feedback
+                avg_rating = 0
+                if feedbacks.exists():
+                    avg_rating = sum(feedback.average_rating for feedback in feedbacks) / feedbacks.count()
+                
                 # Create a summary sheet
                 summary_data = {
                     'Metric': [
@@ -234,6 +247,7 @@ class ExportVolunteersToExcelView(View):
                         'Pending Tasks',
                         'Feedback Submission Rate',
                         'Avg. Volunteer Rating',
+                        'Would Volunteer Again Rate',
                         'Report Generated'
                     ],
                     'Value': [
@@ -247,7 +261,8 @@ class ExportVolunteersToExcelView(View):
                         task_status_counts.get('In Progress', 0),
                         task_status_counts.get('Pending', 0),
                         f"{(feedbacks.count() / volunteers.count() * 100) if volunteers.count() > 0 else 0:.1f}%",
-                        f"{feedbacks.aggregate(avg=models.Avg('rating'))['avg'] or 0:.1f}/5.0",
+                        f"{avg_rating:.1f}/10.0",
+                        f"{(feedbacks.filter(would_volunteer_again=True).count() / feedbacks.count() * 100) if feedbacks.count() > 0 else 0:.1f}%",
                         datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     ]
                 }
@@ -264,7 +279,7 @@ class ExportVolunteersToExcelView(View):
                 # Apply formatting
                 for col_num, value in enumerate(summary_df.columns.values):
                     worksheet.write(0, col_num, value, header_format)
-                    worksheet.set_column(col_num, col_num, 20)
+                    worksheet.set_column(col_num, col_num, 25)
                 
                 # Make metric column bold
                 for row_num in range(len(summary_df)):

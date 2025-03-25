@@ -103,62 +103,6 @@ export const downloadEventVolunteersExcel = async (eventId, filename = null) => 
 };
 
 /**
-* For hosts to check if an event has volunteers who can be exported
-* 
-* @param {number} eventId - ID of the event to check
-* @returns {Promise<Object>} Response with success status and volunteer count
-*/
-export const checkEventVolunteersForExport = async (eventId) => {
- try {
-   if (!eventId) {
-	 throw new Error('Event ID is required');
-   }
-
-   console.log("Checking volunteers for export, event ID:", eventId);
-
-   // This endpoint doesn't exist in the backend yet, but it would be useful to add
-   // Using the event details endpoint as a fallback
-   const response = await axios.get(`${APP_API_URL}events/details/`, {
-	 params: { event_id: eventId }
-   });
-   
-   console.log("Event details for volunteer check:", response.data);
-   
-   // Try to find volunteer count in different possible response formats
-   const volunteerCount = 
-	 response.data.volunteer_count || 
-	 response.data.volunteers?.length || 
-	 response.data.event?.volunteer_count ||
-	 response.data.event?.volunteers?.length ||
-	 0;
-   
-   console.log("Detected volunteer count:", volunteerCount);
-   
-   return {
-	 success: true,
-	 data: {
-	   eventId,
-	   volunteerCount,
-	   hasVolunteers: volunteerCount > 0,
-	   canExport: true // Always allow export
-	 }
-   };
- } catch (error) {
-   console.error('Error checking event volunteers for export:', error);
-   return {
-	 success: false,
-	 error: error.response?.data?.message || error.message,
-	 data: {
-	   eventId,
-	   volunteerCount: 0,
-	   hasVolunteers: false,
-	   canExport: true // Always allow export
-	 }
-   };
- }
-};
-
-/**
  * Alternative method to export volunteers using POST request
  * This is useful for cases where you need to customize the export
  * 

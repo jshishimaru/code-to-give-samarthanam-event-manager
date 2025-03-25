@@ -18,7 +18,12 @@ const CreateEvent = () => {
   // Handler for form submission
   const handleSubmit = async (formData) => {
     try {
-      const response = await createEvent(formData);
+	// debug
+	// console.log("Form data entries:");
+	// for (const pair of formData.entries()) {
+	//   console.log(`${pair[0]}: ${pair[1]}`);
+	// }
+		const response = await createEvent(formData);
       
       if (response.success) {
         // Show success notification
@@ -30,7 +35,7 @@ const CreateEvent = () => {
         
         // Navigate to the event details page after successful creation
         setTimeout(() => {
-          navigate(`/host/MyEvents/${response.data.event_id}`);
+			navigate('/host/MyEvents');
         }, 1500);
         
         return response.data;

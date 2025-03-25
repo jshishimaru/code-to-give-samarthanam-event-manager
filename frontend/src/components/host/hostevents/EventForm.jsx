@@ -127,17 +127,59 @@ const EventForm = ({ initialValues, onSubmit, isEditing = false }) => {
       // Prepare form data for API
       const apiFormData = new FormData();
       
+      // Get a copy of the form data to process
+      const processedData = { ...formData };
+      
+      // Ensure datetime fields are in ISO format for backend
+      if (processedData.start_time) {
+        // Convert from local datetime format to ISO string if needed
+        if (!processedData.start_time.endsWith('Z')) {
+          const startDate = new Date(processedData.start_time);
+          if (!isNaN(startDate.getTime())) {
+            processedData.start_time = startDate.toISOString();
+          }
+        }
+      }
+      
+      if (processedData.end_time) {
+        // Convert from local datetime format to ISO string if needed
+        if (!processedData.end_time.endsWith('Z')) {
+          const endDate = new Date(processedData.end_time);
+          if (!isNaN(endDate.getTime())) {
+            processedData.end_time = endDate.toISOString();
+          }
+        }
+      }
+      
+      // Add event ID for editing
+      if (isEditing && initialValues && initialValues.id) {
+        apiFormData.append('event_id', initialValues.id);
+      }
+      
       // Add all form fields to FormData
-      Object.entries(formData).forEach(([key, value]) => {
+      Object.entries(processedData).forEach(([key, value]) => {
         // Skip null or empty values except for boolean values
         if (value !== null && value !== undefined && value !== '') {
           // Don't append empty image
           if (key === 'image' && !value) return;
-          apiFormData.append(key, value);
+          
+          // Special case for date fields - ensure they're properly formatted
+          if ((key === 'start_time' || key === 'end_time') && value) {
+            // The date is already processed above
+            apiFormData.append(key, value);
+          } else {
+            apiFormData.append(key, value);
+          }
         }
       });
       
-      await onSubmit(apiFormData);
+      // For debugging
+      // for (const pair of apiFormData.entries()) {
+      //   console.log(`${pair[0]}: ${pair[1]}`);
+      // }
+	  // In your handleSubmit function, replace the current console logging with this:
+
+	  await onSubmit(processedData);
       
       // Only reset form after successful submission if not editing
       if (!isEditing) {
@@ -146,7 +188,10 @@ const EventForm = ({ initialValues, onSubmit, isEditing = false }) => {
       }
     } catch (error) {
       console.error('Form submission error:', error);
-      // Handle error response
+      setErrors(prev => ({ 
+        ...prev, 
+        form: error.message || 'Error submitting form. Please try again.' 
+      }));
     } finally {
       setIsSubmitting(false);
     }
@@ -310,6 +355,14 @@ const EventForm = ({ initialValues, onSubmit, isEditing = false }) => {
                   {errors.start_time}
                 </div>
               )}
+              <div className="date-helpers">
+                <button type="button" className="helper-button" onClick={() => setToday('start_time')}>
+                  Set to Today
+                </button>
+                <button type="button" className="helper-button" onClick={() => setTomorrow('start_time')}>
+                  Set to Tomorrow
+                </button>
+              </div>
             </div>
             
             <div className="form-field">
@@ -331,6 +384,11 @@ const EventForm = ({ initialValues, onSubmit, isEditing = false }) => {
                   {errors.end_time}
                 </div>
               )}
+              <div className="date-helpers">
+                <button type="button" className="helper-button" onClick={setEndTime}>
+                  Set 2 Hours After Start
+                </button>
+              </div>
             </div>
             
             <div className="form-field">

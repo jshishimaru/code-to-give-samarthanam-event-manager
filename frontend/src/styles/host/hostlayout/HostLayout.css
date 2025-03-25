@@ -274,3 +274,159 @@ body.scrolled .host-layout {
   .host-layout .tab-content > div {
 	flex: 1;
   }
+
+  /* Existing styles remain... */
+
+/* Fix for horizontal scrolling issues */
+.host-layout {
+	display: flex;
+	min-height: calc(100vh - var(--navbar-height, 5rem));
+	position: relative;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	font-family: var(--body-font-family);
+	font-size: calc(1rem * var(--font-scale, 1));
+	font-weight: calc(400 * var(--font-weight-scale, 1));
+	/* Added to prevent horizontal overflow */
+	width: 100%;
+	overflow-x: hidden;
+  }
+  
+  .host-main-content {
+	flex: 1;
+	transition: margin-left var(--transition-speed, 0.3s) ease;
+	padding: 1.25rem;
+	width: calc(100% - 15.625rem); /* 250px in rem */
+	margin-left: 15.625rem; /* 250px in rem */
+	/* Prevent content from causing horizontal overflow */
+	max-width: calc(100% - 15.625rem);
+	overflow-x: hidden;
+  }
+  
+  .sidebar-closed .host-main-content {
+	margin-left: 4rem; /* 64px in rem */
+	width: calc(100% - 4rem);
+	/* Update max-width to match when sidebar is closed */
+	max-width: calc(100% - 4rem);
+  }
+  
+  .host-main-content-inner {
+	max-width: 75rem; 
+	width: 100%;
+	margin: 0 auto;
+	background-color: var(--bg-color);
+	border-radius: 0.5rem;
+	box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.05);
+	min-height: calc(100vh - var(--navbar-height, 5rem) - 2.5rem);
+	/* Ensure padding doesn't cause overflow */
+	box-sizing: border-box;
+	/* Prevent horizontal overflow */
+	overflow-x: hidden;
+  }
+  
+  /* Fix for event details container */
+  .event-details-container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+	/* Prevent horizontal overflow */
+	max-width: 100%;
+	overflow-x: hidden;
+  }
+  
+  /* Tab content should not overflow horizontally */
+  .tab-content {
+	flex: 1;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 1rem 0;
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+  }
+  
+  /* Fix mobile responsiveness to prevent horizontal overflow */
+  @media (max-width: 48em) { /* 768px ÷ 16px = 48em */
+	.host-main-content {
+	  width: 100%;
+	  max-width: 100%;
+	  margin-left: 0;
+	  padding: 1rem;
+	  box-sizing: border-box;
+	}
+	
+	.sidebar-open .host-main-content {
+	  margin-left: 0;
+	  width: 100%;
+	  max-width: 100%;
+	  /* Use transform instead of margin to avoid width calculation issues */
+	  transform: translateX(15.625rem);
+	}
+	
+	.sidebar-closed .host-main-content {
+	  margin-left: 0;
+	  transform: none;
+	}
+	
+	.host-main-content-inner {
+	  width: 100%;
+	  max-width: 100%;
+	  padding: 0.75rem;
+	  box-sizing: border-box;
+	}
+  }
+  
+  /* Loading indicator should stay within bounds */
+  .loading-indicator {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+	height: 300px;
+	width: 100%;
+	box-sizing: border-box;
+  }
+  
+  .loading-spinner {
+	width: 40px;
+	height: 40px;
+	border: 3px solid rgba(var(--primary-rgb, 0, 123, 255), 0.1);
+	border-radius: 50%;
+	border-top-color: var(--primary-color, #0d6efd);
+	animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+	to { transform: rotate(360deg); }
+  }
+  
+  /* Component error styling to ensure it fits */
+  .component-error {
+	padding: 2rem;
+	text-align: center;
+	background-color: var(--bg-secondary, #f8f9fa);
+	border-radius: 0.5rem;
+	margin: 1rem;
+	width: auto;
+	max-width: 100%;
+	box-sizing: border-box;
+  }
+  
+  .back-button, .retry-button {
+	margin-top: 1rem;
+	padding: 0.5rem 1rem;
+	background-color: var(--primary-color, #0d6efd);
+	color: white;
+	border: none;
+	border-radius: 0.25rem;
+	cursor: pointer;
+  }
+  
+  /* Ensure all child components don't break layout */
+  .host-layout *, 
+  .host-layout *::before, 
+  .host-layout *::after {
+	box-sizing: border-box;
+  }

@@ -419,11 +419,11 @@ class EnrollUserView(View):
                 'message': str(e)
             }, status=500)
 
-
 @method_decorator(csrf_exempt, name='dispatch')
 class UpdateEventView(View):
     """
     Update event details
+    Supports both JSON and multipart form data
     """
     def post(self, request):
         try:
@@ -444,8 +444,18 @@ class UpdateEventView(View):
                     'message': 'Only hosts can update events'
                 }, status=403)
             
-            # Extract data from request
-            data = request.POST.copy() if request.POST else json.loads(request.body)
+            # Extract data based on content type
+            if request.content_type and 'multipart/form-data' in request.content_type:
+                # Handle multipart form data (with file uploads)
+                data = request.POST.dict()
+                # Files will be accessed directly from request.FILES
+            elif request.content_type and 'application/json' in request.content_type:
+                # Handle JSON data
+                data = json.loads(request.body)
+            else:
+                # Default fallback
+                data = request.POST.dict() if request.POST else json.loads(request.body)
+            
             
             # Get event_id from request data
             event_id = data.get('event_id')
@@ -521,7 +531,13 @@ class UpdateEventView(View):
                     }, status=400)
             
             if 'required_volunteers' in data:
-                event.required_volunteers = int(data.get('required_volunteers'))
+                try:
+                    event.required_volunteers = int(data.get('required_volunteers'))
+                except (ValueError, TypeError):
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'Required volunteers must be a number'
+                    }, status=400)
             
             if 'status' in data:
                 # Validate status
@@ -536,7 +552,13 @@ class UpdateEventView(View):
                     }, status=400)
             
             if 'volunteer_efficiency' in data:
-                event.volunteer_efficiency = float(data.get('volunteer_efficiency'))
+                try:
+                    event.volunteer_efficiency = float(data.get('volunteer_efficiency'))
+                except (ValueError, TypeError):
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': 'Volunteer efficiency must be a number'
+                    }, status=400)
             
             if 'task_analysis' in data:
                 event.task_analysis = data.get('task_analysis')
@@ -566,12 +588,12 @@ class UpdateEventView(View):
                 'status': 'error',
                 'message': str(e)
             }, status=500)
-
-
+              
 @method_decorator(csrf_exempt, name='dispatch')
 class CreateEventView(View):
     """
     Create a new event with the authenticated user as host
+    Supports both JSON and multipart form data
     """
     def post(self, request):
         try:
@@ -592,9 +614,21 @@ class CreateEventView(View):
                     'message': 'Only hosts can create events'
                 }, status=403)
             
-            # Extract data from request
-            data = request.POST.copy() if request.POST else json.loads(request.body)
-            
+            print("Content type:", request.content_type)
+            print("Files:", request.FILES)
+            print("POST data:", request.POST)
+            # Extract data based on content type
+            if request.content_type and 'multipart/form-data' in request.content_type:
+                # Handle multipart form data (with file uploads)
+                data = request.POST.dict()
+                # Files will be accessed directly from request.FILES
+            elif request.content_type and 'application/json' in request.content_type:
+                # Handle JSON data
+                data = json.loads(request.body)
+            else:
+                # Default fallback
+                data = request.POST.dict() if request.POST else json.loads(request.body)
+
             # Get required fields
             event_name = data.get('event_name')
             overview = data.get('overview', '')
@@ -639,8 +673,18 @@ class CreateEventView(View):
             if timezone.is_naive(end_time):
                 end_time = timezone.make_aware(end_time)
             
-            required_volunteers = int(data.get('required_volunteers', 1))
+            # Get required_volunteers with safer conversion
+            try:
+                required_volunteers = int(data.get('required_volunteers', 1))
+            except (ValueError, TypeError):
+                required_volunteers = 1
             
+            # Get volunteer_efficiency with safer conversion
+            try:
+                volunteer_efficiency = float(data.get('volunteer_efficiency', 0.0))
+            except (ValueError, TypeError):
+                volunteer_efficiency = 0.0
+                
             # Validate required fields
             if not event_name:
                 return JsonResponse({
@@ -658,7 +702,7 @@ class CreateEventView(View):
                 host=user,  # Use the authenticated user
                 required_volunteers=required_volunteers,
                 status=data.get('status', 'Draft'),
-                volunteer_efficiency=float(data.get('volunteer_efficiency', 0.0)),
+                volunteer_efficiency=volunteer_efficiency,
                 task_analysis=data.get('task_analysis', ''),
                 location=data.get('location', '')
             )
@@ -683,8 +727,7 @@ class CreateEventView(View):
                 'status': 'error',
                 'message': str(e)
             }, status=500)
-
-
+     
 @method_decorator(csrf_exempt, name='dispatch')
 class UnenrollUserView(View):
     """

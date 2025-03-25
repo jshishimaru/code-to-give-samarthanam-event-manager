@@ -109,59 +109,63 @@ export const unenrollUserFromEvent = async (eventId) => {
 
 // Update event
 export const updateEvent = async (eventData) => {
-  try {
-    // Updated to match the URL in urls.py
-    let formData = new FormData();
-    
-    // Add all event data to the formData
-    Object.keys(eventData).forEach(key => {
-      if (key === 'image' && eventData[key] instanceof File) {
-        formData.append(key, eventData[key]);
-      } else {
-        formData.append(key, eventData[key]);
-      }
-    });
-    
-    const response = await axios.post(`${APP_API_URL}host/events/update/`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-    
-    return { success: true, data: response.data };
-  } catch (error) {
-    console.error('Error updating event:', error);
-    return { success: false, error: error.message };
-  }
-};
+	try {
+	  let formData = new FormData();
+
+	  // Add all event data to the formData
+	  Object.keys(eventData).forEach(key => {
+		if (key === 'image' && eventData[key] instanceof File) {
+		  formData.append(key, eventData[key]);
+		} else if (eventData[key] !== null && eventData[key] !== undefined) {
+		  formData.append(key, eventData[key]);
+		}
+	  });
+	  
+	  // Let browser set the content type automatically
+	  const response = await axios.post(`${APP_API_URL}host/events/update/`, formData);
+	  
+	  return { success: true, data: response.data };
+	} catch (error) {
+	  console.error('Error updating event:', error);
+	  if (error.response?.data?.message) {
+		return { success: false, error: error.response.data.message };
+	  }
+	  return { success: false, error: error.message };
+	}
+  };
 
 // Create event
 export const createEvent = async (eventData) => {
-  try {
-    // Updated to match the URL in urls.py
-    let formData = new FormData();
-    
-    // Add all event data to the formData
-    Object.keys(eventData).forEach(key => {
-      if (key === 'image' && eventData[key] instanceof File) {
-        formData.append(key, eventData[key]);
-      } else {
-        formData.append(key, eventData[key]);
-      }
-    });
-    
-    const response = await axios.post(`${APP_API_URL}host/events/create/`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-    
-    return { success: true, data: response.data };
-  } catch (error) {
-    console.error('Error creating event:', error);
-    return { success: false, error: error.message };
-  }
-};
+	try {
+	  let formData = new FormData();
+
+	  
+	  
+	  // Add all event data to the formData
+	  Object.keys(eventData).forEach(key => {
+		  if (key === 'image' && eventData[key] instanceof File) {
+			  formData.append(key, eventData[key]);
+			} else if (eventData[key] !== null && eventData[key] !== undefined) {
+				formData.append(key, eventData[key]);
+			}
+		});
+		
+		console.log("FormData entries:");
+		for (const pair of formData.entries()) {
+		  console.log(`${pair[0]}: ${pair[1]}`);
+		}
+		// Let browser set the content type automatically with correct boundary
+	  const response = await axios.post(`${APP_API_URL}host/events/create/`, formData);
+	  
+	  return { success: true, data: response.data };
+	} catch (error) {
+	  console.error('Error creating event:', error);
+	  if (error.response?.data?.message) {
+		return { success: false, error: error.response.data.message };
+	  }
+	  return { success: false, error: error.message };
+	}
+  };
 
 // Get host events
 export const getHostEvents = async () => {

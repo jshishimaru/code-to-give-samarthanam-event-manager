@@ -1,0 +1,441 @@
+.task-volunteers-container {
+	background-color: var(--bg-color);
+	border-radius: 8px;
+	padding: 1.25rem;
+	margin-bottom: 1.5rem;
+	border: 1px solid var(--input-border);
+  }
+  
+  .task-volunteers-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+  }
+  
+  .task-volunteers-header h2 {
+	font-size: 1.25rem;
+	margin: 0;
+	font-weight: 600;
+	color: var(--text-color);
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+  }
+  
+  .volunteer-count {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 1.5rem;
+	height: 1.5rem;
+	background-color: var(--primary-light);
+	color: var(--primary-color);
+	border-radius: 2rem;
+	font-size: 0.875rem;
+	font-weight: 600;
+	padding: 0 0.5rem;
+  }
+  
+  .add-volunteer-button {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
+	background-color: var(--primary-color);
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 0.875rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background-color 0.2s;
+  }
+  
+  .add-volunteer-button:hover {
+	background-color: var(--primary-hover);
+  }
+  
+  .add-volunteer-button svg {
+	width: 16px;
+	height: 16px;
+  }
+  
+  /* Error state */
+  .task-volunteers-error {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	background-color: var(--error-bg);
+	color: var(--error-color);
+	padding: 0.75rem 1rem;
+	border-radius: 6px;
+	font-size: 0.875rem;
+	margin-bottom: 1rem;
+  }
+  
+  .task-volunteers-error svg {
+	color: var(--error-color);
+	flex-shrink: 0;
+  }
+  
+  /* Loading state */
+  .task-volunteers-loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+	gap: 1rem;
+	color: var(--text-secondary);
+  }
+  
+  .spinner {
+	width: 1.5rem;
+	height: 1.5rem;
+	border: 2px solid var(--primary-light);
+	border-top: 2px solid var(--primary-color);
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+  }
+  
+  /* No volunteers message */
+  .no-volunteers-message {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 3rem 2rem;
+	text-align: center;
+	color: var(--text-secondary);
+  }
+  
+  .no-volunteers-message svg {
+	margin-bottom: 1rem;
+	color: var(--input-border);
+  }
+  
+  .no-volunteers-message p {
+	margin: 0 0 1.5rem 0;
+	font-size: 1rem;
+  }
+  
+  .add-first-volunteer-button {
+	padding: 0.5rem 1rem;
+	background-color: var(--primary-color);
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 0.875rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background-color 0.2s;
+  }
+  
+  .add-first-volunteer-button:hover {
+	background-color: var(--primary-hover);
+  }
+  
+  /* Volunteers list */
+  .volunteers-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+  }
+  
+  .volunteer-item {
+	display: flex;
+	background-color: var(--bg-secondary);
+	border-radius: 8px;
+	padding: 1rem;
+	transition: all 0.2s;
+	border: 1px solid var(--input-border);
+  }
+  
+  .volunteer-item:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .volunteer-avatar {
+	width: 3rem;
+	height: 3rem;
+	border-radius: 50%;
+	background-color: var(--primary-color);
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-right: 1rem;
+	flex-shrink: 0;
+  }
+  
+  .volunteer-details {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+  }
+  
+  .volunteer-info {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.5rem;
+  }
+  
+  .volunteer-name {
+	margin: 0;
+	font-size: 1rem;
+	font-weight: 600;
+	color: var(--text-color);
+  }
+  
+  .volunteer-organization {
+	font-size: 0.875rem;
+	color: var(--text-secondary);
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+  }
+  
+  .volunteer-organization::before {
+	content: '•';
+	display: inline-block;
+	margin-right: 0.25rem;
+  }
+  
+  .volunteer-location {
+	font-size: 0.875rem;
+	color: var(--text-secondary);
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+  }
+  
+  .volunteer-location::before {
+	content: '•';
+	display: inline-block;
+	margin-right: 0.25rem;
+  }
+  
+  /* Skill match section */
+  .volunteer-skill-match {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	margin-top: 0.25rem;
+  }
+  
+  .skill-match-progress {
+	width: 100%;
+	height: 0.375rem;
+	background-color: var(--bg-gray);
+	border-radius: 4px;
+	overflow: hidden;
+  }
+  
+  .skill-match-bar {
+	height: 100%;
+	background-color: var(--primary-color);
+	border-radius: 4px;
+  }
+  
+  .skill-match-label {
+	font-size: 0.75rem;
+	color: var(--text-secondary);
+  }
+  
+  /* Volunteer skills */
+  .volunteer-skills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.375rem;
+	margin-top: 0.25rem;
+  }
+  
+  .skill-tag {
+	font-size: 0.75rem;
+	padding: 0.25rem 0.5rem;
+	background-color: var(--primary-light);
+	color: var(--primary-color);
+	border-radius: 4px;
+	white-space: nowrap;
+  }
+  
+  .more-skills {
+	font-size: 0.75rem;
+	padding: 0.25rem 0.5rem;
+	background-color: var(--bg-gray);
+	color: var(--text-secondary);
+	border-radius: 4px;
+  }
+  
+  /* Matching skills */
+  .matching-skills {
+	display: flex;
+	flex-direction: column;
+	gap: 0.375rem;
+	margin-top: 0.25rem;
+  }
+  
+  .matching-skills-label {
+	font-size: 0.75rem;
+	color: var(--text-secondary);
+  }
+  
+  .matching-skills-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.375rem;
+  }
+  
+  .matching-skill-tag {
+	font-size: 0.75rem;
+	padding: 0.25rem 0.5rem;
+	background-color: var(--success-light);
+	color: var(--success-color);
+	border-radius: 4px;
+	white-space: nowrap;
+  }
+  
+  /* Contact info */
+  .volunteer-contact {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	margin-top: 0.5rem;
+	font-size: 0.875rem;
+  }
+  
+  .volunteer-email, .volunteer-phone {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--primary-color);
+	text-decoration: none;
+  }
+  
+  .volunteer-email:hover, .volunteer-phone:hover {
+	text-decoration: underline;
+  }
+  
+  /* Modal overlay */
+  .add-volunteers-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+	padding: 1rem;
+  }
+  
+  .add-volunteers-modal {
+	background-color: var(--bg-color);
+	border-radius: 8px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+	width: 100%;
+	max-width: 800px;
+	max-height: 90vh;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+	.volunteer-item {
+	  flex-direction: column;
+	}
+	
+	.volunteer-avatar {
+	  margin-right: 0;
+	  margin-bottom: 0.75rem;
+	}
+	
+	.volunteer-contact {
+	  margin-top: 0.75rem;
+	}
+  }
+  
+  @media (max-width: 480px) {
+	.task-volunteers-header {
+	  flex-direction: column;
+	  align-items: flex-start;
+	  gap: 0.75rem;
+	}
+	
+	.add-volunteer-button {
+	  width: 100%;
+	  justify-content: center;
+	}
+  }
+
+  /* Add these styles to prevent forced scrolling and simplify volunteer items */
+
+/* Prevent auto-scrolling */
+.task-volunteers-container {
+	scroll-behavior: auto;
+	overflow: visible;
+	position: relative;
+  }
+  
+  /* Simplified volunteer list */
+  .volunteers-list.simplified {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+  }
+  
+  .volunteer-item.simplified {
+	display: flex;
+	align-items: center;
+	padding: 0.5rem 0.75rem;
+	background-color: var(--bg-secondary, #f5f7fa);
+	border-radius: 50px;
+	min-width: 0;
+	border: 1px solid var(--input-border, #e0e0e0);
+	transition: all 0.2s;
+	width: auto;
+  }
+  
+  .volunteer-item.simplified:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .volunteer-item.simplified .volunteer-avatar {
+	width: 2rem;
+	height: 2rem;
+	font-size: 1rem;
+	margin-right: 0.5rem;
+	flex-shrink: 0;
+  }
+  
+  .volunteer-name-only {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+  }
+  
+  .volunteer-item.simplified .volunteer-name {
+	font-size: 0.9rem;
+	font-weight: 500;
+  }

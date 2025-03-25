@@ -103,10 +103,9 @@ const TaskChat = ({
     // Initial fetch
     fetchMessages();
     
-    // Start polling for new messages every 15 seconds
     pollingIntervalRef.current = setInterval(() => {
       fetchMessages();
-    }, 15000);
+    }, 1000);
     
     return () => {
       // Clean up on unmount

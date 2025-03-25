@@ -737,6 +737,46 @@
 		"notificationFailed": "Failed to send completion notification",
 		"markCompleteFailed": "Failed to mark task as complete"
 	  }
+	},
+"taskVolunteers": {
+	"title": "Assigned Volunteers",
+	"addVolunteer": "Add Volunteer",
+	"loading": "Loading volunteers...",
+	"noVolunteers": "No volunteers assigned to this task yet",
+	"addFirstVolunteer": "Add First Volunteer",
+	"skillMatch": "Skill Match",
+	"skillMatchPercent": "Skill match: {{percent}}%",
+	"matchingSkills": "Matching Skills",
+	"errors": {
+	  "noTaskId": "Task ID is required",
+	  "fetchFailed": "Failed to load volunteers"
+	}
+  },
+  "availableVolunteers": {
+	"title": "Available Volunteers",
+	"forTask": "for task",
+	"inEvent": "in event",
+	"close": "Close",
+	"searchPlaceholder": "Search by name, skills, or location",
+	"clearSearch": "Clear search",
+	"selectedCount": "{{count}} volunteer(s) selected",
+	"clearSelection": "Clear selection",
+	"loading": "Loading available volunteers...",
+	"noAvailableVolunteers": "No available volunteers found for this task",
+	"noSearchResults": "No volunteers matching \"{{query}}\" found",
+	"selectVolunteer": "Select volunteer: {{name}}",
+	"noAssignedTasks": "No assigned tasks",
+	"assignedTasksCount": "{{count}} task(s) already assigned",
+	"skillMatch": "Skill Match",
+	"skillMatchPercent": "Skill match: {{percent}}%",
+	"matchingSkills": "Matching Skills",
+	"cancel": "Cancel",
+	"assignSelected": "Assign {{count}} volunteer(s)",
+	"assigning": "Assigning...",
+	"errors": {
+	  "noTaskId": "Task ID is required",
+	  "fetchFailed": "Failed to load available volunteers",
+	  "assignFailed": "Failed to assign volunteers"
 	}
   }
-  
+  }

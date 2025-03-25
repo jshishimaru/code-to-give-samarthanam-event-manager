@@ -6,7 +6,7 @@ import { checkAuth } from '../../../apiservice/auth';
 import SubtaskList from './subtasklist';
 import TaskChat from './taskchat';
 import '../../../styles/host/taskdetail/taskdetail.css';
-
+import TaskVolunteers from './taskvolunteers';
 /**
  * TaskDetail component displays detailed information about a task,
  * including subtasks, required skills, and a task chat feature.
@@ -438,32 +438,7 @@ const isHost = () => {
               </div>
             )}
 
-            {task.volunteers && task.volunteers.length > 0 && (
-              <div className="task-assigned-volunteers">
-                <h2>{t('taskDetail.assignedVolunteers')}</h2>
-                <ul className="volunteers-list">
-                  {task.volunteers.map((volunteer, index) => (
-                    <li key={index} className="volunteer-item">
-                      <div className="volunteer-avatar">
-                        {volunteer.name ? volunteer.name.charAt(0).toUpperCase() : 'V'}
-                      </div>
-                      <div className="volunteer-info">
-                        <span className="volunteer-name">{volunteer.name || volunteer.username}</span>
-                        {volunteer.skills && volunteer.skills.length > 0 && (
-                          <div className="volunteer-skills">
-                            {volunteer.skills.map((skill, i) => (
-                              <span key={i} className="volunteer-skill-tag">
-                                {skill}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+
 
             {canNotifyCompletion() && (
               <div className="task-actions">
@@ -571,6 +546,20 @@ const isHost = () => {
               }}
               readOnly={!isHost()}
             />
+
+			<TaskVolunteers 
+			  taskId={effectiveTaskId}
+			  eventId={effectiveEventId}
+			  onVolunteersChanged={() => {
+			    // Refresh task data when volunteers are added/removed
+			    getTaskWithSubtasks(effectiveTaskId).then(response => {
+			      if (response.success) {
+			        setTask(response.data.task);
+			      }
+			    });
+			  }}
+			  readOnly={!isHost()}
+			/>	
           </div>
         </main>
 

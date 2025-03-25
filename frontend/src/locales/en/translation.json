@@ -354,6 +354,15 @@
 	  },
 	  "image": {
 		"noImageText": "No Image Available"
+	  },
+	  "date": {
+		"start": "Start",
+		"end": "End"
+	   },
+	  "status": {
+		"enrolled": "Enrolled",
+		"notEnrolled": "Not Enrolled",
+		"volunteer": "Volunteer"
 	  }
 	},
 	"feedback": {

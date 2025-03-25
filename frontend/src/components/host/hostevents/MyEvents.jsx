@@ -54,6 +54,17 @@ const MyEvents = () => {
         past: null
     });
 
+    // Number of events to show initially per section
+    const INITIAL_EVENTS_TO_SHOW = 4;
+
+    // State to track expanded sections
+    const [expandedSections, setExpandedSections] = useState({
+        all: false,
+        ongoing: false,
+        upcoming: false,
+        past: false
+    });
+
     // Check authentication status when component mounts
     useEffect(() => {
         const checkAuthStatus = async () => {
@@ -102,6 +113,22 @@ const MyEvents = () => {
     // Change active tab
     const changeTab = (tab) => {
         setActiveTab(tab);
+    };
+
+    // Toggle expanded state for a section
+    const toggleSectionExpansion = (section) => {
+        setExpandedSections(prev => ({
+            ...prev,
+            [section]: !prev[section]
+        }));
+    };
+
+    // Get the appropriate number of events to display based on section expansion
+    const getVisibleEvents = (events, section) => {
+        if (expandedSections[section]) {
+            return events;
+        }
+        return events.slice(0, INITIAL_EVENTS_TO_SHOW);
     };
 
     // Fetch detailed event information
@@ -282,16 +309,11 @@ const MyEvents = () => {
 
     // Render event section (reusable function for all tabs)
     const renderEventSection = (title, events, isLoading, errorMessage, emptyMessage, sectionKey) => {
+        const visibleEvents = getVisibleEvents(events, sectionKey);
+        const hasMoreEvents = events.length > INITIAL_EVENTS_TO_SHOW;
+
         return (
-            <section className="event-section" aria-labelledby={`${sectionKey}-section-title`}>
-                <header className="section-header">
-                    <h2 id={`${sectionKey}-section-title`} className="section-title">{title}</h2>
-                    {events.length > 0 && (
-                        <span className="event-count" aria-label={t('events.countLabel', '{{count}} events', { count: events.length })}>
-                            {events.length}
-                        </span>
-                    )}
-                </header>
+            <section className="event-section" aria-labelledby={`${sectionKey}-section-title`} id={`${sectionKey}-events-section`}>
                 
                 {isLoading ? (
                     <div className="loading-state" aria-live="polite">
@@ -320,16 +342,36 @@ const MyEvents = () => {
                         </button>
                     </div>
                 ) : (
-                    <div className={`event-${viewMode === 'grid' ? 'grid' : 'list'}`} 
-                        aria-label={t('events.eventListLabel', 'List of events')}>
-                        {events.map(event => (
-                            <EventCard 
-                                key={event.id || event.event_id} 
-                                eventId={event.id || event.event_id}
-                                viewMode={viewMode}
-                            />
-                        ))}
-                    </div>
+                    <>
+                        <div 
+                            id={`${sectionKey}-events-collection`}
+                            className={`event-${viewMode === 'grid' ? 'grid' : 'list'}`} 
+                            aria-label={t('events.eventListLabel', 'List of events')}
+                        >
+                            {visibleEvents.map(event => (
+                                <EventCard 
+                                    key={event.id || event.event_id} 
+                                    eventId={event.id || event.event_id}
+                                    viewMode={viewMode}
+                                />
+                            ))}
+                        </div>
+                        
+                        <div className="view-more-container">
+                            {hasMoreEvents && (
+                                <button 
+                                    className="view-more-button" 
+                                    onClick={() => toggleSectionExpansion(sectionKey)}
+                                    aria-expanded={expandedSections[sectionKey]}
+                                    aria-controls={`${sectionKey}-events-collection`}
+                                >
+                                    {expandedSections[sectionKey] 
+                                        ? t('events.viewLess', 'View Less') 
+                                        : t('events.viewMore', { count: events.length - INITIAL_EVENTS_TO_SHOW }, 'View {{count}} more')}
+                                </button>
+                            )}
+                        </div>
+                    </>
                 )}
             </section>
         );
@@ -368,47 +410,56 @@ const MyEvents = () => {
           <div className="event-page-header">
             <div className="header-left">
                 <h1 className="page-title">{t('myevents.pageTitle', 'My Events')}</h1>
-                
             </div>
+            <div className="header-controls">
+                <div className="view-controls" role="toolbar" aria-label={t('events.viewControls', 'View Controls')}>
+                    <div className="view-mode-dropdown" ref={dropdownRef}>
+                        <button 
+                        className="dropdown-toggle"
+                        onClick={toggleDropdown}
+                        aria-haspopup="true"
+                        aria-expanded={dropdownOpen}
+                        >
+                        <span className={`view-icon ${viewMode === 'grid' ? 'grid-icon' : 'list-icon'}`} aria-hidden="true">
+                            {viewMode === 'grid' ? '▦' : '☰'}
+                        </span>
+                        <span className="view-text">
+                            {viewMode === 'grid' ? t('events.gridView', 'Grid') : t('events.listView', 'List')}
+                        </span>
+                        <span className="dropdown-arrow" aria-hidden="true">▼</span>
+                        </button>
+                        
+                        {dropdownOpen && (
+                        <div className="dropdown-menu">
+                            <button 
+                            className={`dropdown-item ${viewMode === 'grid' ? 'active' : ''}`}
+                            onClick={() => changeViewMode('grid')}
+                            aria-pressed={viewMode === 'grid'}
+                            >
+                            <span className="view-icon grid-icon" aria-hidden="true">▦</span>
+                            <span>{t('events.gridView', 'Grid')}</span>
+                            </button>
+                            <button 
+                            className={`dropdown-item ${viewMode === 'list' ? 'active' : ''}`}
+                            onClick={() => changeViewMode('list')}
+                            aria-pressed={viewMode === 'list'}
+                            >
+                            <span className="view-icon list-icon" aria-hidden="true">☰</span>
+                            <span>{t('events.listView', 'List')}</span>
+                            </button>
+                        </div>
+                        )}
+                    </div>
+                    <button 
+                        className="tab-create-button"
+                        onClick={() => navigate('/host/CreateEvent')}
+                        aria-label={t('events.createEventLabel', 'Create a new event')}
+                    >
+                        <span className="create-icon" aria-hidden="true"></span>
+                        <span>{t('events.createEvent', 'Create Event')}</span>
+                    </button>
+                </div>
             
-            <div className="view-controls" role="toolbar" aria-label={t('events.viewControls', 'View Controls')}>
-              <div className="view-mode-dropdown" ref={dropdownRef}>
-                <button 
-                  className="dropdown-toggle"
-                  onClick={toggleDropdown}
-                  aria-haspopup="true"
-                  aria-expanded={dropdownOpen}
-                >
-                  <span className={`view-icon ${viewMode === 'grid' ? 'grid-icon' : 'list-icon'}`} aria-hidden="true">
-                    {viewMode === 'grid' ? '▦' : '☰'}
-                  </span>
-                  <span className="view-text">
-                    {viewMode === 'grid' ? t('events.gridView', 'Grid') : t('events.listView', 'List')}
-                  </span>
-                  <span className="dropdown-arrow" aria-hidden="true">▼</span>
-                </button>
-                
-                {dropdownOpen && (
-                  <div className="dropdown-menu">
-                    <button 
-                      className={`dropdown-item ${viewMode === 'grid' ? 'active' : ''}`}
-                      onClick={() => changeViewMode('grid')}
-                      aria-pressed={viewMode === 'grid'}
-                    >
-                      <span className="view-icon grid-icon" aria-hidden="true">▦</span>
-                      <span>{t('events.gridView', 'Grid')}</span>
-                    </button>
-                    <button 
-                      className={`dropdown-item ${viewMode === 'list' ? 'active' : ''}`}
-                      onClick={() => changeViewMode('list')}
-                      aria-pressed={viewMode === 'list'}
-                    >
-                      <span className="view-icon list-icon" aria-hidden="true">☰</span>
-                      <span>{t('events.listView', 'List')}</span>
-                    </button>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
           
@@ -466,15 +517,7 @@ const MyEvents = () => {
                 <span>{t('events.pastEvents', 'Past Events')}</span>
                 <span className="tab-count">{pastEvents.length}</span>
               </button>
-              {/* Create Event button - positioned in the tabs container */}
-              <button 
-                className="tab-create-button"
-                onClick={() => navigate('/host/CreateEvent')}
-                aria-label={t('events.createEventLabel', 'Create a new event')}
-              >
-                <span className="create-icon" aria-hidden="true"></span>
-                <span>{t('events.createEvent', 'Create Event')}</span>
-              </button>
+              
             </div>
           </div>
           

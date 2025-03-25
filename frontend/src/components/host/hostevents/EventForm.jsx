@@ -13,7 +13,6 @@ const EventForm = ({ initialValues, onSubmit, isEditing = false }) => {
     status: 'Draft',
     location: '',
     image: null,
-    task_analysis: ''
   };
 
   // Use provided initial values or defaults
@@ -153,13 +152,71 @@ const EventForm = ({ initialValues, onSubmit, isEditing = false }) => {
     }
   };
 
+  const setToday = (timeField) => {
+    const today = new Date();
+    today.setMinutes(Math.ceil(today.getMinutes() / 15) * 15); // Round to nearest 15 min
+    
+    const formattedDate = today.toISOString().slice(0, 16);
+    setFormData(prev => ({ ...prev, [timeField]: formattedDate }));
+    
+    // Clear error when field is set
+    if (errors[timeField]) {
+      setErrors(prev => ({ ...prev, [timeField]: null }));
+    }
+  };
+
+  const setTomorrow = (timeField) => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(9, 0, 0, 0); // Set to 9:00 AM
+    
+    const formattedDate = tomorrow.toISOString().slice(0, 16);
+    setFormData(prev => ({ ...prev, [timeField]: formattedDate }));
+    
+    // Clear error when field is set
+    if (errors[timeField]) {
+      setErrors(prev => ({ ...prev, [timeField]: null }));
+    }
+  };
+
+  const setEndTime = () => {
+    if (!formData.start_time) {
+      setErrors(prev => ({ 
+        ...prev, 
+        end_time: "Please set a start time first" 
+      }));
+      return;
+    }
+    
+    const startTime = new Date(formData.start_time);
+    const endTime = new Date(startTime);
+    endTime.setHours(startTime.getHours() + 2); // Default to 2 hours later
+    
+    const formattedDate = endTime.toISOString().slice(0, 16);
+    setFormData(prev => ({ ...prev, end_time: formattedDate }));
+    
+    // Clear error when field is set
+    if (errors.end_time) {
+      setErrors(prev => ({ ...prev, end_time: null }));
+    }
+  };
+
+  const formatReadableDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      weekday: 'short',
+      month: 'short', 
+      day: 'numeric',
+      year: 'numeric', 
+      hour: 'numeric', 
+      minute: '2-digit'
+    });
+  };
+
   return (
     <div className="event-form-container">
       <form className="event-form" onSubmit={handleSubmit} noValidate>
-        <h2 className="form-title">
-          {isEditing ? 'Edit Event' : 'Create New Event'}
-        </h2>
-        
         {errors.form && (
           <div className="form-error" role="alert">
             {errors.form}
@@ -346,20 +403,6 @@ const EventForm = ({ initialValues, onSubmit, isEditing = false }) => {
                 {errors.description}
               </div>
             )}
-          </div>
-          
-          <div className="form-field">
-            <label htmlFor="task_analysis">
-              Task Analysis
-              <span className="field-hint">(Optional: Analyze tasks and requirements)</span>
-            </label>
-            <textarea
-              id="task_analysis"
-              name="task_analysis"
-              value={formData.task_analysis}
-              onChange={handleChange}
-              rows="4"
-            ></textarea>
           </div>
         </div>
         

@@ -1,11 +1,12 @@
-/* Tab container styles with Create Event button */
 .tabs-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 1rem;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: right;
+  width: 100%;
+  margin-bottom: 1rem;
+  gap: 1rem; 
+}
   
   .event-tabs {
     display: flex;
@@ -13,6 +14,20 @@
     padding-bottom: 0.5rem;
     scrollbar-width: thin;
     flex-grow: 1;
+  }
+  .event-page-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+  }
+  
+  .header-left {
+    flex: 1;
+    max-width: 20%;
   }
   
   .event-tab-button {
@@ -53,7 +68,6 @@
     font-weight: 700;
   }
   
-  /* Enhanced Create Event button styling for the tab container */
   .tab-create-button {
     background-color: var(--primary-color, #4A90E2);
     color: white;
@@ -68,32 +82,12 @@
     align-items: center;
     gap: 0.5rem;
     box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
-    margin-left: 11rem;
-    margin-top: 0.1rem;
     white-space: nowrap;
-    right: 0;
-    top: 0;
-    margin-right: -50%;
+    position: static;
+    margin-right: 0;
+    margin-top: 0;
+    margin-left:1rem;
   }
-  /* .tab-create-button {
-    background-color: var(--primary-color, #4A90E2);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 0.65rem 1.5rem;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
-    white-space: nowrap;
-    position: absolute;
-    right: 0;
-    top: 0; 
-  } */
   
   .tab-create-button::before {
     content: '+';
@@ -196,3 +190,68 @@
     background-color: var(--primary-hover-dark, #6AA7EB);
     box-shadow: 0 4px 12px rgba(90, 154, 230, 0.4);
   }
+
+  /* Update this media query */
+@media screen and (max-width: 768px) {
+  .tabs-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    position: relative;
+    padding-bottom: 60px;
+  }
+  
+  .event-tabs {
+    width: 100%;
+    justify-content: flex-start; /* Better alignment for tabs */
+    overflow-x: auto; /* Allow scrolling when tabs don't fit */
+  }
+  .event-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .view-controls {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .header-controls {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .tab-create-button {
+    /* Reset button styling for mobile */
+    position: static;
+    width: auto;
+    margin-left: auto;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .event-page-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .header-left {
+    flex: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Create a wrapper for controls at smaller sizes */
+  .header-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+  }
+}
+
+.view-controls {
+  justify-content: space-between;
+  align-items: right;
+}

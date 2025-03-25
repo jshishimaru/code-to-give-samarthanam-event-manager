@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getEventDetails } from '../../apiservice/event';
+import { getEventDetails, checkUserEnrollment } from '../../apiservice/event';
 import { checkAuth } from '../../apiservice/auth';
 import '../../styles/Event/EventCard.css';
 
@@ -14,12 +14,16 @@ import '../../styles/Event/EventCard.css';
 const EventCard = ({ eventId, viewMode = 'grid' }) => {
   const { t, i18n } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isUserEnrolled, setIsUserEnrolled] = useState(false);
+  const [enrollmentChecked, setEnrollmentChecked] = useState(false);
   const [authState, setAuthState] = useState({
     isAuthenticated: false,
     isOrganizer: false,
+    isVolunteer: false,
     userId: null
   });
 
@@ -37,12 +41,14 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
           setAuthState({
             isAuthenticated: true,
             isOrganizer: authResponse.data.user.isHost || false,
+            isVolunteer: authResponse.data.user.isVolunteer || false,
             userId: authResponse.data.user.id || null
           });
         } else {
           setAuthState({
             isAuthenticated: false,
             isOrganizer: false,
+            isVolunteer: false,
             userId: null
           });
         }
@@ -51,6 +57,7 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
         setAuthState({
           isAuthenticated: false,
           isOrganizer: false,
+          isVolunteer: false,
           userId: null
         });
       }
@@ -59,6 +66,7 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
     verifyAuth();
   }, []);
 
+  // Fetch event details
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
@@ -83,37 +91,67 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
     }
   }, [eventId, t]);
 
-  // Format date for display based on current language
+  // Check enrollment status if user is a volunteer
+  useEffect(() => {
+    const checkEnrollment = async () => {
+      if (authState.isAuthenticated && authState.isVolunteer && eventId) {
+        try {
+          console.log('Checking enrollment for event:', eventId);
+          const response = await checkUserEnrollment(eventId);
+          console.log('Enrollment response:', response);
+          setIsUserEnrolled(response.success && response.data.enrolled);
+        } catch (err) {
+          console.error('Error checking enrollment:', err);
+          setIsUserEnrolled(false);
+        } finally {
+          setEnrollmentChecked(true);
+        }
+      }
+    };
+
+    checkEnrollment();
+  }, [authState.isAuthenticated, authState.isVolunteer, eventId]);
+
+  // Format date for display based on current language with improved formatting
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     
-    // Get localized date formatting based on the current language
     try {
-      // You can implement locale mapping here based on i18n.language
       const locale = i18n.language === 'en' ? 'en-US' : 
                     i18n.language === 'hi' ? 'hi-IN' : 
                     i18n.language === 'kn' ? 'kn-IN' : 
                     i18n.language === 'te' ? 'te-IN' : 'en-US';
-                    
-      return date.toLocaleDateString(locale, {
-        weekday: 'short',
+      
+      // Date formatting without time
+      const dateFormatted = date.toLocaleDateString(locale, {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
       });
+      
+      // Time formatting separately
+      const timeFormatted = date.toLocaleTimeString(locale, {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+      
+      return `${dateFormatted}`;
     } catch (e) {
-      // Fallback to English if locale isn't supported
-      return date.toLocaleDateString('en-US', {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+      // Fallback formatting
+      return `${date.toLocaleDateString()}`;
+    }
+  };
+
+  // Handle click on the entire card
+  const handleCardClick = () => {
+    if (isOnMyEventsPage) {
+      navigate(`/host/MyEvents/${eventId}`);
+    } else if (authState.isAuthenticated && authState.isOrganizer && isHostedEvent()) {
+      navigate(`/host/MyEvents/${eventId}`);
+    } else {
+      navigate(`/events/${eventId}`);
     }
   };
 
@@ -160,14 +198,15 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
   }
 
   return (
-    <article className={cardClasses}>
+    <article className={cardClasses} onClick={handleCardClick}>
+
       <div className="event-card__image-container">
         {event.image_url ? (
           <img 
-            src={event.image_url} 
-            alt={t('eventCard.image.alt', { name: event.event_name })} 
-            className="event-card__image"
-            loading="lazy"
+          src={event.image_url} 
+          alt={t('eventCard.image.alt', { name: event.event_name })} 
+          className="event-card__image"
+          loading="lazy"
           />
         ) : (
           <div className="event-card__placeholder" aria-label={t('eventCard.image.noImage')}>
@@ -178,12 +217,34 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
       
       <div className="event-card__content">
         <h3 className="event-card__title">{event.event_name}</h3>
+        {/* Status badges for volunteers - made more visible */}
+        {authState.isAuthenticated && authState.isVolunteer && enrollmentChecked && (
+          <div className="event-card__badges">
+            <div className={`event-status-badge ${isUserEnrolled ? 'enrolled-badge' : 'not-enrolled-badge'}`}>
+              {isUserEnrolled ? t('eventCard.status.enrolled') : t('eventCard.status.notEnrolled')}
+            </div>
+            <div className="event-status-badge volunteer-badge">
+              {t('eventCard.status.volunteer')}
+            </div>
+          </div>
+        )}
         
-        <div className="event-card__date" aria-label={t('eventCard.date.ariaLabel')}>
-          <span className="event-card__date-icon" aria-hidden="true">📅</span>
-          <time dateTime={event.start_time}>
-            {formatDate(event.start_time)}
-          </time>
+        <div className="event-card__dates" aria-label={t('eventCard.date.ariaLabel')}>
+          <div className="event-card__date-row">
+            <span className="event-card__date-icon" aria-hidden="true">📅</span>
+            <span className="event-card__date-label">{t('eventCard.date.start')}:</span>
+            <time dateTime={event.start_time} className="event-card__date-value">
+              {formatDate(event.start_time)}
+            </time>
+          </div>
+          
+          <div className="event-card__date-row">
+            <span className="event-card__date-icon" aria-hidden="true">🏁</span>
+            <span className="event-card__date-label">{t('eventCard.date.end')}:</span>
+            <time dateTime={event.end_time} className="event-card__date-value">
+              {formatDate(event.end_time)}
+            </time>
+          </div>
         </div>
         
         {/* Only show description in list view */}
@@ -192,38 +253,6 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
             {event.description}
           </p>
         )}
-        
-        <div className="event-card__footer">
-          {/* Show "Manage Event" button when on the MyEvents page */}
-          {isOnMyEventsPage ? (
-            <Link 
-              to={`/host/MyEvents/${eventId}`} 
-              className="event-card__link manage-event-link"
-              aria-label={t('eventCard.manage.ariaLabel', { name: event.event_name })}
-            >
-              {t('eventCard.manage.label')}
-            </Link>
-          ) : (
-            // The original rendering logic for other pages
-            authState.isAuthenticated && authState.isOrganizer && isHostedEvent() ? (
-              <Link 
-                to={`/host/MyEvents/${eventId}`} 
-                className="event-card__link"
-                aria-label={t('eventCard.edit.ariaLabel', { name: event.event_name })}
-              >
-                {t('eventCard.review.label')}
-              </Link>
-            ) : (
-              <Link 
-                to={`/events/${eventId}`} 
-                className="event-card__link"
-                aria-label={t('eventCard.viewDetails.ariaLabel', { name: event.event_name })}
-              >
-                {t('eventCard.viewDetails.label')}
-              </Link>
-            )
-          )}
-        </div>
       </div>
     </article>
   );

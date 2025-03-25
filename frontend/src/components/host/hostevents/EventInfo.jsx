@@ -330,15 +330,6 @@ const EventInfo = () => {
                       <p>{eventData?.description || t('common.notProvided', 'No description provided')}</p>
                     </div>
                   </div>
-
-                  {/* {eventData?.task_analysis && (
-                    <div className="info-section">
-                      <h2>{t('events.taskAnalysis', 'Task Analysis')}</h2>
-                      <div className="section-content">
-                        <p>{eventData.task_analysis}</p>
-                      </div>
-                    </div>
-                  )} */}
                 </div>
               </div>
 

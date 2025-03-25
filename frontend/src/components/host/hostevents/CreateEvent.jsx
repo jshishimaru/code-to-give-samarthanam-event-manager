@@ -82,7 +82,7 @@ const CreateEvent = () => {
           </svg>
           {t('events.backToMyEvents', 'Back to My Events')}
         </button>
-        <h1 className="page-title">{t('events.createNew', 'Create New Event')}</h1>
+        {/* <h1 className="page-title">{t('events.createNew', 'Create New Event')}</h1> */}
       </header>
       
       <EventForm onSubmit={handleSubmit} isEditing={false} />

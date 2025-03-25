@@ -39,7 +39,7 @@ const EventPage = () => {
   const [viewMode, setViewMode] = useState('grid');
   
   // Active tab state
-  const [activeTab, setActiveTab] = useState('enrolled');
+  const [activeTab, setActiveTab] = useState(isAuthenticated ? 'enrolled' : 'ongoing');
   
   // Dropdown state
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -47,7 +47,7 @@ const EventPage = () => {
   
   // Number of events to show initially per section
   const INITIAL_EVENTS_TO_SHOW = 4;
-
+  
   // Computed property for showing featured tab
   const showFeaturedTab = isAuthenticated && userRole !== 'host';
   
@@ -76,7 +76,7 @@ const EventPage = () => {
     past: null,
     featured: null
   });
-
+  
   // Check user authentication status
   useEffect(() => {
     const checkUserAuthentication = async () => {
@@ -87,10 +87,12 @@ const EventPage = () => {
           setUserId(response.data.user.id);
           // Set user role based on isHost flag
           setUserRole(response.data.user.isHost ? 'host' : 'volunteer');
+          setActiveTab('enrolled');
         } else {
           setIsAuthenticated(false);
           setUserId(null);
           setUserRole(null);
+          setActiveTab('ongoing');
         }
       } catch (err) {
         console.error('Error checking authentication:', err);
@@ -98,10 +100,10 @@ const EventPage = () => {
         setUserRole(null);
       }
     };
-
+    
     checkUserAuthentication();
   }, []);
-
+  
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
@@ -361,20 +363,6 @@ const EventPage = () => {
 		className="event-section" 
 		aria-labelledby={`${section}-section-heading`}
 	  >
-		<div className="section-header">
-		  <h2 
-			id={`${section}-section-heading`} 
-			className="section-title"
-		  >
-			{title}
-		  </h2>
-		  <span 
-			className="event-count" 
-			aria-label={`${eventIds.length} ${t('events.countLabel')}`}
-		  >
-			({eventIds.length})
-		  </span>
-		</div>
 		
 		{loadingState ? (
 		  <div className="loading-container" aria-live="polite" aria-busy="true">
@@ -543,19 +531,20 @@ const EventPage = () => {
           role="tablist" 
           aria-label={t('events.tabsLabel', 'Event categories')}
         >
-          <button 
-            role="tab"
-            className={`event-tab-button ${activeTab === 'enrolled' ? 'active' : ''}`}
-            id="enrolled-tab"
-            aria-selected={activeTab === 'enrolled'}
-            aria-controls="enrolled-tab-panel"
-            onClick={() => changeTab('enrolled')}
-            >
-            <span>{t('events.enrolledEvents', 'Enrolled Events')}</span>
-            <span className="tab-count">{enrolledEvents.length}</span>
-          </button>
-          
-            {showFeaturedTab && (
+            { isAuthenticated && (
+              <button 
+                role="tab"
+                className={`event-tab-button ${activeTab === 'enrolled' ? 'active' : ''}`}
+                id="enrolled-tab"
+                aria-selected={activeTab === 'enrolled'}
+                aria-controls="enrolled-tab-panel"
+                onClick={() => changeTab('enrolled')}
+                >
+                <span>{t('events.enrolledEvents', 'Enrolled Events')}</span>
+                <span className="tab-count">{enrolledEvents.length}</span>
+              </button>
+            )}
+            {showFeaturedTab && isAuthenticated && (
               <button 
                 role="tab"
                 className={`event-tab-button ${activeTab === 'featured' ? 'active' : ''}`}
@@ -568,7 +557,8 @@ const EventPage = () => {
                 <span className="tab-count">{featuredEvents.length}</span>
               </button>
             )}
-            
+
+
           <button 
             role="tab"
             className={`event-tab-button ${activeTab === 'ongoing' ? 'active' : ''}`}
@@ -593,17 +583,19 @@ const EventPage = () => {
             <span className="tab-count">{upcomingEvents.length}</span>
           </button>
           
-          <button 
-            role="tab"
-            className={`event-tab-button ${activeTab === 'past' ? 'active' : ''}`}
-            id="past-tab"
-            aria-selected={activeTab === 'past'}
-            aria-controls="past-tab-panel"
-            onClick={() => changeTab('past')}
-          >
-            <span>{t('events.pastEvents', 'Past Events')}</span>
-            <span className="tab-count">{pastEvents.length}</span>
-          </button>
+          { isAuthenticated && (
+            <button 
+              role="tab"
+              className={`event-tab-button ${activeTab === 'past' ? 'active' : ''}`}
+              id="past-tab"
+              aria-selected={activeTab === 'past'}
+              aria-controls="past-tab-panel"
+              onClick={() => changeTab('past')}
+            >
+              <span>{t('events.pastEvents', 'Past Events')}</span>
+              <span className="tab-count">{pastEvents.length}</span>
+            </button>
+          )}
         </div>
       </div>
       

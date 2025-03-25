@@ -1,31 +1,57 @@
-/* Base card styling - more compact dimensions */
 .event-card {
 	display: flex; 
 	flex-direction: column;
 	background-color: var(--bg-color);
-	border-radius: 8px;
-	box-shadow: 0 2px 6px var(--shadow-color);
+	border-radius: 0.75rem;
+	box-shadow: 0 0.3rem 0.8rem rgba(var(--primary-rgb, 236, 87, 81), 0.1), 
+				0 0.125rem 0.375rem var(--shadow-color);
 	overflow: hidden;
-	transition: transform 0.2s ease, box-shadow 0.2s ease;
-	max-width: 320px; /* Reduced from 350px */
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+	max-width: 20rem; /* 320px equivalent */
 	height: 100%;
+	cursor: pointer;
+	position: relative;
+	border-bottom: 0.25rem solid transparent;
   }
   
   .event-card:hover, .event-card:focus-within {
-	transform: translateY(-3px);
-	box-shadow: 0 4px 10px var(--shadow-color);
+	transform: translateY(-0.3rem);
+	box-shadow: 0 0.5rem 1rem rgba(var(--primary-rgb, 236, 87, 81), 0.15), 
+				0 0.25rem 0.625rem var(--shadow-color);
+	border-bottom: 0.25rem solid var(--primary-color);
   }
   
   .event-card:focus-within {
-	outline: 2px solid var(--outline-color);
+	outline: 0.125rem solid var(--outline-color);
   }
   
-  /* More compact image container */
+  /* Image container with aspect ratio and gradient overlay */
   .event-card__image-container {
 	position: relative;
 	width: 100%;
-	padding-top: 52%; /* Slightly shorter than 16:9 for compactness */
+	padding-top: 56%; /* 16:9 aspect ratio */
 	overflow: hidden;
+  }
+  
+  .event-card__image-container::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(0deg, 
+				  rgba(0, 0, 0, 0.5) 0%, 
+				  rgba(0, 0, 0, 0.2) 20%, 
+				  rgba(0, 0, 0, 0) 40%);
+	z-index: 1;
+	pointer-events: none;
+	opacity: 0.7;
+	transition: opacity 0.3s ease;
+  }
+  
+  .event-card:hover .event-card__image-container::after {
+	opacity: 0.9;
   }
   
   .event-card__image {
@@ -35,113 +61,240 @@
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	transition: transform 0.3s ease;
+	transition: transform 0.5s ease;
   }
   
   .event-card:hover .event-card__image {
-	transform: scale(1.05);
+	transform: scale(1.08);
   }
   
-  /* More compact content area */
+  /* Content area with improved spacing and typography */
   .event-card__content {
-	padding: 12px; /* Reduced from 16px */
+	padding: 1rem 1.25rem; /* More generous padding */
 	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
+	background: linear-gradient(180deg, 
+				  rgba(var(--primary-rgb, 236, 87, 81), 0.03) 0%, 
+				  transparent 100%);
+	border-top: 0.0625rem solid rgba(var(--primary-rgb, 236, 87, 81), 0.1);
   }
   
   .event-card__title {
 	color: var(--text-color);
-	font-size: 1.125rem; /* Slightly smaller font */
+	font-size: 1.125rem;
 	font-weight: 600;
-	margin-bottom: 6px; /* Reduced from 8px */
-	line-height: 1.3;
+	margin-top:-0.5rem;
+	margin-bottom: -0.5rem;
+	line-height: 1.4;
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
-	line-clamp: 2; /* Standard property for compatibility */
+	line-clamp: 2;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	letter-spacing: -0.01em;
   }
   
-  .event-card__date {
+  /* Enhanced enrollment status badges with animations */
+  .event-status-badge {
+	position: absolute;
+	top: 0.75rem;
+	right: 0.75rem;
+	padding: 0.35rem 0.7rem;
+	border-radius: 2rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: white;
+	z-index: 2;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
+	backdrop-filter: blur(4px);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .event-card:hover .event-status-badge {
+	transform: translateY(-0.125rem);
+	box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.2);
+  }
+  
+  .enrolled-badge {
+	background-color: var(--success-text, #27ae60);
+	background: linear-gradient(135deg, #2ecc71, #27ae60);
+  }
+  
+  .not-enrolled-badge {
+	background-color: var(--error-color, #e74c3c);
+	background: linear-gradient(135deg, #e74c3c, #c0392b);
+  }
+  
+  .volunteer-badge {
+	top: 2.75rem; /* Position below enrollment badge */
+	background-color: var(--primary-color, #ec5751);
+	background: linear-gradient(135deg, #ec6b66, #ec5751);
+  }
+  
+  .event-card__dates {
 	color: var(--text-secondary);
-	font-size: 0.8125rem; /* Reduced from 0.875rem */
-	margin-bottom: 8px; /* Reduced from 12px */
+	font-size: 0.875rem;
+	margin-bottom: 0.75rem;
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	gap: 0.375rem;
+	background: rgba(var(--primary-rgb, 236, 87, 81), 0.04);
+	border-radius: 0.5rem;
+	padding: 0.75rem;
+  }
+  
+  .event-card__date-row {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: baseline;
+	overflow: hidden;
+	white-space: nowrap;
+  }
+  
+  .event-card__date-label {
+	font-weight: 600;
+	margin-right: 0.375rem;
+	color: rgba(var(--primary-rgb, 236, 87, 81), 0.9);
+	flex-shrink: 0;
   }
   
   .event-card__date-icon {
-	margin-right: 4px; /* Reduced from 6px */
-	font-size: 0.875rem; /* Smaller icon */
+	margin-right: 0.375rem;
+	font-size: 0.9375rem;
+	flex-shrink: 0;
   }
   
+  .event-card__date-value {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	flex: 1;
+  }
+  .event-card__badges {
+	position: absolute;
+	top: 0.75rem;
+	right: 0.75rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	z-index: 10;
+  }
+  .event-status-badge {
+	position: static; /* Override the existing absolute positioning */
+	padding: 0.35rem 0.7rem;
+	border-radius: 2rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: white;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.2);
+	backdrop-filter: blur(4px);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+
+.event-card:hover .event-status-badge {
+	transform: translateY(-0.125rem);
+	box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+  }
+  
+  .enrolled-badge {
+	background-color: var(--success-text, #27ae60);
+	background: linear-gradient(135deg, #2ecc71, #27ae60);
+	border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .not-enrolled-badge {
+	background-color: var(--error-color, #e74c3c);
+	background: linear-gradient(135deg, #e74c3c, #c0392b);
+	border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .volunteer-badge {
+	background-color: var(--primary-color, #ec5751);
+	background: linear-gradient(135deg, #ec6b66, #ec5751);
+	border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Fix for list view */
+  .event-card-list .event-card__badges {
+	top: 0.75rem;
+	left: 0.75rem;
+	right: auto;
+  }
+  
+  /* Responsive adjustments */
+  @media screen and (max-width: 30rem) { /* 480px */
+	.event-card-list .event-card__badges {
+	  right: 0.75rem;
+	  left: auto;
+	}
+	
+	.event-status-badge {
+	  font-size: 0.6875rem;
+	  padding: 0.25rem 0.5rem;
+	}
+  }
+
   .event-card__description {
-	font-size: 0.875rem; /* Smaller text */
-	line-height: 1.4;
+	font-size: 0.875rem;
+	line-height: 1.5;
 	color: var(--text-secondary);
 	display: -webkit-box;
 	-webkit-line-clamp: 3;
-	line-clamp: 3; /* Standard property for compatibility */
+	line-clamp: 3;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	margin-bottom: 0.5rem;
+	margin-bottom: 0.75rem;
   }
   
+  /* We're removing the footer with the button as per requirements */
   .event-card__footer {
-	margin-top: auto;
-	padding-top: 10px; /* Reduced from 16px */
+	display: none;
   }
   
-  .event-card__link {
-	display: inline-block;
-	background-color: var(--primary-color);
-	color: white;
-	padding: 6px 12px; /* Reduced from 8px 16px */
-	border-radius: 4px;
-	text-decoration: none;
-	font-weight: 500;
-	font-size: 0.875rem; /* Smaller button text */
-	transition: background-color 0.2s ease;
-  }
-  
-  .event-card__link:hover, .event-card__link:focus {
-	background-color: var(--primary-hover);
-  }
-  
-  .event-card__link:focus {
-	outline: 2px solid var(--outline-color);
-	outline-offset: 2px;
-  }
-  
-  /* Placeholder for missing images */
+  /* Enhanced placeholder for missing images */
   .event-card__placeholder {
-	background-color: var(--bg-secondary);
+	background: linear-gradient(45deg, 
+				rgba(var(--primary-rgb, 236, 87, 81), 0.1), 
+				rgba(var(--primary-rgb, 236, 87, 81), 0.05));
 	width: 100%;
 	height: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	color: var(--text-secondary);
+	font-weight: 500;
+	font-size: 0.875rem;
+	letter-spacing: 0.03em;
   }
   
-  /* Refined list view styling for better information density */
+  /* List view styling with smoother transitions */
   .event-card-list {
 	display: flex;
 	flex-direction: row;
 	max-width: 100%;
 	height: auto;
-	min-height: 9rem; /* Shorter height for list view */
+	min-height: 10rem;
+	border-radius: 1rem;
   }
   
   .event-card-list .event-card__image-container {
-	width: 28%; /* Reduced from 35% */
+	width: 35%;
 	padding-top: 0;
 	position: relative;
-	min-height: 9rem; /* Reduced from 12rem */
+	min-height: 10rem;
 	height: auto;
+	border-radius: 0;
+	border-top-left-radius: 0.75rem;
+	border-bottom-left-radius: 0.75rem;
+	overflow: hidden;
   }
   
   .event-card-list .event-card__image {
@@ -154,152 +307,291 @@
   }
   
   .event-card-list .event-card__content {
-	width: 72%; /* Increased from 65% */
+	width: 65%;
 	display: flex;
 	flex-direction: column;
+	border-left: none;
+	border-top: none;
+	padding: 0.125rem 0.5rem;
   }
   
   .event-card-list .event-card__description {
-	margin-bottom: 0.75rem;
-	line-height: 1.4;
-	-webkit-line-clamp: 2; /* Show fewer lines in list view */
-	line-clamp: 2; /* Standard property for compatibility */
+	margin-bottom: 0.875rem;
+	line-height: 1.5;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
   }
   
   .event-card-list .event-card__title {
-	font-size: 1.05rem;
-	-webkit-line-clamp: 1; /* Show only 1 line in list view */
-	line-clamp: 1; /* Standard property for compatibility */
+	font-size: 1.25rem;
+	-webkit-line-clamp: 1;
+	line-clamp: 1;
+	/* margin-bottom: 0.875rem; */
   }
   
-  .event-card-list .event-card__footer {
-	padding-top: 6px;
+  /* Status badge positioning in list view */
+  .event-card-list .event-status-badge {
+	left: 0.75rem;
+	right: auto;
   }
   
-  /* Skeleton styling for loading state */
+  .event-card-list .volunteer-badge {
+	left: 0.75rem;
+	top: 2.75rem;
+  }
+  
+  /* Enhanced skeleton loading with smoother animations */
   .skeleton .event-card__image-container {
-	background-color: var(--bg-secondary);
+	background: linear-gradient(110deg, 
+				var(--bg-secondary) 30%, 
+				rgba(var(--primary-rgb, 236, 87, 81), 0.05) 50%, 
+				var(--bg-secondary) 70%);
+	background-size: 200% 100%;
+	animation: shimmer 1.5s infinite;
   }
   
   .skeleton .event-card__content {
-	padding: 12px;
+	padding: 0.5rem;
   }
   
   .skeleton-title,
   .skeleton-date,
   .skeleton-description {
-	background-color: var(--bg-secondary);
-	border-radius: 4px;
-	height: 0.875rem;
-	margin-bottom: 0.8rem;
-	animation: pulse 1.5s infinite ease-in-out;
+	background: linear-gradient(110deg, 
+				var(--bg-secondary) 30%, 
+				rgba(var(--primary-rgb, 236, 87, 81), 0.05) 50%, 
+				var(--bg-secondary) 70%);
+	background-size: 200% 100%;
+	border-radius: 0.375rem;
+	height: 1rem;
+	margin-bottom: 1rem;
+	animation: shimmer 1.5s infinite;
+  }
+  
+  @keyframes shimmer {
+	0% {
+	  background-position: -100% 0;
+	}
+	100% {
+	  background-position: 100% 0;
+	}
   }
   
   .skeleton-title {
-	width: 70%;
-	height: 1.2rem;
+	width: 75%;
+	height: 1.5rem;
   }
   
   .skeleton-date {
-	width: 40%;
-	height: 0.875rem;
+	width: 50%;
+	height: 1rem;
   }
   
   .skeleton-description {
 	width: 90%;
-	height: 3rem;
+	height: 3.5rem;
   }
   
-  @keyframes pulse {
-	0% {
-	  opacity: 0.6;
-	}
-	50% {
-	  opacity: 1;
-	}
-	100% {
-	  opacity: 0.6;
-	}
-  }
-  
-  /* Error card styling */
+  /* Enhanced error card styling */
   .error-card {
-	background-color: rgba(var(--error-rgb, 255, 50, 50), 0.1);
-	border: 1px solid var(--error-color, #ff3232);
+	background-color: rgba(var(--error-rgb, 231, 76, 60), 0.05);
+	border: 0.0625rem solid var(--error-color, #e74c3c);
+	border-radius: 0.75rem;
+	overflow: hidden;
   }
   
   .error-message {
-	color: var(--error-color, #ff3232);
+	color: var(--error-color, #e74c3c);
 	text-align: center;
-	padding: 1.5rem;
+	padding: 2rem 1.5rem;
+	font-weight: 500;
   }
   
-  /* Responsive adjustments for list view */
-  @media screen and (max-width: 768px) {
+  /* Responsive adjustments with smoother transitions */
+  @media screen and (max-width: 48rem) { /* 768px */
 	.event-card-list {
-	  flex-direction: row; /* Keep as row even on medium screens */
+	  flex-direction: row;
 	}
 	
 	.event-card-list .event-card__image-container {
-	  width: 30%;
-	  min-height: 8rem;
+	  width: 40%;
+	  min-height: 9rem;
 	}
 	
 	.event-card-list .event-card__content {
-	  width: 70%;
+	  width: 60%;
+	  padding: 0.5rem;
+	}
+	
+	.event-card-list .event-card__title {
+	  font-size: 1.125rem;
+	}
+	
+	.event-card__dates {
+	  padding: 0.625rem;
 	}
   }
   
-  /* Only shift to column on very small screens */
-  @media screen and (max-width: 480px) {
+  @media screen and (max-width: 30rem) { /* 480px */
 	.event-card-list {
 	  flex-direction: column;
+	  border-radius: 0.75rem;
 	}
 	
 	.event-card-list .event-card__image-container {
 	  width: 100%;
-	  padding-top: 50%; /* Slightly shorter aspect ratio */
+	  padding-top: 56%;
 	  min-height: auto;
+	  border-radius: 0;
+	  border-top-left-radius: 0.75rem;
+	  border-top-right-radius: 0.75rem;
+	  border-bottom-left-radius: 0;
 	}
 	
 	.event-card-list .event-card__content {
 	  width: 100%;
+	  border-top: none;
+	}
+	
+	/* Adjust badge positions for small screens */
+	.event-card-list .event-status-badge {
+	  right: 0.75rem;
+	  left: auto;
+	}
+	
+	.event-card-list .volunteer-badge {
+	  right: 0.75rem;
+	  left: auto;
 	}
   }
   
-  /* Grid layout adjustments for more cards per row */
-  @media screen and (min-width: 768px) {
+  /* Grid layout adjustments with enhanced spacing */
+  @media screen and (min-width: 48rem) { /* 768px */
 	.event-grid {
 	  display: grid;
-	  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-	  gap: 1.25rem;
+	  grid-template-columns: repeat(auto-fill, minmax(16.25rem, 1fr));
+	  gap: 1.5rem;
 	}
   }
   
-  @media screen and (min-width: 1024px) {
+  @media screen and (min-width: 64rem) { /* 1024px */
 	.event-grid {
-	  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+	  gap: 1.75rem;
 	}
   }
   
-  /* Event grid with more compact cards */
+  /* Event grid with more elegant cards */
   .event-grid .event-card {
 	height: 100%;
 	margin-bottom: 0;
-  }
-
-  /* Add these styles to your existing EventCard.css file */
-
-.manage-event-link {
-	background-color: var(--primary-color) !important;
-	color: white !important;
-	font-weight: 500;
-	padding: 0.5rem 1rem;
-	border-radius: 4px;
-	transition: background-color 0.2s ease;
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
   
-  .manage-event-link:hover, .manage-event-link:focus {
-	background-color: var(--primary-hover) !important;
-	text-decoration: none;
+  /* High contrast and dark mode adjustments with improved aesthetics */
+  [data-theme="dark"] .event-card {
+	box-shadow: 0 0.3rem 0.8rem rgba(var(--primary-rgb, 242, 107, 102), 0.15),
+				0 0.125rem 0.375rem var(--shadow-color);
+  }
+  
+  [data-theme="dark"] .event-card__dates {
+	background: rgba(var(--primary-rgb, 242, 107, 102), 0.12);
+  }
+  
+  [data-theme="dark"] .event-card__date-label {
+	color: rgba(var(--primary-rgb, 242, 107, 102), 1);
+  }
+  
+  [data-theme="high-contrast-light"] .event-card {
+	border: 0.125rem solid var(--text-color);
+	box-shadow: 0.25rem 0.25rem 0 var(--text-color);
+	transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  
+  [data-theme="high-contrast-light"] .event-card:hover {
+	box-shadow: 0.375rem 0.375rem 0 var(--text-color);
+  }
+  
+  [data-theme="high-contrast-dark"] .event-card {
+	border: 0.125rem solid var(--text-color);
+	box-shadow: 0.25rem 0.25rem 0 var(--text-color);
+  }
+  
+  [data-theme="high-contrast-dark"] .event-card:hover {
+	box-shadow: 0.375rem 0.375rem 0 var(--text-color);
+  }
+  
+  /* Accessibility adjustments based on font scaling with better spacing */
+  [data-font-size="large"] .event-card__title,
+  [data-font-size="x-large"] .event-card__title {
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	/* margin-bottom: 0.875rem; */
+  }
+  
+  [data-font-size="large"] .event-card__dates,
+  [data-font-size="x-large"] .event-card__dates {
+	margin-bottom: 0.875rem;
+  }
+  
+  /* Adjust badge positions for larger font sizes */
+  [data-font-size="large"] .volunteer-badge,
+  [data-font-size="x-large"] .volunteer-badge {
+	top: 3.25rem;
+  }
+  
+  /* Handle text contrast settings with enhanced visibility */
+  [data-text-contrast="high-black"] .event-card__title,
+  [data-text-contrast="high-black"] .event-card__description,
+  [data-text-contrast="high-black"] .event-card__dates {
+	color: #000000;
+  }
+  
+  [data-text-contrast="high-black"] .event-card__date-label {
+	color: #000000;
+	font-weight: 700;
+  }
+  
+  [data-text-contrast="high-white"] .event-card__title,
+  [data-text-contrast="high-white"] .event-card__description,
+  [data-text-contrast="high-white"] .event-card__dates {
+	color: #ffffff;
+  }
+  
+  [data-text-contrast="high-white"] .event-card__date-label {
+	color: #ffffff;
+	font-weight: 700;
+  }
+  
+  [data-text-contrast="yellow-black"] .event-card__title,
+  [data-text-contrast="yellow-black"] .event-card__description {
+	color: #ffff00;
+  }
+  
+  [data-text-contrast="yellow-black"] .event-card__dates {
+	color: #ffff00;
+  }
+  
+  [data-text-contrast="yellow-black"] .event-card__date-label {
+	color: #ffff00;
+	font-weight: 700;
+  }
+  
+  /* Add a subtle hover indicator */
+  .event-card::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 0;
+	height: 0.25rem;
+	background: linear-gradient(90deg, 
+				var(--primary-color) 0%, 
+				rgba(var(--primary-rgb, 236, 87, 81), 0.7) 100%);
+	transition: width 0.3s ease-in-out;
+  }
+  
+  .event-card:hover::after,
+  .event-card:focus-within::after {
+	width: 100%;
   }

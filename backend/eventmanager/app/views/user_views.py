@@ -271,6 +271,24 @@ class AvailableVolunteersForTaskView(View):
                     
                     skill_match_percent = round(len(matching_skills) / len(task_skills) * 100 if task_skills else 0, 1)
                 
+                # Get tasks this volunteer is already assigned to in this event
+                assigned_tasks = TaskInfo.objects.filter(
+                    event=task.event,
+                    volunteers=volunteer
+                )
+                
+                assigned_task_count = assigned_tasks.count()
+                
+                # Get task details for the UI
+                assigned_task_details = [
+                    {
+                        'id': t.id,
+                        'name': t.task_name,
+                        'status': t.status
+                    }
+                    for t in assigned_tasks
+                ]
+                
                 volunteer_data = {
                     'id': volunteer.id,
                     'name': volunteer.name,
@@ -281,13 +299,19 @@ class AvailableVolunteersForTaskView(View):
                     'contact': volunteer.contact,
                     'matching_skills': matching_skills,
                     'missing_skills': missing_skills,
-                    'skill_match_percent': skill_match_percent
+                    'skill_match_percent': skill_match_percent,
+                    'assigned_task_count': assigned_task_count,  # Added task count
+                    'assigned_tasks': assigned_task_details  # Added task details
                 }
                 
                 volunteers_data.append(volunteer_data)
             
-            # Sort by skill match percentage (highest first)
+            # First sort by skill match percentage (highest first)
             volunteers_data.sort(key=lambda x: x['skill_match_percent'], reverse=True)
+            
+            # Then sort by assigned task count (lowest first)
+            # Using stable sort to preserve skill match order for volunteers with the same task count
+            volunteers_data.sort(key=lambda x: x['assigned_task_count'])
             
             return JsonResponse({
                 'status': 'success',
@@ -310,7 +334,6 @@ class AvailableVolunteersForTaskView(View):
     def post(self, request):
         # POST method can use the same logic as GET
         return self.get(request)
-
 
 @method_decorator(csrf_exempt, name='dispatch')
 class SearchVolunteersView(View):

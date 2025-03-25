@@ -4,8 +4,9 @@ import Sidebar from './Sidebar';
 import EventVolunteers from '../volunteertab/EventVolunteers';
 import EventTasks from '../hosttask/EventTasks';
 import EventInfo from '../hostevents/EventInfo';
-import CommunityChat from '../../Event/CommunityChat'; // Import CommunityChat component
-import { getEventDetails } from '../../../apiservice/event'; // Import to get event title
+import CommunityChat from '../../Event/CommunityChat';
+import StatsPage from '../stats/statspage';
+import { getEventDetails } from '../../../apiservice/event';
 import '../../../styles/host/hostlayout/HostLayout.css';
 
 const HostLayout = () => {
@@ -13,7 +14,7 @@ const HostLayout = () => {
   const [activeTab, setActiveTab] = useState('info');
   const [componentError, setComponentError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [eventTitle, setEventTitle] = useState(''); // Add state for event title
+  const [eventTitle, setEventTitle] = useState('');
   const { eventId } = useParams();
 
   const toggleSidebar = () => {
@@ -35,7 +36,7 @@ const HostLayout = () => {
         const response = await getEventDetails(eventId);
         
         if (response.success) {
-          // Store the event title for use in Community Chat
+          // Store the event title for use in components
           setEventTitle(response.data.event.title || response.data.event.event_name || '');
         }
       } catch (error) {
@@ -69,7 +70,7 @@ const HostLayout = () => {
     };
   }, []);
 
-  // Modify the renderContent function to handle when there's no eventId
+  // Modify the renderContent function to handle the stats tab
   const renderContent = () => {
     if (componentError) {
       return (
@@ -93,6 +94,8 @@ const HostLayout = () => {
           return eventId ? <EventInfo eventId={eventId} /> : null;
         case 'communitychat':
           return eventId ? <CommunityChat eventId={eventId} eventTitle={eventTitle} /> : null;
+        case 'stats':
+          return eventId ? <StatsPage eventId={eventId} /> : null;
         default:
           return <div className="event-info-placeholder">Event information will be implemented later</div>;
       }

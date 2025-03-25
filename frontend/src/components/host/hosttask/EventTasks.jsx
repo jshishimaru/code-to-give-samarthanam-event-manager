@@ -1,168 +1,194 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getTasksForEvent } from '../../../apiservice/task';
 import TaskList from './TaskList';
-import TaskForm from './TaskForm';
+import TaskDetail from '../../host/taskdetail/taskdetail';
+import { getTasksForEvent } from '../../../apiservice/task';
 import '../../../styles/host/hosttask/EventTasks.css';
 
 /**
- * EventTasks component displays all tasks for an event and allows adding/editing tasks
+ * EventTasks component displays tasks for an event with options to view, edit, and manage tasks
+ * @param {Object} props Component props
+ * @param {string} props.eventId ID of the event
  */
 const EventTasks = ({ eventId }) => {
   const { t } = useTranslation();
   
-  // States
+  // State
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [showTaskForm, setShowTaskForm] = useState(false);
-  const [formMode, setFormMode] = useState('create');
-  const [eventName, setEventName] = useState('');
-
-  // Fetch tasks on component mount and when eventId changes
+  
+  // Fetch tasks on component mount or when eventId changes
   useEffect(() => {
+    const fetchTasks = async () => {
+      if (!eventId) {
+        setError(t('eventTasks.errors.noEventId'));
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        setLoading(true);
+        
+        // Using getTasksForEvent instead of getEventTasks
+        const response = await getTasksForEvent(eventId);
+        
+        if (response.success) {
+          // Handle different response structures that might come from the API
+          let tasksList = [];
+          if (response.data.tasks) {
+            tasksList = response.data.tasks;
+          } else if (Array.isArray(response.data)) {
+            tasksList = response.data;
+          } else if (response.data.data && Array.isArray(response.data.data)) {
+            tasksList = response.data.data;
+          }
+          
+          setTasks(tasksList);
+          setError(null);
+        } else {
+          setError(response.error || t('eventTasks.errors.fetchFailed'));
+        }
+      } catch (err) {
+        console.error('Error fetching event tasks:', err);
+        setError(t('eventTasks.errors.fetchFailed'));
+      } finally {
+        setLoading(false);
+      }
+    };
+    
     fetchTasks();
-  }, [eventId]);
-
-  // Fetch tasks for the event
-  const fetchTasks = async () => {
-    if (!eventId) {
-      setError(t('eventTasks.errors.noEventId'));
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
+  }, [eventId, t]);
+  
+  // Refresh tasks after actions that might change the task data
+  const refreshTasks = async () => {
     try {
+      setLoading(true);
       const response = await getTasksForEvent(eventId);
       
       if (response.success) {
-        setTasks(response.data.tasks || []);
-        setEventName(response.data.event_name || '');
+        // Handle different response structures
+        let tasksList = [];
+        if (response.data.tasks) {
+          tasksList = response.data.tasks;
+        } else if (Array.isArray(response.data)) {
+          tasksList = response.data;
+        } else if (response.data.data && Array.isArray(response.data.data)) {
+          tasksList = response.data.data;
+        }
+        
+        setTasks(tasksList);
+        setError(null);
       } else {
-        setError(response.error || t('eventTasks.errors.fetchFailed'));
+        console.error('Error refreshing tasks:', response.error);
       }
     } catch (err) {
-      console.error('Error fetching tasks:', err);
-      setError(t('eventTasks.errors.fetchFailed'));
+      console.error('Error refreshing tasks:', err);
     } finally {
       setLoading(false);
     }
   };
-
-  // Handle adding a new task
-  const handleAddTask = () => {
-    setSelectedTask(null);
-    setFormMode('create');
-    setShowTaskForm(true);
-  };
-
-  // Handle editing a task
-  const handleEditTask = (task) => {
+  
+  // Handle task selection for viewing details
+  const handleSelectTask = (task) => {
     setSelectedTask(task);
-    setFormMode('edit');
-    setShowTaskForm(true);
   };
-
-  // Handle task form success
-  const handleTaskFormSuccess = (taskData) => {
-    setShowTaskForm(false);
-    fetchTasks(); // Refresh the task list
+  
+  // Handle back to task list
+  const handleBackToList = () => {
+    // Refresh tasks when returning to list view to get latest data
+    refreshTasks();
+    setSelectedTask(null);
   };
-
-  // Handle task form cancel
-  const handleTaskFormCancel = () => {
-    setShowTaskForm(false);
+  
+  // Handle task edit
+  const handleEditTask = (task) => {
+    // For now, just view the task detail
+    setSelectedTask(task);
   };
-
-  return (
-    <div className="event-tasks-container">
-      {/* Header with title and add task button */}
-      <div className="event-tasks-header">
-        <h1 className="event-tasks-title">
-          {eventName ? 
-            t('eventTasks.tasksForEvent', { eventName }) : 
-            t('eventTasks.tasks')
-          }
-        </h1>
+  
+  // Render loading state
+  if (loading) {
+    return (
+      <div className="event-tasks-loading">
+        <div className="spinner"></div>
+        <p>{t('eventTasks.loading')}</p>
+      </div>
+    );
+  }
+  
+  // Render error state
+  if (error) {
+    return (
+      <div className="event-tasks-error">
+        <p>{error}</p>
         <button 
-          className="add-task-button"
-          onClick={handleAddTask}
-          aria-label={t('eventTasks.addTaskAriaLabel')}
+          className="retry-button"
+          onClick={refreshTasks}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          {t('eventTasks.addTask')}
+          {t('eventTasks.retry')}
         </button>
       </div>
-
-      {/* Display task list or error/loading states */}
-      <div className="event-tasks-content">
-        {loading ? (
-          <div className="event-tasks-loading">
-            <div className="loading-spinner" role="status"></div>
-            <p>{t('eventTasks.loading')}</p>
-          </div>
-        ) : error ? (
-          <div className="event-tasks-error" role="alert">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    );
+  }
+  
+  // Render task detail if a task is selected
+  if (selectedTask) {
+    return (
+      <TaskDetail
+        taskId={selectedTask.id}
+        eventId={eventId}
+        onBack={handleBackToList}
+      />
+    );
+  }
+  
+  // Render task list
+  return (
+    <div className="event-tasks-container">
+      <div className="event-tasks-header">
+        <h2>{t('eventTasks.title')}</h2>
+        <div className="event-tasks-actions">
+          {/* Task actions like add new task, filter, etc. */}
+          <button 
+            className="refresh-tasks-button"
+            onClick={refreshTasks}
+            aria-label={t('eventTasks.refreshTasks')}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M23 4v6h-6"></path>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
             </svg>
-            <p>{error}</p>
-          </div>
-        ) : tasks.length === 0 ? (
-          <div className="event-tasks-empty">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10 9 9 9 8 9"></polyline>
+            {t('eventTasks.refresh')}
+          </button>
+          <button className="add-task-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-            <p>{t('eventTasks.noTasks')}</p>
-            <button 
-              className="add-first-task-button"
-              onClick={handleAddTask}
-              aria-label={t('eventTasks.addFirstTaskAriaLabel')}
-            >
-              {t('eventTasks.addFirstTask')}
-            </button>
-          </div>
-        ) : (
-          <TaskList 
-            tasks={tasks} 
-            onEditTask={handleEditTask} 
-          />
-        )}
-      </div>
-
-      {/* Task form modal */}
-      {showTaskForm && (
-        <div className="task-form-modal-overlay">
-          <div className="task-form-modal-content">
-            <button 
-              className="close-modal-button"
-              onClick={handleTaskFormCancel}
-              aria-label={t('eventTasks.closeModal')}
-            >
-              ×
-            </button>
-            <TaskForm
-              mode={formMode}
-              initialData={selectedTask}
-              eventId={eventId}
-              onSuccess={handleTaskFormSuccess}
-              onCancel={handleTaskFormCancel}
-            />
-          </div>
+            {t('eventTasks.addTask')}
+          </button>
         </div>
+      </div>
+      
+      {tasks.length === 0 ? (
+        <div className="no-tasks-message">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          <p>{t('eventTasks.noTasks')}</p>
+          <button className="create-first-task-button">
+            {t('eventTasks.createFirstTask')}
+          </button>
+        </div>
+      ) : (
+        <TaskList 
+          tasks={tasks} 
+          onEditTask={handleEditTask}
+          onSelectTask={handleSelectTask}
+        />
       )}
     </div>
   );

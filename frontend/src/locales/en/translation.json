@@ -405,69 +405,71 @@
 		"eventLoadFailed": "Failed to load event details."
 	  }
 	},
-	"taskDetail": {
-	  "backToTasks": "Back to Tasks",
-	  "backToEvent": "Back to Event",
-	  "loading": "Loading task details...",
-	  "progress": "Completion Progress",
-	  "completionProgress": "Task completion progress: {{percentage}}%",
-	  "startDate": "Start",
-	  "dueDate": "Due",
-	  "noDate": "No date set",
-	  "description": "Description",
-	  "assignedVolunteers": "Assigned Volunteers",
-	  "you": "You",
-	  "subtasks": "Subtasks",
-	  "notifyCompletion": "Notify Completion",
-	  "notifying": "Notifying...",
-	  "completionNotified": "Completion notified at {{time}}",
-	  "closeNotification": "Close notification",
-	  "requiredSkills": "Required Skills",
-	  "skillMatchLabel": "Skill Match",
-	  "skillMatch": "You have this skill",
-	  "missingSkills": "Skills to develop",
-	  "noRequiredSkills": "No specific skills required for this task",
-	  "status": {
-		"pending": "Pending",
-		"inProgress": "In Progress",
-		"completed": "Completed",
-		"notificationSent": "Pending Verification",
-		"unknown": "Unknown Status"
-	  },
-	  "notifications": {
-		"completed": "Completion notification sent successfully!",
-		"alreadyNotified": "This task has already been notified as completed."
-	  },
-	  "errors": {
-		"auth": "You need to be logged in to view task details",
-		"fetchFailed": "Failed to load task details. Please try again.",
-		"notFound": "Task not found. It may have been deleted.",
-		"notificationFailed": "Failed to send completion notification. Please try again.",
-		"notAuthorized": "You are not authorized to view this task."
-	  },
-	  "comingSoon": "Task details are coming soon",
-	  "implementationNote": "This feature is currently being implemented"
+"taskDetail": {
+	"backToTasks": "Back to Tasks",
+	"backToEvent": "Back to Event",
+	"loading": "Loading task details...",
+	"progress": "Completion Progress",
+	"completionProgress": "Task completion progress: {{percentage}}%",
+	"startDate": "Start",
+	"dueDate": "Due",
+	"noDate": "No date set",
+	"description": "Description",
+	"assignedVolunteers": "Assigned Volunteers",
+	"you": "You",
+	"subtasks": "Subtasks",
+	"notifyCompletion": "Notify Completion",
+	"markComplete": "Mark as Complete",
+	"notifying": "Notifying...",
+	"processing": "Processing...",
+	"completionNotified": "Completion notified at {{time}}",
+	"completionNotificationSent": "Completion notification has been sent",
+	"taskMarkedComplete": "Task has been marked as complete",
+	"defaultCompletionMessage": "I've completed this task",
+	"closeNotification": "Close notification",
+	"requiredSkills": "Required Skills",
+	"skillMatchLabel": "Skill Match",
+	"skillMatch": "You have this skill",
+	"missingSkills": "Skills to develop",
+	"noRequiredSkills": "No specific skills required for this task",
+	"status": {
+	  "pending": "Pending",
+	  "inProgress": "In Progress",
+	  "completed": "Completed",
+	  "cancelled": "Cancelled",
+	  "delayed": "Delayed",
+	  "notificationSent": "Pending Verification",
+	  "unknown": "Unknown Status"
 	},
-	"taskChat": {
+	"notifications": {
+	  "completed": "Completion notification sent successfully!",
+	  "alreadyNotified": "This task has already been notified as completed."
+	},
+	"errors": {
+	  "auth": "You need to be logged in to view task details",
+	  "fetchFailed": "Failed to load task details. Please try again.",
+	  "notFound": "Task not found. It may have been deleted.",
+	  "notificationFailed": "Failed to send completion notification. Please try again.",
+	  "notAuthorized": "You are not authorized to view this task.",
+	  "missingTaskId": "Task ID is required",
+	  "markCompleteFailed": "Failed to mark task as complete"
+	}
+  },
+  	"taskChat": {
 	  "title": "Task Chat",
-	  "loading": "Loading chat...",
-	  "loadMore": "Load earlier messages",
-	  "loadingMore": "Loading...",
-	  "retry": "Retry",
+	  "loading": "Loading messages...",
 	  "noMessages": "No messages yet. Start the conversation!",
-	  "messagePlaceholder": "Type a message...",
-	  "send": "Send",
-	  "host": "Host",
 	  "you": "You",
-	  "justNow": "just now",
-	  "minutesAgo": "{{count}}m ago",
-	  "hoursAgo": "{{count}}h ago",
-	  "daysAgo": "{{count}}d ago",
+	  "host": "Host",
+	  "unknownUser": "Unknown User",
+	  "inputPlaceholder": "Type a message...",
+	  "inputAriaLabel": "Type a message",
+	  "sendAriaLabel": "Send message",
 	  "errors": {
-		"auth": "You need to be logged in to use the chat",
-		"fetchFailed": "Failed to load chat messages",
+		"fetchFailed": "Failed to load messages",
 		"sendFailed": "Failed to send message",
-		"loadMoreFailed": "Failed to load more messages"
+		"notAuthenticated": "You need to be logged in to use the chat",
+		"authFailed": "Authentication error. Please try logging in again."
 	  }
 	},
 	"recommendations": {
@@ -485,156 +487,256 @@
 	  "notPersonalized": "Showing popular events. Update your skills for personalized recommendations."
 	},
 	"profile": {
-  "loadingProfile": "Loading profile...",
-  "errorTitle": "Profile Error",
-  "notFound": "User Not Found",
-  "volunteerNotFound": "The volunteer profile could not be found.",
-  "closeProfile": "Close profile",
-  "volunteer": "Volunteer",
-  "contactInfo": "Contact Information",
-  "personalInfo": "Personal Information",
-  "email": "Email",
-  "contact": "Phone",
-  "location": "Location",
-  "organization": "Organization",
-  "age": "Age",
-  "memberSince": "Member Since",
-  "skills": "Skills",
-  "errors": {
-    "missingId": "User ID is required to view profile",
-    "fetchFailed": "Failed to load profile"
-  },
-  "actions": {
-    "contact": "Contact",
-    "message": "Message",
-    "viewEvents": "View Events"
-  }
-},
-"volunteerList": {
-  "volunteers": "Volunteers",
-  "volunteersFor": "Volunteers for",
-  "volunteer": "volunteer",
-  "volunteersCount": "volunteers",
-  "searchPlaceholder": "Search by name, skills, location...",
-  "searchAriaLabel": "Search volunteers",
-  "search": "Search",
-  "clearSearch": "Clear search",
-  "searchResultsFor": "Found {count} results for '{query}'",
-  "noSearchResults": "No results found for '{query}'",
-  "loading": "Loading volunteers...",
-  "noVolunteers": "No volunteers enrolled in this event yet",
-  "viewProfile": "View Profile",
-  "skillMatch": "Skill Match",
-  "noAssignedTasks": "No assigned tasks",
-  "assignedTasksCount": "{count} tasks assigned",
-  "foundResults": "Found {{count}} results for",
-  "noResults": "No results found for",
-  "showAllVolunteers": "Show all volunteers",
-  "errors": {
-    "noEventId": "No event ID provided",
-    "fetchFailed": "Failed to fetch volunteers",
-    "searchFailed": "Failed to search volunteers"
-  }
-},
-"taskWindow": {
-  "assignTaskTo": "Assign Task to {{name}}",
-  "searchTasksPlaceholder": "Search tasks...",
-  "loading": "Loading tasks...",
-  "noTasks": "No tasks available for this event",
-  "noSearchResults": "No tasks found matching '{{query}}'",
-  "assignTask": "Assign Task",
-  "assigning": "Assigning...",
-  "assignSuccess": "Task assigned successfully!",
-  "assignedVolunteersCount": "{{count}} volunteers assigned",
-  "status": {
-    "open": "Open",
-    "in-progress": "In Progress",
-    "notified": "Completed (Pending)",
-    "completed": "Completed"
-  },
-  "errors": {
-    "noEventId": "No event ID provided",
-    "fetchFailed": "Failed to fetch tasks",
-    "assignFailed": "Failed to assign task"
-  }
-},
-"eventVolunteers": {
-  "assignTask": "Assign Task",
-  "selectVolunteerPrompt": "Select a volunteer from the list to view their profile and assign tasks"
-},
-"taskForm": {
-	"titles": {
-	  "create": "Create New Task",
-	  "edit": "Edit Task"
+	  "loadingProfile": "Loading profile...",
+	  "errorTitle": "Profile Error",
+	  "notFound": "User Not Found",
+	  "volunteerNotFound": "The volunteer profile could not be found.",
+	  "closeProfile": "Close profile",
+	  "volunteer": "Volunteer",
+	  "contactInfo": "Contact Information",
+	  "personalInfo": "Personal Information",
+	  "email": "Email",
+	  "contact": "Phone",
+	  "location": "Location",
+	  "organization": "Organization",
+	  "age": "Age",
+	  "memberSince": "Member Since",
+	  "skills": "Skills",
+	  "errors": {
+		"missingId": "User ID is required to view profile",
+		"fetchFailed": "Failed to load profile"
+	  },
+	  "actions": {
+		"contact": "Contact",
+		"message": "Message",
+		"viewEvents": "View Events"
+	  }
 	},
-	"aria": {
-	  "createForm": "Create new task form",
-	  "editForm": "Edit task form"
+	"volunteerList": {
+	  "volunteers": "Volunteers",
+	  "volunteersFor": "Volunteers for",
+	  "volunteer": "volunteer",
+	  "volunteersCount": "volunteers",
+	  "searchPlaceholder": "Search by name, skills, location...",
+	  "searchAriaLabel": "Search volunteers",
+	  "search": "Search",
+	  "clearSearch": "Clear search",
+	  "searchResultsFor": "Found {count} results for '{query}'",
+	  "noSearchResults": "No results found for '{query}'",
+	  "loading": "Loading volunteers...",
+	  "noVolunteers": "No volunteers enrolled in this event yet",
+	  "viewProfile": "View Profile",
+	  "skillMatch": "Skill Match",
+	  "noAssignedTasks": "No assigned tasks",
+	  "assignedTasksCount": "{count} tasks assigned",
+	  "foundResults": "Found {{count}} results for",
+	  "noResults": "No results found for",
+	  "showAllVolunteers": "Show all volunteers",
+	  "errors": {
+		"noEventId": "No event ID provided",
+		"fetchFailed": "Failed to fetch volunteers",
+		"searchFailed": "Failed to search volunteers"
+	  }
 	},
-	"fields": {
-	  "taskName": "Task Name",
+	"taskWindow": {
+	  "assignTaskTo": "Assign Task to {{name}}",
+	  "searchTasksPlaceholder": "Search tasks...",
+	  "loading": "Loading tasks...",
+	  "noTasks": "No tasks available for this event",
+	  "noSearchResults": "No tasks found matching '{{query}}'",
+	  "assignTask": "Assign Task",
+	  "assigning": "Assigning...",
+	  "assignSuccess": "Task assigned successfully!",
+	  "assignedVolunteersCount": "{{count}} volunteers assigned",
+	  "status": {
+		"open": "Open",
+		"in-progress": "In Progress",
+		"notified": "Completed (Pending)",
+		"completed": "Completed"
+	  },
+	  "errors": {
+		"noEventId": "No event ID provided",
+		"fetchFailed": "Failed to fetch tasks",
+		"assignFailed": "Failed to assign task"
+	  }
+	},
+	"eventVolunteers": {
+	  "assignTask": "Assign Task",
+	  "selectVolunteerPrompt": "Select a volunteer from the list to view their profile and assign tasks"
+	},
+	"taskForm": {
+	  "titles": {
+		"create": "Create New Task",
+		"edit": "Edit Task"
+	  },
+	  "aria": {
+		"createForm": "Create new task form",
+		"editForm": "Edit task form"
+	  },
+	  "fields": {
+		"taskName": "Task Name",
+		"description": "Description",
+		"startTime": "Start Time",
+		"endTime": "End Time",
+		"status": "Status",
+		"requiredSkills": "Required Skills"
+	  },
+	  "placeholders": {
+		"taskName": "Enter task name",
+		"description": "Provide a detailed description of the task",
+		"requiredSkills": "e.g. Photography, Content Writing, Design"
+	  },
+	  "help": {
+		"skills": "Separate skills with commas"
+	  },
+	  "status": {
+		"pending": "Pending",
+		"inProgress": "In Progress",
+		"completed": "Completed",
+		"cancelled": "Cancelled",
+		"delayed": "Delayed"
+	  },
+	  "buttons": {
+		"cancel": "Cancel",
+		"create": "Create Task",
+		"creating": "Creating...",
+		"update": "Update Task",
+		"updating": "Updating...",
+		"cancelAriaLabel": "Cancel and return to previous page"
+	  },
+	  "errors": {
+		"nameRequired": "Task name is required",
+		"startTimeRequired": "Start time is required",
+		"endTimeRequired": "End time is required",
+		"endTimeAfterStart": "End time must be after start time",
+		"submitFailed": "Failed to save task. Please try again."
+	  }
+	},
+	"eventTasks": {
+	  "title": "Event Tasks",
+	  "loading": "Loading tasks...",
+	  "retry": "Retry",
+	  "refresh": "Refresh",
+	  "refreshTasks": "Refresh task list",
+	  "addTask": "Add Task",
+	  "noTasks": "No tasks have been created for this event yet.",
+	  "createFirstTask": "Create First Task",
+	  "errors": {
+		"noEventId": "Event ID is required",
+		"fetchFailed": "Failed to fetch tasks for this event"
+	  }
+	},
+	"taskList": {
+	  "taskName": "Task",
+	  "dates": "Dates",
+	  "status": "Status",
+	  "volunteers": "Volunteers",
+	  "actions": "Actions",
+	  "start": "Start",
+	  "end": "End",
+	  "noVolunteers": "No volunteers assigned",
+	  "volunteerCount": "{{count}} volunteer(s) assigned",
+	  "editTask": "Edit",
+	  "viewTask": "View",
+	  "editTaskAriaLabel": "Edit task: {{taskName}}",
+	  "viewTaskAriaLabel": "View details for task: {{taskName}}",
+	  "statusPending": "Pending"
+	},
+	"taskChatWindow": {
+	  "title": "Task Chat",
+	  "loading": "Loading messages...",
+	  "noMessages": "No messages yet. Start the conversation!",
+	  "you": "You",
+	  "host": "Host",
+	  "unknownUser": "Unknown User",
+	  "inputPlaceholder": "Type a message...",
+	  "inputAriaLabel": "Type a message",
+	  "sendAriaLabel": "Send message",
+	  "errors": {
+		"fetchFailed": "Failed to load messages",
+		"sendFailed": "Failed to send message"
+	  }
+	},
+	"subtaskList": {
+	  "title": "Subtasks",
+	  "addSubtask": "Add Subtask",
+	  "loading": "Loading subtasks...",
+	  "noSubtasks": "No subtasks have been created for this task yet",
+	  "editSubtask": "Edit subtask",
+	  "markComplete": "Mark as complete",
+	  "start": "Start",
+	  "due": "Due",
+	  "completionNotified": "Completion notified at {{time}}",
+	  "statusPending": "Pending",
+	  "retry": "Retry",
+	  "errors": {
+		"noTaskId": "Task ID is required to load subtasks",
+		"fetchFailed": "Failed to load subtasks",
+		"markCompleteFailed": "Failed to mark subtask as complete"
+	  }
+	},
+	"subtaskForm": {
+	  "createTitle": "Add New Subtask",
+	  "editTitle": "Edit Subtask",
+	  "close": "Close form",
+	  "title": "Title",
+	  "titlePlaceholder": "Enter subtask title",
 	  "description": "Description",
+	  "descriptionPlaceholder": "Enter subtask description",
 	  "startTime": "Start Time",
 	  "endTime": "End Time",
 	  "status": "Status",
-	  "requiredSkills": "Required Skills"
-	},
-	"placeholders": {
-	  "taskName": "Enter task name",
-	  "description": "Provide a detailed description of the task",
-	  "requiredSkills": "e.g. Photography, Content Writing, Design"
-	},
-	"help": {
-	  "skills": "Separate skills with commas"
-	},
-	"status": {
-	  "pending": "Pending",
-	  "inProgress": "In Progress",
-	  "completed": "Completed",
-	  "cancelled": "Cancelled"
-	},
-	"buttons": {
+	  "statuses": {
+		"pending": "Pending",
+		"inProgress": "In Progress",
+		"completed": "Completed",
+		"cancelled": "Cancelled",
+		"delayed": "Delayed"
+	  },
 	  "cancel": "Cancel",
-	  "create": "Create Task",
-	  "creating": "Creating...",
-	  "update": "Update Task",
-	  "updating": "Updating...",
-	  "cancelAriaLabel": "Cancel and return to previous page"
+	  "create": "Create Subtask",
+	  "update": "Update Subtask",
+	  "submitting": "Submitting...",
+	  "errors": {
+		"titleRequired": "Title is required",
+		"startTimeRequired": "Start time is required",
+		"endTimeRequired": "End time is required",
+		"endTimeBeforeStart": "End time must be after start time",
+		"submissionFailed": "Failed to save subtask"
+	  }
 	},
-	"errors": {
-	  "nameRequired": "Task name is required",
-	  "startTimeRequired": "Start time is required",
-	  "endTimeRequired": "End time is required",
-	  "endTimeAfterStart": "End time must be after start time",
-	  "submitFailed": "Failed to save task. Please try again."
+	"taskDetailPage": {
+	  "loading": "Loading task details...",
+	  "backToTasks": "Back to Tasks",
+	  "progress": "Completion Progress",
+	  "completionProgress": "Task completion: {{percentage}}%",
+	  "startDate": "Start Date",
+	  "dueDate": "Due Date",
+	  "description": "Description",
+	  "assignedVolunteers": "Assigned Volunteers",
+	  "requiredSkills": "Required Skills",
+	  "notifyCompletion": "Notify Completion",
+	  "markComplete": "Mark as Complete",
+	  "notifying": "Sending...",
+	  "processing": "Processing...",
+	  "completionNotified": "Completion notified at {{time}}",
+	  "completionNotificationSent": "Completion notification has been sent",
+	  "taskMarkedComplete": "Task has been marked as complete",
+	  "defaultCompletionMessage": "I've completed this task",
+	  "closeNotification": "Close notification",
+	  "status": {
+		"pending": "Pending",
+		"inProgress": "In Progress",
+		"completed": "Completed",
+		"cancelled": "Cancelled",
+		"delayed": "Delayed"
+	  },
+	  "errors": {
+		"missingTaskId": "Task ID is required",
+		"fetchFailed": "Failed to load task details",
+		"notificationFailed": "Failed to send completion notification",
+		"markCompleteFailed": "Failed to mark task as complete"
+	  }
 	}
-  },
-"eventTasks": {
-	"tasks": "Tasks",
-	"tasksForEvent": "Tasks for {{eventName}}",
-	"addTask": "Add Task",
-	"addTaskAriaLabel": "Add a new task",
-	"loading": "Loading tasks...",
-	"noTasks": "No tasks have been created for this event yet",
-	"addFirstTask": "Create First Task",
-	"addFirstTaskAriaLabel": "Create the first task for this event",
-	"closeModal": "Close form",
-	"errors": {
-	  "noEventId": "No event ID provided",
-	  "fetchFailed": "Failed to fetch tasks"
-	}
-  },
-  "taskList": {
-	"taskName": "Task Name",
-	"dates": "Dates",
-	"status": "Status",
-	"volunteers": "Volunteers",
-	"actions": "Actions",
-	"start": "Start",
-	"end": "End",
-	"noVolunteers": "No volunteers assigned",
-	"volunteerCount": "{{count}} volunteers",
-	"editTask": "Edit",
-	"editTaskAriaLabel": "Edit task {{taskName}}"
   }
-  }
+  

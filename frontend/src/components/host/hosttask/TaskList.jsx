@@ -7,26 +7,39 @@ import '../../../styles/host/hosttask/TaskList.css';
  * @param {Object} props Component props
  * @param {Array} props.tasks Array of task objects
  * @param {Function} props.onEditTask Function to call when editing a task
+ * @param {Function} props.onSelectTask Function to call when selecting a task to view details
  */
-const TaskList = ({ tasks, onEditTask }) => {
+const TaskList = ({ tasks, onEditTask, onSelectTask }) => {
   const { t } = useTranslation();
 
   // Get status class name based on task status
   const getStatusClassName = (status) => {
-    const statusMap = {
-      'Pending': 'status-pending',
-      'In Progress': 'status-in-progress',
-      'Completed': 'status-completed',
-      'Cancelled': 'status-cancelled',
-      'Delayed': 'status-delayed'
-    };
-    return statusMap[status] || 'status-pending';
+    if (!status) return 'status-pending';
+    
+    // Normalize status to handle case differences
+    const normalizedStatus = status.toLowerCase();
+    
+    if (normalizedStatus.includes('progress') || normalizedStatus.includes('in-progress')) {
+      return 'status-in-progress';
+    } else if (normalizedStatus.includes('complet')) {
+      return 'status-completed';
+    } else if (normalizedStatus.includes('cancel')) {
+      return 'status-cancelled';
+    } else if (normalizedStatus.includes('delay')) {
+      return 'status-delayed';
+    }
+    
+    return 'status-pending';
   };
 
   // Format date to readable format
   const formatDate = (dateString) => {
     if (!dateString) return '';
+    
+    // Check if the date string is valid
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Invalid date';
+    
     return date.toLocaleString(undefined, {
       year: 'numeric',
       month: 'short',
@@ -38,10 +51,41 @@ const TaskList = ({ tasks, onEditTask }) => {
 
   // Get volunteer count message
   const getVolunteerCountMessage = (task) => {
-    const count = task.volunteers?.length || 0;
+    // Different possible ways the volunteers info might be stored
+    let count = 0;
+    
+    if (task.volunteers && Array.isArray(task.volunteers)) {
+      count = task.volunteers.length;
+    } else if (task.volunteer_count !== undefined) {
+      count = task.volunteer_count;
+    } else if (task.assigned_volunteers && Array.isArray(task.assigned_volunteers)) {
+      count = task.assigned_volunteers.length;
+    }
+    
     return count === 0 
       ? t('taskList.noVolunteers') 
       : t('taskList.volunteerCount', { count });
+  };
+
+  // Get task name from different possible properties
+  const getTaskName = (task) => {
+    return task.task_name || task.title || task.name || 'Unnamed Task';
+  };
+
+  // Get task skills list
+  const getTaskSkills = (task) => {
+    // Different possible ways the skills info might be stored
+    if (task.skills_list && Array.isArray(task.skills_list)) {
+      return task.skills_list;
+    } else if (task.required_skills) {
+      if (Array.isArray(task.required_skills)) {
+        return task.required_skills;
+      } else if (typeof task.required_skills === 'string') {
+        return task.required_skills.split(',').map(skill => skill.trim());
+      }
+    }
+    
+    return [];
   };
 
   return (
@@ -56,35 +100,34 @@ const TaskList = ({ tasks, onEditTask }) => {
       
       <ul className="task-list">
         {tasks.map(task => (
-          <li key={task.id} className="task-item">
+          <li 
+            key={task.id} 
+            className="task-item"
+            onClick={() => onSelectTask && onSelectTask(task)}
+          >
             <div className="task-name">
-              <h3>{task.task_name}</h3>
+              <h3>{getTaskName(task)}</h3>
               {task.required_skills && (
                 <div className="task-skills">
-                  {Array.isArray(task.skills_list) 
-                    ? task.skills_list.map((skill, index) => (
-                        <span key={index} className="skill-tag">{skill}</span>
-                      ))
-                    : task.required_skills.split(',').map((skill, index) => (
-                        <span key={index} className="skill-tag">{skill.trim()}</span>
-                      ))
-                  }
+                  {getTaskSkills(task).map((skill, index) => (
+                    <span key={index} className="skill-tag">{skill}</span>
+                  ))}
                 </div>
               )}
             </div>
             
             <div className="task-dates">
               <div className="task-date">
-                <strong>{t('taskList.start')}:</strong> {formatDate(task.start_time)}
+                <strong>{t('taskList.start')}:</strong> {formatDate(task.start_time || task.start_date)}
               </div>
               <div className="task-date">
-                <strong>{t('taskList.end')}:</strong> {formatDate(task.end_time)}
+                <strong>{t('taskList.end')}:</strong> {formatDate(task.end_time || task.due_date)}
               </div>
             </div>
             
             <div className="task-status">
               <span className={`status-badge ${getStatusClassName(task.status)}`}>
-                {task.status}
+                {task.status || t('taskList.statusPending')}
               </span>
             </div>
             
@@ -100,17 +143,28 @@ const TaskList = ({ tasks, onEditTask }) => {
               </div>
             </div>
             
-            <div className="task-actions">
+            <div className="task-actions" onClick={(e) => e.stopPropagation()}>
               <button 
                 className="edit-task-button"
-                onClick={() => onEditTask(task)}
-                aria-label={t('taskList.editTaskAriaLabel', { taskName: task.task_name })}
+                onClick={() => onEditTask && onEditTask(task)}
+                aria-label={t('taskList.editTaskAriaLabel', { taskName: getTaskName(task) })}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
                 {t('taskList.editTask')}
+              </button>
+              <button 
+                className="view-task-button"
+                onClick={() => onSelectTask && onSelectTask(task)}
+                aria-label={t('taskList.viewTaskAriaLabel', { taskName: getTaskName(task) })}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                {t('taskList.viewTask')}
               </button>
             </div>
           </li>

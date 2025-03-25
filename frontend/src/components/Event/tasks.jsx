@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getTasksForEvent, getVolunteerTasks } from '../../apiservice/task';
 import { checkAuth } from '../../apiservice/auth';
-import TaskDetail from './taskdetail';
+import TaskDetail from '../host/taskdetail/taskdetail';
 import '../../styles/Event/tasks.css';
 
 const Tasks = ({ eventId }) => {

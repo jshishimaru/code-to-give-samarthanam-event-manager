@@ -77,48 +77,45 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
   
   // Fetch task data
   useEffect(() => {
-    const fetchTaskData = async () => {
-      if (!effectiveTaskId) {
-        setError(t('taskDetail.errors.missingTaskId'));
-        setLoading(false);
-        return;
-      }
-      
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const response = await getTaskWithSubtasks(effectiveTaskId);
-        
-        if (response.success) {
-			console.log( response.data.task );
-          const taskData = response.data.task || {};
-          setTask(taskData);
-          
-          // Calculate completion progress
-          if (taskData.subtasks && taskData.subtasks.length > 0) {
-            const completedSubtasks = taskData.subtasks.filter(
-              subtask => subtask.status === 'Completed'
-            ).length;
-            const progress = Math.round(
-              (completedSubtasks / taskData.subtasks.length) * 100
-            );
-            setCompletionProgress(progress);
-          } else {
-            setCompletionProgress(taskData.status === 'Completed' ? 100 : 0);
-          }
-        } else {
-          setError(response.error || t('taskDetail.errors.fetchFailed'));
-        }
-      } catch (err) {
-        console.error('Error fetching task details:', err);
-        setError(t('taskDetail.errors.fetchFailed'));
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchTaskData();
+	const fetchTaskData = async () => {
+	  if (!effectiveTaskId) {
+		setError(t('taskDetail.errors.missingTaskId'));
+		setLoading(false);
+		return;
+	  }
+	  
+	  try {
+		setLoading(true);
+		setError(null);
+		
+		const response = await getTaskWithSubtasks(effectiveTaskId);
+		
+		if (response.success) {
+		  const taskData = response.data.task || {};
+		  setTask(taskData);
+		  
+		  if (taskData) {
+			let completedSubtasks = taskData.completed_subtasks;
+			const progress = Math.round(
+			  (completedSubtasks / taskData.subtask_count) * 100
+			);
+			setCompletionProgress(progress);
+		  } else {
+			// If no subtasks, base progress on task status
+			setCompletionProgress(taskData.status === 'Completed' ? 100 : 0);
+		  }
+		} else {
+		  setError(response.error || t('taskDetail.errors.fetchFailed'));
+		}
+	  } catch (err) {
+		console.error('Error fetching task details:', err);
+		setError(t('taskDetail.errors.fetchFailed'));
+	  } finally {
+		setLoading(false);
+	  }
+	};
+	
+	fetchTaskData();
   }, [effectiveTaskId, t]);
 
   // Scroll to top when component mounts
@@ -395,26 +392,51 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
       <div className="task-detail-content">
         {/* Left side - Task details and subtasks */}
         <main className="task-detail-main">
-          <div className="task-progress-container">
-            <div className="task-progress-info">
-              <span className="progress-label">{t('taskDetail.progress')}</span>
-              <span className="progress-percentage">{completionProgress}%</span>
-            </div>
-            <div className="task-progress-bar">
-              <div 
-                className="task-progress-bar-fill" 
-                style={{ width: `${completionProgress}%` }}
-                aria-valuenow={completionProgress}
-                aria-valuemin="0"
-                aria-valuemax="100"
-                role="progressbar"
-                aria-label={t('taskDetail.completionProgress', { percentage: completionProgress })}
-              ></div>
-            </div>
-          </div>
+		<div className="task-progress-container">
+			  <div className="task-progress-info">
+			    <span className="progress-label">{t('taskDetail.progress')}</span>
+			    <span className="progress-percentage">{completionProgress}%</span>
+			  </div>
+			  <div className="task-progress-bar">
+			    <div 
+			      className="task-progress-bar-fill" 
+			      style={{ width: `${completionProgress}%` }}
+			      aria-valuenow={completionProgress}
+			      aria-valuemin="0"
+			      aria-valuemax="100"
+			      role="progressbar"
+			      aria-label={t('taskDetail.completionProgress', { percentage: completionProgress })}
+			    ></div>
+			  </div>
+			</div>
 
           <div className="task-main-info">
             <h1 className="task-title">{task.title || task.task_name}</h1>
+			{canMarkComplete() && (
+		    <div className="task-actions">
+		      <button 
+		        className={`mark-complete-button ${notifying ? 'notifying' : ''}`}
+		        onClick={handleMarkComplete}
+		        disabled={notifying}
+		        aria-busy={notifying}
+		      >
+		        {notifying ? (
+		          <>
+		            <div className="button-spinner"></div>
+		            {t('taskDetail.processing')}
+		          </>
+		        ) : (
+		          <>
+		            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+		              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+		              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+		            </svg>
+		            {t('taskDetail.markComplete')}
+		          </>
+		        )}
+		      </button>
+		    </div>
+		  )}
             
             <div className="task-metadata">
               <span className={`task-status ${taskStatusInfo.className}`}>
@@ -504,32 +526,6 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                   </svg>
                   {t('taskDetail.notifyCompletion')}
-                </button>
-              </div>
-            )}
-
-            {canMarkComplete() && (
-              <div className="task-actions">
-                <button 
-                  className={`mark-complete-button ${notifying ? 'notifying' : ''}`}
-                  onClick={handleMarkComplete}
-                  disabled={notifying}
-                  aria-busy={notifying}
-                >
-                  {notifying ? (
-                    <>
-                      <div className="button-spinner"></div>
-                      {t('taskDetail.processing')}
-                    </>
-                  ) : (
-                    <>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                      </svg>
-                      {t('taskDetail.markComplete')}
-                    </>
-                  )}
                 </button>
               </div>
             )}

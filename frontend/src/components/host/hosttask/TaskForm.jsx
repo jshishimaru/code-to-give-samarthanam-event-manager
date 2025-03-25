@@ -1,7 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { addTaskToEvent, updateTask } from '../../../apiservice/task';
 import '../../../styles/host/hosttask/TaskForm.css';
+
+// Predefined list of skills that might be needed for tasks
+const AVAILABLE_SKILLS = [
+  "Web Development", "Mobile Development", "UI/UX Design", "Project Management",
+  "Teaching", "Content Writing", "Social Media", "Photography", "Event Planning",
+  "Public Speaking", "Graphic Design", "Data Analysis", "Translation",
+  "Accounting", "Legal Support", "Healthcare", "Mentoring", "Marketing"
+];
 
 /**
  * TaskForm component for creating and editing tasks
@@ -29,13 +37,22 @@ const TaskForm = ({
     start_time: '',
     end_time: '',
     status: 'Pending',
-    required_skills: ''
+    required_skills: [],
   });
   
   // Track validation errors and submission state
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  
+  // Skills selection state
+  const [skillInput, setSkillInput] = useState("");
+  const [filteredSkills, setFilteredSkills] = useState([]);
+  const [showSkillDropdown, setShowSkillDropdown] = useState(false);
+  const [focusedSkillIndex, setFocusedSkillIndex] = useState(-1);
+  const skillDropdownRef = useRef(null);
+  const skillInputRef = useRef(null);
+  const skillsContainerRef = useRef(null);
   
   // Initialize form data in edit mode
   useEffect(() => {
@@ -46,12 +63,57 @@ const TaskForm = ({
         start_time: initialData.start_time ? formatDateForInput(initialData.start_time) : '',
         end_time: initialData.end_time ? formatDateForInput(initialData.end_time) : '',
         required_skills: Array.isArray(initialData.skills_list) 
-          ? initialData.skills_list.join(', ')
-          : initialData.required_skills || ''
+          ? initialData.skills_list
+          : initialData.required_skills 
+            ? initialData.required_skills.split(',').map(skill => skill.trim())
+            : []
       };
       setFormData(formattedData);
     }
   }, [isEditMode, initialData]);
+  
+  // Filter available skills based on input
+  useEffect(() => {
+    if (skillInput.trim() === "") {
+      setFilteredSkills(AVAILABLE_SKILLS.filter(skill => !formData.required_skills.includes(skill)));
+    } else {
+      const filtered = AVAILABLE_SKILLS.filter(
+        skill => skill.toLowerCase().includes(skillInput.toLowerCase()) && 
+                 !formData.required_skills.includes(skill)
+      );
+      setFilteredSkills(filtered);
+    }
+    // Reset focused index when filtered skills change
+    setFocusedSkillIndex(-1);
+  }, [skillInput, formData.required_skills]);
+  
+  // Handle click outside skills dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        skillsContainerRef.current && 
+        !skillsContainerRef.current.contains(event.target)
+      ) {
+        setShowSkillDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
+  // Focus the selected skill option when focused index changes
+  useEffect(() => {
+    if (focusedSkillIndex >= 0 && skillDropdownRef.current) {
+      const options = skillDropdownRef.current.querySelectorAll('.skill-option');
+      if (options[focusedSkillIndex]) {
+        options[focusedSkillIndex].focus();
+        options[focusedSkillIndex].scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }, [focusedSkillIndex]);
   
   // Format ISO date string for datetime-local input
   const formatDateForInput = (dateString) => {
@@ -75,6 +137,115 @@ const TaskForm = ({
         ...prev,
         [name]: null
       }));
+    }
+  };
+  
+  // Skills input handlers
+  const handleSkillInputChange = (e) => {
+    setSkillInput(e.target.value);
+    setShowSkillDropdown(true);
+  };
+  
+  const handleSelectSkill = (skill) => {
+    if (!formData.required_skills.includes(skill)) {
+      setFormData({
+        ...formData,
+        required_skills: [...formData.required_skills, skill]
+      });
+      setSkillInput("");
+      
+      // Clear any skills error
+      if (errors.required_skills) {
+        setErrors({
+          ...errors,
+          required_skills: null
+        });
+      }
+      
+      // Focus back on the input after selection
+      if (skillInputRef.current) {
+        skillInputRef.current.focus();
+      }
+    }
+    setShowSkillDropdown(false);
+  };
+  
+  const handleRemoveSkill = (skillToRemove) => {
+    setFormData({
+      ...formData,
+      required_skills: formData.required_skills.filter(skill => skill !== skillToRemove)
+    });
+  };
+  
+  const toggleSkillDropdown = () => {
+    setShowSkillDropdown(prev => !prev);
+    // If opening the dropdown, focus the input
+    if (!showSkillDropdown && skillInputRef.current) {
+      skillInputRef.current.focus();
+    }
+  };
+  
+  // Handle keyboard navigation in skills dropdown
+  const handleSkillInputKeyDown = (e) => {
+    // If dropdown is not showing and user presses down, show it
+    if (!showSkillDropdown && (e.key === 'ArrowDown' || e.key === 'Enter')) {
+      e.preventDefault();
+      setShowSkillDropdown(true);
+      return;
+    }
+    
+    if (!showSkillDropdown) return;
+    
+    // Down arrow
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setFocusedSkillIndex(prev => 
+        prev < filteredSkills.length - 1 ? prev + 1 : prev
+      );
+    }
+    // Up arrow
+    else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setFocusedSkillIndex(prev => prev > 0 ? prev - 1 : 0);
+    }
+    // Enter
+    else if (e.key === 'Enter' && focusedSkillIndex >= 0) {
+      e.preventDefault();
+      handleSelectSkill(filteredSkills[focusedSkillIndex]);
+    }
+    // Escape
+    else if (e.key === 'Escape') {
+      e.preventDefault();
+      setShowSkillDropdown(false);
+    }
+  };
+  
+  // Handle keyboard navigation for skill options
+  const handleSkillOptionKeyDown = (e, skill, index) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleSelectSkill(skill);
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (index < filteredSkills.length - 1) {
+        setFocusedSkillIndex(index + 1);
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (index > 0) {
+        setFocusedSkillIndex(index - 1);
+      } else {
+        // If at first item, return focus to input
+        if (skillInputRef.current) {
+          skillInputRef.current.focus();
+        }
+      }
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      setShowSkillDropdown(false);
+      if (skillInputRef.current) {
+        skillInputRef.current.focus();
+      }
     }
   };
   
@@ -111,18 +282,22 @@ const TaskForm = ({
     
     try {
       let response;
+      // Convert skills array to string for API
+      const skillsString = formData.required_skills.join(', ');
       
       if (isEditMode) {
         // Update existing task
         response = await updateTask({
           task_id: initialData.id,
-          ...formData
+          ...formData,
+          required_skills: skillsString
         });
       } else {
         // Create new task
         response = await addTaskToEvent({
           event_id: eventId,
-          ...formData
+          ...formData,
+          required_skills: skillsString
         });
       }
       
@@ -260,19 +435,87 @@ const TaskForm = ({
               </select>
             </div>
             
-            <div className="form-group">
-              <label htmlFor="required_skills">{t('taskForm.fields.requiredSkills')}</label>
-              <input
-                type="text"
-                id="required_skills"
-                name="required_skills"
-                value={formData.required_skills}
-                onChange={handleChange}
-                placeholder={t('taskForm.placeholders.requiredSkills')}
-                aria-describedby="skills_help"
-              />
-              <div className="field-help" id="skills_help">
-                {t('taskForm.help.skills')}
+            <div className="form-group skills-container" ref={skillsContainerRef}>
+              <label htmlFor="skillInput">{t('taskForm.fields.requiredSkills')}</label>
+              
+              {/* Selected skills tags */}
+              <div className="selected-skills" aria-live="polite">
+                {formData.required_skills.map((skill, index) => (
+                  <span key={skill} className="skill-tag" tabIndex="0">
+                    {skill}
+                    <button 
+                      type="button" 
+                      className="remove-skill-btn"
+                      onClick={() => handleRemoveSkill(skill)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleRemoveSkill(skill)}
+                      aria-label={`Remove ${skill}`}
+                      tabIndex="0"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+              
+              {/* Skills dropdown input */}
+              <div className="skills-input-container">
+                <input
+                  type="text"
+                  id="skillInput"
+                  ref={skillInputRef}
+                  className="form-input skills-input"
+                  value={skillInput}
+                  onChange={handleSkillInputChange}
+                  onFocus={() => setShowSkillDropdown(true)}
+                  onKeyDown={handleSkillInputKeyDown}
+                  placeholder={t('taskForm.placeholders.requiredSkills')}
+                  aria-controls="skills-dropdown"
+                  aria-expanded={showSkillDropdown}
+                  autoComplete="off"
+                />
+                <button 
+                  type="button"
+                  className="dropdown-toggle-btn"
+                  onClick={toggleSkillDropdown}
+                  aria-label={showSkillDropdown ? t('taskForm.aria.closeSkillsDropdown') : t('taskForm.aria.openSkillsDropdown')}
+                >
+                  <span className={`dropdown-arrow ${showSkillDropdown ? 'open' : ''}`} aria-hidden="true">▼</span>
+                </button>
+                
+                {/* Skills dropdown */}
+                {showSkillDropdown && (
+                  <div 
+                    id="skills-dropdown"
+                    ref={skillDropdownRef}
+                    className="skills-dropdown" 
+                    role="listbox" 
+                    aria-label={t('taskForm.aria.availableSkills')}
+                  >
+                    {filteredSkills.length > 0 ? (
+                      filteredSkills.map((skill, index) => (
+                        <div 
+                          key={skill} 
+                          className={`skill-option ${focusedSkillIndex === index ? 'focused' : ''}`}
+                          role="option"
+                          aria-selected={focusedSkillIndex === index}
+                          onClick={() => handleSelectSkill(skill)}
+                          onKeyDown={(e) => handleSkillOptionKeyDown(e, skill, index)}
+                          tabIndex={focusedSkillIndex === index ? "0" : "-1"}
+                        >
+                          {skill}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="skills-dropdown-empty">
+                        {t('taskForm.noMatchingSkills')}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              
+              <div className="skills-help-text">
+                {t('taskForm.skillsHelpText', 'Type to search or select skills from the dropdown')}
               </div>
             </div>
           </div>

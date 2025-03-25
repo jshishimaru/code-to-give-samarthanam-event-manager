@@ -613,10 +613,7 @@ class CreateEventView(View):
                     'status': 'error',
                     'message': 'Only hosts can create events'
                 }, status=403)
-            
-            print("Content type:", request.content_type)
-            print("Files:", request.FILES)
-            print("POST data:", request.POST)
+
             # Extract data based on content type
             if request.content_type and 'multipart/form-data' in request.content_type:
                 # Handle multipart form data (with file uploads)

@@ -156,3 +156,92 @@
 	  overflow-y: visible;
 	}
   }
+/* Updated search styles without absolute positioning */
+
+/* Search container styles */
+.search-container {
+	display: flex;
+	align-items: center;
+	margin-bottom: 1rem;
+	width: 100%;
+	border: 1px solid var(--input-border);
+	border-radius: 6px;
+	background-color: var(--bg-primary);
+	overflow: hidden; /* Keep everything contained */
+  }
+  
+  .search-input {
+	flex: 1; /* Take up available space */
+	padding: 0.75rem 1rem;
+	border: none; /* Remove border as it's on the container */
+	font-size: 0.95rem;
+	background-color: var(--bg-primary);
+	color: var(--text-primary);
+	transition: border-color 0.2s ease;
+  }
+  
+  .search-input:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px rgba(45, 97, 211, 0.1);
+  }
+  
+  .search-button {
+	background-color: transparent;
+	border: none;
+	color: var(--text-secondary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	padding: 0.75rem 1rem;
+	border-radius: 0;
+	transition: background-color 0.2s;
+	margin-left: auto; /* Push to right side */
+  }
+  
+  .search-button:hover {
+	background-color: rgba(0, 0, 0, 0.05);
+	color: var(--primary-color);
+  }
+  
+  /* Clear button for search */
+  .clear-search {
+	background-color: transparent;
+	border: none;
+	color: var(--text-secondary);
+	cursor: pointer;
+	padding: 0.75rem 0.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0;
+	opacity: 0.7;
+  }
+  
+  .clear-search:hover {
+	opacity: 1;
+	background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  /* If the search bar is in a filter section, add these styles */
+  .filter-section .search-container {
+	flex: 1;
+	margin-bottom: 0;
+  }
+  
+  /* Mobile responsiveness for search */
+  @media (max-width: 768px) {
+	.search-container {
+	  flex-wrap: nowrap; /* Prevent wrapping */
+	}
+	
+	.search-input {
+	  padding: 0.6rem 0.75rem;
+	  font-size: 0.9rem;
+	}
+	
+	.search-button,
+	.clear-search {
+	  padding: 0.6rem 0.75rem;
+	}
+  }

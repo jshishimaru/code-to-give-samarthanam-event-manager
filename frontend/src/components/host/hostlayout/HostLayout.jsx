@@ -9,6 +9,8 @@ import '../../../styles/host/hostlayout/HostLayout.css';
 const HostLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('info');
+  const [componentError, setComponentError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { eventId } = useParams();
 
   const toggleSidebar = () => {
@@ -17,6 +19,7 @@ const HostLayout = () => {
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
+    setComponentError(null); // Reset error when changing tabs
   };
 
   // Listen for navbar scroll state
@@ -40,17 +43,47 @@ const HostLayout = () => {
     };
   }, []);
 
+  // Verify eventId is available
+  useEffect(() => {
+    if (!eventId) {
+      setComponentError("Event ID is missing. Please go back to the events page and try again.");
+    }
+  }, [eventId]);
+
   // Render content based on active tab
   const renderContent = () => {
-    switch (activeTab) {
-      case 'volunteers':
-        return <EventVolunteers eventId={eventId} />;
-      case 'tasks':
-        return <EventTasks eventId={eventId} />;
-      case 'info':
-        return <EventInfo eventId={eventId} />;
-      default:
-        return <div className="event-info-placeholder">Event information will be implemented later</div>;
+    if (componentError) {
+      return (
+        <div className="component-error" role="alert">
+          <p>{componentError}</p>
+          <button onClick={() => window.history.back()} className="back-button">
+            Go Back
+          </button>
+        </div>
+      );
+    }
+
+    try {
+      switch (activeTab) {
+        case 'volunteers':
+          return <EventVolunteers eventId={eventId} />;
+        case 'tasks':
+          return <EventTasks eventId={eventId} />;
+        case 'info':
+          return <EventInfo eventId={eventId} />;
+        default:
+          return <div className="event-info-placeholder">Event information will be implemented later</div>;
+      }
+    } catch (error) {
+      console.error("Error rendering content:", error);
+      return (
+        <div className="component-error" role="alert">
+          <p>Something went wrong loading the content. Please try again.</p>
+          <button onClick={() => setComponentError(null)} className="retry-button">
+            Retry
+          </button>
+        </div>
+      );
     }
   };
 
@@ -66,9 +99,16 @@ const HostLayout = () => {
       <div className="host-main-content" id="host-main-content">
         <div className="host-main-content-inner">
           <div className="event-details-container">
-            {/* Content area for the selected tab - removed top tabs */}
+            {/* Content area for the selected tab */}
             <div className="tab-content">
-              {renderContent()}
+              {isLoading ? (
+                <div className="loading-indicator">
+                  <div className="loading-spinner"></div>
+                  <p>Loading content...</p>
+                </div>
+              ) : (
+                renderContent()
+              )}
             </div>
           </div>
         </div>

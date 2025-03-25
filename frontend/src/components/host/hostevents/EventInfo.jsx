@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
-import HostLayout from '../hostlayout/HostLayout';
+// import HostLayout from '../hostlayout/HostLayout';
 import EventForm from './EventForm';
 import { getEventDetails, updateEvent } from '../../../apiservice/event';
 import '../../../styles/host/hostevents/EventInfo.css';
@@ -187,7 +187,6 @@ const EventInfo = () => {
   };
 
   return (
-    <HostLayout>
       <div className="event-info-container">
         {notification.show && (
           <div className={`notification ${notification.type}`} role="alert">
@@ -356,7 +355,6 @@ const EventInfo = () => {
           </div>
         )}
       </div>
-    </HostLayout>
   );
 };
 

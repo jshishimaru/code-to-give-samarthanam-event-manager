@@ -248,3 +248,29 @@ body.scrolled .host-layout {
 	font-size: 1.2rem;
 	margin: 1rem;
   }
+
+  /* Add this at the end of the file */
+
+/* Community Chat adjustments for host layout */
+.host-layout .community-chat {
+	height: calc(100vh - 120px);
+	border-radius: 8px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	margin: 0;
+	overflow: hidden; /* Prevents the chat from causing overflow */
+  }
+  
+  .host-layout .chat-messages {
+	max-height: calc(100% - 130px);
+  }
+  
+  /* Make sure the chat container doesn't interfere with layout */
+  .host-layout .tab-content {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+  }
+  
+  .host-layout .tab-content > div {
+	flex: 1;
+  }

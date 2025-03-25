@@ -4,7 +4,7 @@ import TaskList from './TaskList';
 import TaskDetail from '../../host/taskdetail/taskdetail';
 import { getTasksForEvent } from '../../../apiservice/task';
 import '../../../styles/host/hosttask/EventTasks.css';
-
+import TaskForm from './TaskForm';
 /**
  * EventTasks component displays tasks for an event with options to view, edit, and manage tasks
  * @param {Object} props Component props
@@ -18,6 +18,29 @@ const EventTasks = ({ eventId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
+
+  const [showTaskForm, setShowTaskForm] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
+
+  const handleAddTask = () => {
+	setEditingTask(null);
+	setShowTaskForm(true);
+  };
+  
+  // Add a function to handle form submission success
+  const handleTaskFormSuccess = (taskData) => {
+	setShowTaskForm(false);
+	refreshTasks();
+  };
+  
+  // Add a function to handle form cancellation
+  const handleTaskFormCancel = () => {
+	setShowTaskForm(false);
+  };
+
+  const handleTaskDeleted = () => {
+	refreshTasks();
+  };
   
   // Fetch tasks on component mount or when eventId changes
   useEffect(() => {
@@ -89,6 +112,8 @@ const EventTasks = ({ eventId }) => {
       setLoading(false);
     }
   };
+
+
   
   // Handle task selection for viewing details
   const handleSelectTask = (task) => {
@@ -104,8 +129,8 @@ const EventTasks = ({ eventId }) => {
   
   // Handle task edit
   const handleEditTask = (task) => {
-    // For now, just view the task detail
-    setSelectedTask(task);
+	setEditingTask(task);
+	setShowTaskForm(true);
   };
   
   // Render loading state
@@ -147,30 +172,24 @@ const EventTasks = ({ eventId }) => {
   // Render task list
   return (
     <div className="event-tasks-container">
-      <div className="event-tasks-header">
-        <h2>{t('eventTasks.title')}</h2>
-        <div className="event-tasks-actions">
-          {/* Task actions like add new task, filter, etc. */}
-          <button 
-            className="refresh-tasks-button"
-            onClick={refreshTasks}
-            aria-label={t('eventTasks.refreshTasks')}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M23 4v6h-6"></path>
-              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-            </svg>
-            {t('eventTasks.refresh')}
-          </button>
-          <button className="add-task-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            {t('eventTasks.addTask')}
-          </button>
-        </div>
-      </div>
+	<div className="event-tasks-header">
+	  <h2>{t('eventTasks.title')}</h2>
+	  <div className="event-tasks-actions">
+	    {/* Remove the refresh button and keep only the add task button */}
+	    <button 
+	      className="add-task-button"
+	      onClick={handleAddTask}
+	    >
+	      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+	        <line x1="12" y1="5" x2="12" y2="19"></line>
+	        <line x1="5" y1="12" x2="19" y2="12"></line>
+	      </svg>
+	      {t('eventTasks.addTask')}
+	    </button>
+	  </div>
+	</div>
+
+
       
       {tasks.length === 0 ? (
         <div className="no-tasks-message">
@@ -184,13 +203,36 @@ const EventTasks = ({ eventId }) => {
           </button>
         </div>
       ) : (
-        <TaskList 
-          tasks={tasks} 
-          onEditTask={handleEditTask}
-          onSelectTask={handleSelectTask}
-        />
+		<TaskList 
+		  tasks={tasks} 
+		  onEditTask={handleEditTask}
+		  onSelectTask={handleSelectTask}
+		  onTaskDeleted={handleTaskDeleted}
+		/>
       )}
+
+	{showTaskForm && (
+	  <div className="task-form-modal-overlay">
+	    <div className="task-form-modal-content">
+	      <button 
+	        className="close-modal-button"
+	        onClick={() => setShowTaskForm(false)}
+	        aria-label={t('common.close')}
+	      >
+	        ×
+	      </button>
+	      <TaskForm
+	        mode={editingTask ? 'edit' : 'create'}
+	        initialData={editingTask}
+	        eventId={eventId}
+	        onSuccess={handleTaskFormSuccess}
+	        onCancel={handleTaskFormCancel}
+	      />
+	    </div>
+	  </div>
+	)}
     </div>
+
   );
 };
 

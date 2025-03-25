@@ -368,3 +368,28 @@
 	  gap: 0.5rem;
 	}
   }
+
+  /* Add these styles for subtask delete button */
+.delete-subtask-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	background-color: var(--error-light, rgba(220, 53, 69, 0.1));
+	color: var(--error-color, #dc3545);
+	border: none;
+	border-radius: 0.25rem;
+	cursor: pointer;
+	transition: background-color 0.2s;
+	margin-left: 0.5rem;
+  }
+  
+  .delete-subtask-button:hover {
+	background-color: var(--error-hover, rgba(220, 53, 69, 0.2));
+  }
+  
+  .delete-subtask-button svg {
+	width: 1rem;
+	height: 1rem;
+  }

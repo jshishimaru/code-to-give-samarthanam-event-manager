@@ -314,7 +314,7 @@ const MyEvents = () => {
                         <p>{emptyMessage}</p>
                         <button 
                             className="create-event-button"
-                            onClick={() => navigate('/host/MyEvents/CreateEvent')}
+                            onClick={() => navigate('/host/CreateEvent')}
                         >
                             {t('events.createEvent', 'Create New Event')}
                         </button>
@@ -469,7 +469,7 @@ const MyEvents = () => {
               {/* Create Event button - positioned in the tabs container */}
               <button 
                 className="tab-create-button"
-                onClick={() => navigate('/host/MyEvents/CreateEvent')}
+                onClick={() => navigate('/host/CreateEvent')}
                 aria-label={t('events.createEventLabel', 'Create a new event')}
               >
                 <span className="create-icon" aria-hidden="true"></span>

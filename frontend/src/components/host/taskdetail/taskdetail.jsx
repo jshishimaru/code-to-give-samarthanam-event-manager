@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getTaskWithSubtasks, notifyTaskCompletion, markTaskComplete } from '../../../apiservice/task';
 import { checkAuth } from '../../../apiservice/auth';
 import SubtaskList from './subtasklist';
 import TaskChat from './taskchat';
-import '../../../styles/host/taskdetail/taskdetail.css';
 import TaskVolunteers from './taskvolunteers';
+import '../../../styles/host/taskdetail/taskdetail.css';
+
 /**
  * TaskDetail component displays detailed information about a task,
  * including subtasks, required skills, and a task chat feature.
@@ -18,6 +19,7 @@ import TaskVolunteers from './taskvolunteers';
  */
 const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
   const { t } = useTranslation();
+  const detailContainerRef = useRef(null);
   
   // Use props first, then URL params as fallback
   const params = useParams();
@@ -115,99 +117,111 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
     fetchTaskData();
   }, [effectiveTaskId, t]);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    // Reset scroll position
+    window.scrollTo(0, 0);
+    
+    // Also reset scroll position of the container if it exists
+    if (detailContainerRef.current) {
+      detailContainerRef.current.scrollTop = 0;
+    }
+  }, [effectiveTaskId]); // Re-run when task ID changes
+
   // Handle task completion notification
   const handleNotifyCompletion = async () => {
-	if (notifying) return;
-	
-	try {
-	  setNotifying(true);
-	  
-	  const response = await notifyTaskCompletion(
-		effectiveTaskId,
-		t('taskDetail.defaultCompletionMessage')
-	  );
-	  
-	  if (response.success) {
-		setNotification({
-		  show: true,
-		  message: t('taskDetail.completionNotificationSent'),
-		  type: 'success'
-		});
-		
-		// Refresh task data
-		const taskResponse = await getTaskWithSubtasks(effectiveTaskId);
-		if (taskResponse.success) {
-		  setTask(taskResponse.data.task);
-		}
-		
-		// Wait a bit before going back to list to show success message
-		setTimeout(() => {
-		  if (onBack) onBack();
-		}, 1500);
-	  } else {
-		setNotification({
-		  show: true,
-		  message: response.error || t('taskDetail.errors.notificationFailed'),
-		  type: 'error'
-		});
-	  }
-	} catch (err) {
-	  console.error('Error notifying completion:', err);
-	  setNotification({
-		show: true,
-		message: t('taskDetail.errors.notificationFailed'),
-		type: 'error'
-	  });
-	} finally {
-	  setNotifying(false);
-	}
+    if (notifying) return;
+    
+    try {
+      setNotifying(true);
+      
+      const response = await notifyTaskCompletion(
+        effectiveTaskId,
+        t('taskDetail.defaultCompletionMessage')
+      );
+      
+      if (response.success) {
+        setNotification({
+          show: true,
+          message: t('taskDetail.completionNotificationSent'),
+          type: 'success'
+        });
+        
+        // Refresh task data
+        const taskResponse = await getTaskWithSubtasks(effectiveTaskId);
+        if (taskResponse.success) {
+          setTask(taskResponse.data.task);
+        }
+        
+        // Wait a bit before going back to list to show success message
+        setTimeout(() => {
+          if (onBack) onBack();
+        }, 1500);
+      } else {
+        setNotification({
+          show: true,
+          message: response.error || t('taskDetail.errors.notificationFailed'),
+          type: 'error'
+        });
+      }
+    } catch (err) {
+      console.error('Error notifying completion:', err);
+      setNotification({
+        show: true,
+        message: t('taskDetail.errors.notificationFailed'),
+        type: 'error'
+      });
+    } finally {
+      setNotifying(false);
+    }
   };
 
   // Handle marking task as complete (host action)
   const handleMarkComplete = async () => {
-	if (notifying) return;
-	
-	try {
-	  setNotifying(true);
-	  
-	  const response = await markTaskComplete(effectiveTaskId);
-	  
-	  if (response.success) {
-		setNotification({
-		  show: true,
-		  message: t('taskDetail.taskMarkedComplete'),
-		  type: 'success'
-		});
-		
-		// Refresh task data
-		const taskResponse = await getTaskWithSubtasks(effectiveTaskId);
-		if (taskResponse.success) {
-		  setTask(taskResponse.data.task);
-		  setCompletionProgress(100);
-		}
-		
-		// Wait a bit before going back to list to show success message
-		setTimeout(() => {
-		  if (onBack) onBack();
-		}, 1500);
-	  } else {
-		setNotification({
-		  show: true,
-		  message: response.error || t('taskDetail.errors.markCompleteFailed'),
-		  type: 'error'
-		});
-	  }
-	} catch (err) {
-	  console.error('Error marking task complete:', err);
-	  setNotification({
-		show: true,
-		message: t('taskDetail.errors.markCompleteFailed'),
-		type: 'error'
-	  });
-	} finally {
-	  setNotifying(false);
-	}
+    if (notifying) return;
+    
+    try {
+      setNotifying(true);
+      
+      const response = await markTaskComplete(effectiveTaskId);
+      
+      if (response.success) {
+        setNotification({
+          show: true,
+          message: t('taskDetail.taskMarkedComplete'),
+          type: 'success'
+        });
+        
+        // Refresh task data
+        const taskResponse = await getTaskWithSubtasks(effectiveTaskId);
+        if (taskResponse.success) {
+          setTask(taskResponse.data.task);
+          setCompletionProgress(100);
+        }
+        
+        // Wait a bit before going back to list to show success message
+        setTimeout(() => {
+          if (onBack) onBack();
+        }, 1500);
+      } else {
+        setNotification({
+          show: true,
+          message: response.error || t('taskDetail.errors.markCompleteFailed'),
+          type: 'error'
+        });
+      }
+    } catch (err) {
+      console.error('Error marking task complete:', err);
+      setNotification({
+        show: true,
+        message: t('taskDetail.errors.markCompleteFailed'),
+        type: 'error'
+      });
+    } finally {
+      setNotifying(false);
+    }
   };
+
   // Format date for display
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -222,16 +236,14 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
   };
 
   // Check if the current user is a host
-// Update the isHost function to handle all possible host indicators
-const isHost = () => {
-	console.log('Current user in isHost check:', currentUser);
-	return currentUser && (
-	  currentUser.is_host === true || 
-	  currentUser.is_event_host === true || 
-	  currentUser.host === true ||
-	  currentUser.role === 'host' ||
-	  currentUser.isHost === true
-	);
+  const isHost = () => {
+    return currentUser && (
+      currentUser.is_host === true || 
+      currentUser.is_event_host === true || 
+      currentUser.host === true ||
+      currentUser.role === 'host' ||
+      currentUser.isHost === true
+    );
   };
 
   // Get task status with appropriate classes
@@ -287,6 +299,29 @@ const isHost = () => {
     );
   };
 
+  // Get required skills for the task
+  const getRequiredSkills = () => {
+    if (!task || !task.required_skills) return [];
+    
+    // If required_skills is already an array, use it directly
+    if (Array.isArray(task.required_skills)) {
+      return task.required_skills;
+    }
+    
+    // If it's a string (comma-separated), split it into an array
+    if (typeof task.required_skills === 'string') {
+      return task.required_skills.split(',').map(skill => skill.trim()).filter(skill => skill);
+    }
+    
+    // If we have skills_list property, use that instead
+    if (task.skills_list && Array.isArray(task.skills_list)) {
+      return task.skills_list;
+    }
+    
+    // Fallback to empty array
+    return [];
+  };
+
   // Render loading state
   if (loading) {
     return (
@@ -318,35 +353,13 @@ const isHost = () => {
     );
   }
 
-  const getRequiredSkills = () => {
-	if (!task || !task.required_skills) return [];
-	
-	// If required_skills is already an array, use it directly
-	if (Array.isArray(task.required_skills)) {
-	  return task.required_skills;
-	}
-	
-	// If it's a string (comma-separated), split it into an array
-	if (typeof task.required_skills === 'string') {
-	  return task.required_skills.split(',').map(skill => skill.trim()).filter(skill => skill);
-	}
-	
-	// If we have skills_list property, use that instead
-	if (task.skills_list && Array.isArray(task.skills_list)) {
-	  return task.skills_list;
-	}
-	
-	// Fallback to empty array
-	return [];
-  };
-
   // Extract task info
   const taskStatusInfo = getTaskStatusInfo();
   const requiredSkills = getRequiredSkills();
   const hasRequiredSkills = requiredSkills.length > 0;
 
   return (
-    <div className="task-detail-container">
+    <div className="task-detail-container" ref={detailContainerRef}>
       {notification.show && (
         <div className={`task-notification ${notification.type}`} role="alert">
           <span>{notification.message}</span>
@@ -438,8 +451,6 @@ const isHost = () => {
               </div>
             )}
 
-
-
             {canNotifyCompletion() && (
               <div className="task-actions">
                 <button 
@@ -506,7 +517,7 @@ const isHost = () => {
               </div>
             )}
 
-            {/* Subtasks section - using the existing SubtaskList component */}
+            {/* Subtasks section */}
             <SubtaskList 
               taskId={effectiveTaskId}
               onSubtaskAdded={() => {
@@ -547,19 +558,20 @@ const isHost = () => {
               readOnly={!isHost()}
             />
 
-			<TaskVolunteers 
-			  taskId={effectiveTaskId}
-			  eventId={effectiveEventId}
-			  onVolunteersChanged={() => {
-			    // Refresh task data when volunteers are added/removed
-			    getTaskWithSubtasks(effectiveTaskId).then(response => {
-			      if (response.success) {
-			        setTask(response.data.task);
-			      }
-			    });
-			  }}
-			  readOnly={!isHost()}
-			/>	
+            {/* Task volunteers section */}
+            <TaskVolunteers 
+              taskId={effectiveTaskId}
+              eventId={effectiveEventId}
+              onVolunteersChanged={() => {
+                // Refresh task data when volunteers are added/removed
+                getTaskWithSubtasks(effectiveTaskId).then(response => {
+                  if (response.success) {
+                    setTask(response.data.task);
+                  }
+                });
+              }}
+              readOnly={!isHost()}
+            />
           </div>
         </main>
 
@@ -579,7 +591,7 @@ const isHost = () => {
             </div>
           )}
 
-          {/* Task chat section - using the existing TaskChat component */}
+          {/* Task chat section */}
           <div className="task-chat-container">
             <TaskChat 
               taskId={effectiveTaskId}

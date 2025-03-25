@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import HostLayout from '../hostlayout/HostLayout';
 import EventForm from './EventForm';
 import { createEvent } from '../../../apiservice/event';
+import { useTranslation } from 'react-i18next';
 import '../../../styles/host/hostevents/HostEventDetails.css';
 
 const CreateEvent = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [notification, setNotification] = useState({
     show: false,
@@ -22,18 +24,18 @@ const CreateEvent = () => {
         // Show success notification
         setNotification({
           show: true,
-          message: 'Event created successfully',
+          message: t('events.createSuccess', 'Event created successfully'),
           type: 'success'
         });
         
         // Navigate to the event details page after successful creation
         setTimeout(() => {
-          navigate(`/host/event-info/${response.data.event_id}`);
+          navigate(`/host/MyEvents/${response.data.event_id}`);
         }, 1500);
         
         return response.data;
       } else {
-        throw new Error(response.error || 'Failed to create event');
+        throw new Error(response.error || t('events.createError', 'Failed to create event'));
       }
     } catch (error) {
       console.error('Error creating event:', error);
@@ -41,7 +43,7 @@ const CreateEvent = () => {
       // Show error notification
       setNotification({
         show: true,
-        message: error.message || 'Failed to create event',
+        message: error.message || t('events.createError', 'Failed to create event'),
         type: 'error'
       });
       
@@ -60,33 +62,31 @@ const CreateEvent = () => {
   };
 
   return (
-    <HostLayout>
-      <div className="host-event-details-page">
-        {notification.show && (
-          <div className={`notification ${notification.type}`} role="alert">
-            <span>{notification.message}</span>
-            <button className="close-notification" onClick={closeNotification} aria-label="Close notification">×</button>
-          </div>
-        )}
-        
-        <header className="event-details-header">
-          <button 
-            className="back-to-events-button" 
-            onClick={() => navigate('/host/MyEvents')}
-            aria-label="Go back to my events page"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Back to My Events
-          </button>
-          <h1 className="page-title">Create New Event</h1>
-        </header>
-        
-        <EventForm onSubmit={handleSubmit} isEditing={false} />
-      </div>
-    </HostLayout>
+    <div className="create-event-page">
+      {notification.show && (
+        <div className={`notification ${notification.type}`} role="alert">
+          <span>{notification.message}</span>
+          <button className="close-notification" onClick={closeNotification} aria-label={t('common.closeNotification', 'Close notification')}>×</button>
+        </div>
+      )}
+      
+      <header className="page-header">
+        <button 
+          className="back-button" 
+          onClick={() => navigate('/host/MyEvents')}
+          aria-label={t('events.backToMyEvents', 'Back to My Events')}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          {t('events.backToMyEvents', 'Back to My Events')}
+        </button>
+        <h1 className="page-title">{t('events.createNew', 'Create New Event')}</h1>
+      </header>
+      
+      <EventForm onSubmit={handleSubmit} isEditing={false} />
+    </div>
   );
 };
 

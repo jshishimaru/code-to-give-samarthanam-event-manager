@@ -61,6 +61,7 @@ urlpatterns = [
     path('subtasks/notify-completion/', tasks_views.NotifySubtaskCompletionView.as_view(), name='notify_subtask_completion'),
     path('subtasks/mark-complete/', tasks_views.MarkSubtaskCompleteView.as_view(), name='mark_subtask_complete'),
     path('subtasks/notified/', tasks_views.GetNotifiedSubtasksView.as_view(), name='get_notified_subtasks'),
+	path('subtasks/delete/', tasks_views.DeleteSubtaskView.as_view(), name='delete_subtask'),
 
     # chat endpoints 
     path('events/chat/', chats_views.EventChatView.as_view(), name='event_chat'),

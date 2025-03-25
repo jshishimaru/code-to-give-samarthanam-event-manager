@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getTaskWithSubtasks, markSubtaskComplete } from '../../../apiservice/task';
+import { getTaskWithSubtasks, markSubtaskComplete, deleteSubtask } from '../../../apiservice/task';
 import SubtaskForm from './SubtaskForm';
 import '../../../styles/host/taskdetail/SubtaskList.css';
 
@@ -31,6 +31,7 @@ const SubtaskList = ({
   const [selectedSubtask, setSelectedSubtask] = useState(null);
   const [expandedNotifications, setExpandedNotifications] = useState([]);
   const [markingComplete, setMarkingComplete] = useState(null);
+  const [deletingSubtask, setDeletingSubtask] = useState(null);
   const [taskInfo, setTaskInfo] = useState(null);
 
   // Fetch subtasks on component mount or when taskId changes
@@ -73,6 +74,34 @@ const SubtaskList = ({
       setError(t('subtaskList.errors.fetchFailed'));
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle deleting a subtask
+  const handleDeleteSubtask = async (subtaskId) => {
+    if (window.confirm(t('subtaskList.confirmDelete', { defaultValue: 'Are you sure you want to delete this subtask? This action cannot be undone.' }))) {
+      try {
+        setDeletingSubtask(subtaskId);
+        setError(null);
+        
+        const response = await deleteSubtask(subtaskId);
+        
+        if (response.success) {
+          // Refresh subtasks list
+          fetchSubtasks();
+          // Notify parent that a subtask was deleted
+          if (onSubtaskEdited) {
+            onSubtaskEdited();
+          }
+        } else {
+          setError(response.error || t('subtaskList.errors.deleteFailed', { defaultValue: 'Failed to delete subtask' }));
+        }
+      } catch (err) {
+        console.error('Error deleting subtask:', err);
+        setError(t('subtaskList.errors.deleteFailed', { defaultValue: 'Failed to delete subtask' }));
+      } finally {
+        setDeletingSubtask(null);
+      }
     }
   };
 
@@ -132,11 +161,11 @@ const SubtaskList = ({
           onSubtaskStatusChange(subtaskId, 'Completed');
         }
       } else {
-        setError(response.error || t('subtaskList.errors.markCompleteFailed'));
+        setError(response.error || t('subtaskList.errors.markCompleteFailed', { defaultValue: 'Failed to mark subtask as complete' }));
       }
     } catch (err) {
       console.error('Error marking subtask as complete:', err);
-      setError(t('subtaskList.errors.markCompleteFailed'));
+      setError(t('subtaskList.errors.markCompleteFailed', { defaultValue: 'Failed to mark subtask as complete' }));
     } finally {
       setMarkingComplete(null);
     }
@@ -192,7 +221,7 @@ const SubtaskList = ({
             <line x1="9" y1="14" x2="15" y2="14"></line>
             <line x1="9" y1="19" x2="15" y2="19"></line>
           </svg>
-          <p>{t('subtaskList.noSubtasks')}</p>
+          <p>{t('subtaskList.noSubtasks', { defaultValue: 'No subtasks have been added yet' })}</p>
         </div>
       );
     }
@@ -205,7 +234,7 @@ const SubtaskList = ({
               <div className="subtask-title-wrapper">
                 <h3 className="subtask-title">{subtask.title}</h3>
                 <span className={getStatusBadgeClass(subtask.status)}>
-                  {subtask.status || t('subtaskList.statusPending')}
+                  {subtask.status || t('subtaskList.statusPending', { defaultValue: 'Pending' })}
                 </span>
               </div>
               
@@ -214,7 +243,7 @@ const SubtaskList = ({
                   <button 
                     className="edit-button"
                     onClick={() => handleEditSubtask(subtask)}
-                    aria-label={t('subtaskList.editSubtask')}
+                    aria-label={t('subtaskList.editSubtask', { defaultValue: 'Edit subtask' })}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -227,7 +256,7 @@ const SubtaskList = ({
                       className={`complete-button ${markingComplete === subtask.id ? 'loading' : ''}`}
                       onClick={() => handleMarkComplete(subtask.id)}
                       disabled={markingComplete === subtask.id}
-                      aria-label={t('subtaskList.markComplete')}
+                      aria-label={t('subtaskList.markComplete', { defaultValue: 'Mark complete' })}
                     >
                       {markingComplete === subtask.id ? (
                         <span className="spinner"></span>
@@ -239,6 +268,30 @@ const SubtaskList = ({
                       )}
                     </button>
                   )}
+
+                  <button 
+                    className={`delete-subtask-button ${deletingSubtask === subtask.id ? 'loading' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteSubtask(subtask.id);
+                    }}
+                    disabled={deletingSubtask === subtask.id}
+                    aria-label={t('subtaskList.deleteSubtaskAriaLabel', { 
+                      title: subtask.title,
+                      defaultValue: `Delete subtask: ${subtask.title}`
+                    })}
+                  >
+                    {deletingSubtask === subtask.id ? (
+                      <span className="spinner"></span>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                      </svg>
+                    )}
+                  </button>
                 </div>
               )}
             </div>
@@ -258,7 +311,7 @@ const SubtaskList = ({
                     <line x1="8" y1="2" x2="8" y2="6"></line>
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                   </svg>
-                  <span>{t('subtaskList.start')}: {formatDate(subtask.start_time)}</span>
+                  <span>{t('subtaskList.start', { defaultValue: 'Start' })}: {formatDate(subtask.start_time)}</span>
                 </div>
               )}
               
@@ -268,7 +321,7 @@ const SubtaskList = ({
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                   </svg>
-                  <span>{t('subtaskList.due')}: {formatDate(subtask.end_time)}</span>
+                  <span>{t('subtaskList.due', { defaultValue: 'Due' })}: {formatDate(subtask.end_time)}</span>
                 </div>
               )}
             </div>
@@ -290,7 +343,8 @@ const SubtaskList = ({
                   </div>
                   <span className="notification-title">
                     {t('subtaskList.completionNotified', { 
-                      time: formatDate(subtask.notification_time) 
+                      time: formatDate(subtask.notification_time),
+                      defaultValue: `Completion notified at ${formatDate(subtask.notification_time)}`
                     })}
                   </span>
                   <div className="notification-toggle">
@@ -321,7 +375,7 @@ const SubtaskList = ({
           <span className="subtask-count">{subtasks.length}</span>
         </h2>
         
-        {/* Always render the button but with conditional visibility based on readOnly */}
+        {/* Only show add button for non-read-only mode */}
         {!readOnly && (
           <button 
             className="add-subtask-button"

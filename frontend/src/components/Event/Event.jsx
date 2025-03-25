@@ -38,10 +38,6 @@ const Event = ({ eventData }) => {
     }
   };
 
-//   useEffect(() => {
-//     console.log(eventData);
-//   }, [eventData]);
-
   // Default image if none provided
   const defaultImage = 'https://via.placeholder.com/400x300?text=Event+Image';
 

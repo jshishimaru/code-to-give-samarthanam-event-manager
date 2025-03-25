@@ -1421,3 +1421,85 @@ class SearchTasksBySkillView(View):
     def post(self, request):
         # POST method can use the same logic as GET for this view
         return self.get(request)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteSubtaskView(View):
+    """Delete a subtask"""
+    def post(self, request):
+        try:
+            # Check authentication
+            if not request.user.is_authenticated:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'Authentication required'
+                }, status=401)
+                
+            # Check if user is a host
+            if not request.user.isHost:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'Only hosts can delete subtasks'
+                }, status=403)
+                
+            # Parse request data
+            data = request.POST if request.POST else json.loads(request.body)
+            
+            # Get subtask_id from request data
+            subtask_id = data.get('subtask_id')
+            if not subtask_id:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'Subtask ID is required'
+                }, status=400)
+                
+            # Find the subtask
+            try:
+                subtask = SubTask.objects.get(id=subtask_id)
+            except SubTask.DoesNotExist:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'Subtask not found'
+                }, status=404)
+                
+            # Get the parent task for later verification
+            parent_task = subtask.parent_task
+            
+            # Check if the current user is the host of the event containing this subtask
+            if parent_task.event.host != request.user:
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'You can only delete subtasks for events you are hosting'
+                }, status=403)
+                
+            # Store subtask info for response
+            subtask_title = subtask.title
+            parent_task_name = parent_task.task_name
+            
+            # Delete the subtask
+            subtask.delete()
+            
+            # Get updated list of remaining subtasks
+            remaining_subtasks = SubTaskSerializer(
+                parent_task.subtasks.all().order_by('start_time'),
+                many=True
+            ).data
+            
+            return JsonResponse({
+                'status': 'success', 
+                'message': f'Subtask "{subtask_title}" for task "{parent_task_name}" deleted successfully',
+                'parent_task_id': parent_task.id,
+                'remaining_subtasks': remaining_subtasks,
+                'subtask_count': len(remaining_subtasks)
+            })
+                
+        except Exception as e:
+            print(f"Error in DeleteSubtaskView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error', 
+                'message': str(e)
+            }, status=500)
+    
+    def delete(self, request):
+        """Support DELETE HTTP method as well"""
+        return self.post(request)

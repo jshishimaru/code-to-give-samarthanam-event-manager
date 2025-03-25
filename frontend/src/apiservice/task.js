@@ -329,3 +329,25 @@ export const getTasksForEvent = async (eventId) => {
 	  };
 	}
   };
+
+  // Add this function to task.js if it doesn't exist
+
+/**
+ * Delete a subtask
+ * @param {number} subtaskId - ID of the subtask to delete
+ * @returns {Promise<Object>} Response with success status and message
+ */
+export const deleteSubtask = async (subtaskId) => {
+	try {
+	  const response = await axios.post(`${APP_API_URL}subtasks/delete/`, {
+		subtask_id: subtaskId
+	  });
+	  return { success: true, data: response.data };
+	} catch (error) {
+	  console.error('Error deleting subtask:', error);
+	  return { 
+		success: false, 
+		error: error.response?.data?.message || error.message 
+	  };
+	}
+  };

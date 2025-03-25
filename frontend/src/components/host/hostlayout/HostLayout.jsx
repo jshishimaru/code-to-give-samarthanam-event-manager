@@ -4,6 +4,8 @@ import Sidebar from './Sidebar';
 import EventVolunteers from '../volunteertab/EventVolunteers';
 import EventTasks from '../hosttask/EventTasks';
 import EventInfo from '../hostevents/EventInfo';
+import CommunityChat from '../../Event/CommunityChat'; // Import CommunityChat component
+import { getEventDetails } from '../../../apiservice/event'; // Import to get event title
 import '../../../styles/host/hostlayout/HostLayout.css';
 
 const HostLayout = () => {
@@ -11,6 +13,7 @@ const HostLayout = () => {
   const [activeTab, setActiveTab] = useState('info');
   const [componentError, setComponentError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [eventTitle, setEventTitle] = useState(''); // Add state for event title
   const { eventId } = useParams();
 
   const toggleSidebar = () => {
@@ -21,6 +24,29 @@ const HostLayout = () => {
     setActiveTab(tabId);
     setComponentError(null); // Reset error when changing tabs
   };
+
+  // Fetch event details to get the title
+  useEffect(() => {
+    const fetchEventDetails = async () => {
+      if (!eventId) return;
+      
+      try {
+        setIsLoading(true);
+        const response = await getEventDetails(eventId);
+        
+        if (response.success) {
+          // Store the event title for use in Community Chat
+          setEventTitle(response.data.event.title || response.data.event.event_name || '');
+        }
+      } catch (error) {
+        console.error("Error fetching event details:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchEventDetails();
+  }, [eventId]);
 
   // Listen for navbar scroll state
   useEffect(() => {
@@ -43,14 +69,7 @@ const HostLayout = () => {
     };
   }, []);
 
-  // Verify eventId is available
-  useEffect(() => {
-    if (!eventId) {
-      setComponentError("Event ID is missing. Please go back to the events page and try again.");
-    }
-  }, [eventId]);
-
-  // Render content based on active tab
+  // Modify the renderContent function to handle when there's no eventId
   const renderContent = () => {
     if (componentError) {
       return (
@@ -64,13 +83,16 @@ const HostLayout = () => {
     }
 
     try {
+      // We only need eventId for these tabs
       switch (activeTab) {
         case 'volunteers':
-          return <EventVolunteers eventId={eventId} />;
+          return eventId ? <EventVolunteers eventId={eventId} /> : null;
         case 'tasks':
-          return <EventTasks eventId={eventId} />;
+          return eventId ? <EventTasks eventId={eventId} /> : null;
         case 'info':
-          return <EventInfo eventId={eventId} />;
+          return eventId ? <EventInfo eventId={eventId} /> : null;
+        case 'communitychat':
+          return eventId ? <CommunityChat eventId={eventId} eventTitle={eventTitle} /> : null;
         default:
           return <div className="event-info-placeholder">Event information will be implemented later</div>;
       }

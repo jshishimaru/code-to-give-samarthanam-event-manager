@@ -40,8 +40,12 @@ const router = createBrowserRouter([
         element: <Layout><MyEvents /></Layout>
     },
     {
-        path:'/host/MyEvents/CreateEvent',
+        path:'/host/CreateEvent',
         element: <Layout><CreateEvent /></Layout>
+    },
+    {
+        path:'/host/event-info/:eventId',
+        element: <Layout><HostLayout /></Layout>
     },
     {
         path:'/host/MyEvents/:eventId',

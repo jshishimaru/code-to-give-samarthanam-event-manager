@@ -201,7 +201,7 @@ const EventCard = ({ eventId, viewMode = 'grid' }) => {
               className="event-card__link manage-event-link"
               aria-label={t('eventCard.manage.ariaLabel', { name: event.event_name })}
             >
-              {t('eventCard.manage.label', 'Manage Event')}
+              {t('eventCard.manage.label')}
             </Link>
           ) : (
             // The original rendering logic for other pages

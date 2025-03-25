@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { deleteTask } from '../../../apiservice/task';
 import '../../../styles/host/hosttask/TaskList.css';
 
 /**
@@ -8,9 +9,58 @@ import '../../../styles/host/hosttask/TaskList.css';
  * @param {Array} props.tasks Array of task objects
  * @param {Function} props.onEditTask Function to call when editing a task
  * @param {Function} props.onSelectTask Function to call when selecting a task to view details
+ * @param {Function} props.onTaskDeleted Function to call when a task is deleted
  */
-const TaskList = ({ tasks, onEditTask, onSelectTask }) => {
+const TaskList = ({ tasks, onEditTask, onSelectTask, onTaskDeleted }) => {
   const { t } = useTranslation();
+  const [deletingTaskId, setDeletingTaskId] = useState(null);
+  const [notification, setNotification] = useState(null);
+
+  // Handle task deletion
+  const handleDeleteTask = async (taskId, event) => {
+    // Stop the event from propagating to the parent (which would trigger task selection)
+    event.stopPropagation();
+    
+    if (deletingTaskId) return; // Prevent multiple clicks
+    
+    if (window.confirm(t('taskList.confirmDelete'))) {
+      try {
+        setDeletingTaskId(taskId);
+        
+        const response = await deleteTask(taskId);
+        
+        if (response.success) {
+          setNotification({
+            type: 'success',
+            message: t('taskList.taskDeleted')
+          });
+          
+          // Call the callback to refresh the task list
+          if (onTaskDeleted) {
+            onTaskDeleted();
+          }
+        } else {
+          setNotification({
+            type: 'error',
+            message: response.error || t('taskList.deleteFailed')
+          });
+        }
+      } catch (err) {
+        console.error('Error deleting task:', err);
+        setNotification({
+          type: 'error',
+          message: t('taskList.deleteFailed')
+        });
+      } finally {
+        setDeletingTaskId(null);
+        
+        // Clear notification after 3 seconds
+        setTimeout(() => {
+          setNotification(null);
+        }, 3000);
+      }
+    }
+  };
 
   // Get status class name based on task status
   const getStatusClassName = (status) => {
@@ -89,22 +139,35 @@ const TaskList = ({ tasks, onEditTask, onSelectTask }) => {
   };
 
   return (
-    <div className="task-list-container">
-      <div className="task-list-header">
-        <div className="task-name-header">{t('taskList.taskName')}</div>
-        <div className="task-date-header">{t('taskList.dates')}</div>
-        <div className="task-status-header">{t('taskList.status')}</div>
-        <div className="task-volunteers-header">{t('taskList.volunteers')}</div>
-        <div className="task-actions-header">{t('taskList.actions')}</div>
-      </div>
-      
-      <ul className="task-list">
-        {tasks.map(task => (
-          <li 
-            key={task.id} 
-            className="task-item"
-            onClick={() => onSelectTask && onSelectTask(task)}
-          >
+	<div className="task-list-container">
+	{/* Show notification if present */}
+	{notification && (
+	  <div className={`task-notification ${notification.type}`}>
+		<span>{notification.message}</span>
+		<button 
+		  className="close-notification"
+		  onClick={() => setNotification(null)}
+		>
+		  ×
+		</button>
+	  </div>
+	)}
+  
+	<div className="task-list-header">
+	  <div className="task-name-header">{t('taskList.taskName')}</div>
+	  <div className="task-date-header">{t('taskList.dates')}</div>
+	  <div className="task-status-header">{t('taskList.status')}</div>
+	  <div className="task-volunteers-header">{t('taskList.volunteers')}</div>
+	  <div className="task-actions-header">{t('taskList.actions')}</div>
+	</div>
+	
+	<ul className="task-list">
+	  {tasks.map(task => (
+		<li 
+		  key={task.id} 
+		  className="task-item"
+		  onClick={() => onSelectTask && onSelectTask(task)}
+		>
             <div className="task-name">
               <h3>{getTaskName(task)}</h3>
               {task.required_skills && (
@@ -155,6 +218,7 @@ const TaskList = ({ tasks, onEditTask, onSelectTask }) => {
                 </svg>
                 {t('taskList.editTask')}
               </button>
+              
               <button 
                 className="view-task-button"
                 onClick={() => onSelectTask && onSelectTask(task)}
@@ -165,6 +229,25 @@ const TaskList = ({ tasks, onEditTask, onSelectTask }) => {
                   <circle cx="12" cy="12" r="3"></circle>
                 </svg>
                 {t('taskList.viewTask')}
+              </button>
+              
+              <button 
+                className="delete-task-button"
+                onClick={(e) => handleDeleteTask(task.id, e)}
+                disabled={deletingTaskId === task.id}
+                aria-label={t('taskList.deleteTaskAriaLabel', { taskName: getTaskName(task) })}
+              >
+                {deletingTaskId === task.id ? (
+                  <span className="button-spinner"></span>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                )}
+                {t('taskList.deleteTask')}
               </button>
             </div>
           </li>

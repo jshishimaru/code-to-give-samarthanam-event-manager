@@ -156,7 +156,6 @@
 	  overflow-y: visible;
 	}
   }
-/* Updated search styles without absolute positioning */
 
 /* Search container styles */
 .search-container {
@@ -167,7 +166,7 @@
 	border: 1px solid var(--input-border);
 	border-radius: 6px;
 	background-color: var(--bg-primary);
-	overflow: hidden; /* Keep everything contained */
+	overflow: hidden; 
   }
   
   .search-input {

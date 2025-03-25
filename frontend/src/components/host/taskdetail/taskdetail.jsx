@@ -44,6 +44,9 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
     message: '',
     type: 'success'
   });
+  const [showNotificationMessage, setShowNotificationMessage] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [showNotificationForm, setShowNotificationForm] = useState(false);
   
   // Handle back button click
   const handleBackClick = () => {
@@ -88,6 +91,7 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
         const response = await getTaskWithSubtasks(effectiveTaskId);
         
         if (response.success) {
+			console.log( response.data.task );
           const taskData = response.data.task || {};
           setTask(taskData);
           
@@ -137,7 +141,7 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
       
       const response = await notifyTaskCompletion(
         effectiveTaskId,
-        t('taskDetail.defaultCompletionMessage')
+        notificationMessage || "No Message for task completion"
       );
       
       if (response.success) {
@@ -147,16 +151,14 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
           type: 'success'
         });
         
+        setShowNotificationForm(false);
+        setNotificationMessage('');
+        
         // Refresh task data
         const taskResponse = await getTaskWithSubtasks(effectiveTaskId);
         if (taskResponse.success) {
           setTask(taskResponse.data.task);
         }
-        
-        // Wait a bit before going back to list to show success message
-        setTimeout(() => {
-          if (onBack) onBack();
-        }, 1500);
       } else {
         setNotification({
           show: true,
@@ -198,11 +200,6 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
           setTask(taskResponse.data.task);
           setCompletionProgress(100);
         }
-        
-        // Wait a bit before going back to list to show success message
-        setTimeout(() => {
-          if (onBack) onBack();
-        }, 1500);
       } else {
         setNotification({
           show: true,
@@ -220,6 +217,11 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
     } finally {
       setNotifying(false);
     }
+  };
+
+  // Toggle notification message visibility
+  const toggleNotificationMessage = () => {
+    setShowNotificationMessage(!showNotificationMessage);
   };
 
   // Format date for display
@@ -451,28 +453,57 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
               </div>
             )}
 
-            {canNotifyCompletion() && (
+            {showNotificationForm && (
+              <div className="notification-form">
+                <h4>{t('taskDetail.notificationFormTitle', { defaultValue: 'Notify task completion' })}</h4>
+                <p>{t('taskDetail.notificationFormDescription', { defaultValue: 'Add a message for the host about this task completion' })}</p>
+                <textarea
+                  value={notificationMessage}
+                  onChange={(e) => setNotificationMessage(e.target.value)}
+                  placeholder={t('taskDetail.notificationPlaceholder', { defaultValue: 'Add details about the completion (optional)' })}
+                  rows="3"
+                  className="notification-textarea"
+                />
+                <div className="notification-form-actions">
+                  <button 
+                    className="cancel-button"
+                    onClick={() => {
+                      setShowNotificationForm(false);
+                      setNotificationMessage('');
+                    }}
+                  >
+                    {t('taskDetail.cancel', { defaultValue: 'Cancel' })}
+                  </button>
+                  <button 
+                    className="submit-button"
+                    onClick={handleNotifyCompletion}
+                    disabled={notifying}
+                  >
+                    {notifying ? (
+                      <>
+                        <span className="spinner"></span>
+                        {t('taskDetail.sending', { defaultValue: 'Sending...' })}
+                      </>
+                    ) : (
+                      t('taskDetail.sendNotification', { defaultValue: 'Send notification' })
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {canNotifyCompletion() && !showNotificationForm && (
               <div className="task-actions">
                 <button 
-                  className={`notify-completion-button ${notifying ? 'notifying' : ''}`}
-                  onClick={handleNotifyCompletion}
-                  disabled={notifying}
-                  aria-busy={notifying}
+                  className="notify-completion-button"
+                  onClick={() => setShowNotificationForm(true)}
+                  aria-label={t('taskDetail.notifyCompletion')}
                 >
-                  {notifying ? (
-                    <>
-                      <div className="button-spinner"></div>
-                      {t('taskDetail.notifying')}
-                    </>
-                  ) : (
-                    <>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                      </svg>
-                      {t('taskDetail.notifyCompletion')}
-                    </>
-                  )}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                  {t('taskDetail.notifyCompletion')}
                 </button>
               </div>
             )}
@@ -505,15 +536,41 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
 
             {task.completion_notified && (
               <div className="task-notification-info">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-                <span>
-                  {t('taskDetail.completionNotified', { 
-                    time: formatDate(task.notification_time) 
-                  })}
-                </span>
+                <div 
+                  className="notification-header"
+                  onClick={toggleNotificationMessage}
+                  role="button"
+                  tabIndex="0"
+                  aria-expanded={showNotificationMessage}
+                >
+                  <div className="notification-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                  </div>
+                  <span className="notification-title">
+                    {t('taskDetail.completionNotified', { 
+                      time: formatDate(task.notification_time),
+                      defaultValue: `Completion notified at ${formatDate(task.notification_time)}`
+                    })}
+                  </span>
+                  <div className="notification-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points={showNotificationMessage ? "18 15 12 9 6 15" : "6 9 12 15 18 9"}></polyline>
+                    </svg>
+                  </div>
+                </div>
+                
+                {showNotificationMessage && (
+                  <div className="notification-message">
+                    {task.notification_message ? (
+                      <p>{task.notification_message}</p>
+                    ) : (
+                      <p className="no-message">{t('taskDetail.noMessage', { defaultValue: 'No additional message was provided.' })}</p>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 

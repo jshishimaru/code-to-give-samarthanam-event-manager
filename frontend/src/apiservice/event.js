@@ -312,3 +312,141 @@ export const getHostDraftEvents = async () => {
   }
 };
 
+/**
+ * Search events based on various criteria
+ * @param {Object} searchParams - Search parameters object
+ * @param {string} searchParams.query - Text query to search across event name/description
+ * @param {string} searchParams.status - Filter events by status ('Upcoming', 'In Progress', 'Completed', 'Draft', 'Cancelled')
+ * @param {boolean} searchParams.upcomingOnly - If true, return only upcoming events
+ * @param {boolean} searchParams.ongoingOnly - If true, return only ongoing events
+ * @param {string} searchParams.location - Filter events by location
+ * @param {Array<string>} searchParams.skills - Filter events requiring specific skills
+ * @returns {Promise<Object>} Response with success status and matching events
+ */
+export const searchEvents = async (searchParams = {}) => {
+	try {
+	  // Convert searchParams to query parameters
+	  const params = { ...searchParams };
+	  
+	  // Convert skills array to comma-separated string if it exists
+	  if (params.skills && Array.isArray(params.skills)) {
+		params.skills = params.skills.join(',');
+	  }
+	  
+	  // Use 'q' as the query parameter name to match backend expectations
+	  if (params.query) {
+		params.q = params.query;
+		delete params.query;
+	  }
+	  
+	  const response = await axios.get(`${APP_API_URL}events/search/`, { params });
+	  
+	  return {
+		success: true,
+		data: response.data,
+		events: response.data.events || [],
+		count: response.data.count || 0
+	  };
+	} catch (error) {
+	  console.error('Error searching events:', error);
+	  return {
+		success: false,
+		error: error.response?.data?.message || error.message,
+		events: [],
+		count: 0
+	  };
+	}
+  };
+  
+  /**
+   * Search events by text query
+   * @param {string} query - Search query text
+   * @param {Object} options - Additional search options
+   * @param {string} options.status - Filter by status
+   * @param {boolean} options.upcomingOnly - If true, return only upcoming events
+   * @param {boolean} options.ongoingOnly - If true, return only ongoing events
+   * @returns {Promise<Object>} Response with success status and matching events
+   */
+  export const searchEventsByText = async (query, options = {}) => {
+	return searchEvents({ 
+	  query, 
+	  ...options 
+	});
+  };
+  
+  /**
+   * Search for upcoming events
+   * @param {string} query - Optional search query text
+   * @returns {Promise<Object>} Response with success status and upcoming events
+   */
+  export const searchUpcomingEvents = async (query = '') => {
+	return searchEvents({ 
+	  query, 
+	  upcomingOnly: true 
+	});
+  };
+  
+  /**
+   * Search for ongoing events
+   * @param {string} query - Optional search query text
+   * @returns {Promise<Object>} Response with success status and ongoing events
+   */
+  export const searchOngoingEvents = async (query = '') => {
+	return searchEvents({ 
+	  query, 
+	  ongoingOnly: true 
+	});
+  };
+  
+  /**
+   * Search events by location
+   * @param {string} location - Location to search for
+   * @param {Object} options - Additional search options
+   * @param {string} options.status - Filter by status
+   * @param {boolean} options.upcomingOnly - If true, return only upcoming events
+   * @param {boolean} options.ongoingOnly - If true, return only ongoing events
+   * @returns {Promise<Object>} Response with success status and matching events
+   */
+  export const searchEventsByLocation = async (location, options = {}) => {
+	return searchEvents({ 
+	  query: location, 
+	  location, 
+	  ...options 
+	});
+  };
+  
+  /**
+   * Search events by required skills
+   * @param {Array<string>|string} skills - Skills to search for (array or comma-separated string)
+   * @param {Object} options - Additional search options
+   * @param {string} options.status - Filter by status
+   * @param {boolean} options.upcomingOnly - If true, return only upcoming events
+   * @param {boolean} options.ongoingOnly - If true, return only ongoing events
+   * @returns {Promise<Object>} Response with success status and matching events
+   */
+  export const searchEventsBySkills = async (skills, options = {}) => {
+	// If skills is a string, try to parse it as a comma-separated list
+	let skillsArray = skills;
+	if (typeof skills === 'string') {
+	  skillsArray = skills.split(',').map(skill => skill.trim());
+	}
+	
+	return searchEvents({ 
+	  skills: skillsArray, 
+	  ...options 
+	});
+  };
+  
+  /**
+   * Filter events by status
+   * @param {string} status - Status to filter by ('Upcoming', 'In Progress', 'Completed', 'Draft', 'Cancelled')
+   * @param {string} query - Optional search query text
+   * @returns {Promise<Object>} Response with success status and matching events
+   */
+  export const filterEventsByStatus = async (status, query = '') => {
+	return searchEvents({ 
+	  query, 
+	  status 
+	});
+  };
+

@@ -7,6 +7,7 @@ from .views import chats_views
 from .views import taskchat_views
 from .views import ml_views
 from .views import user_views
+from .views import user_data
 # router = DefaultRouter()
 # router.register(r'events', event_views.EventViewSet, basename='events')
 
@@ -67,6 +68,7 @@ urlpatterns = [
     path('events/chat/', chats_views.EventChatView.as_view(), name='event_chat'),
     path('events/chat/history/', chats_views.EventChatHistoryView.as_view(), name='event_chat_history'),
     path('user/chats/recent/', chats_views.RecentEventChatsView.as_view(), name='recent_event_chats'),
+	path('events/search/', event_views.SearchEventsView.as_view(), name='search_events'),
 
     # Task Chat Endpoints
     path('tasks/chat/', taskchat_views.TaskChatView.as_view(), name='task_chat'),
@@ -84,5 +86,6 @@ urlpatterns = [
 	path('tasks/volunteers/', user_views.TaskVolunteersView.as_view(), name='task_volunteers'),
 	path('tasks/available-volunteers/', user_views.AvailableVolunteersForTaskView.as_view(), name='available_volunteers_for_task'),
 	path('volunteers/search/', user_views.SearchVolunteersView.as_view(), name='search_volunteers'),
+	path('events/export-volunteers/', user_data.ExportVolunteersToExcelView.as_view(), name='export_volunteers_to_excel'),
 
 ]

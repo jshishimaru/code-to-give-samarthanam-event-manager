@@ -1159,3 +1159,187 @@ class HostDraftEventsView(View):
     def post(self, request):
         # POST method can use the same logic as GET for this view
         return self.get(request)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class SearchEventsView(View):
+    """
+    Search for events based on keywords matching event name, description, location, or task skills
+    """
+    def get(self, request):
+        try:
+            # Get search query from URL parameters
+            query = request.GET.get('q', '').strip()
+            
+            if not query:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Search query is required'
+                }, status=400)
+            
+            # Get optional filter parameters
+            status_filter = request.GET.get('status', None)  # Can filter by event status
+            upcoming_only = request.GET.get('upcoming_only') == 'true'  # Optional filter for upcoming events
+            ongoing_only = request.GET.get('ongoing_only') == 'true'  # Optional filter for ongoing events
+            
+            # Base queryset - start with all events
+            events = EventInfo.objects.all()
+            
+            # Apply status filter if provided
+            if status_filter:
+                events = events.filter(status=status_filter)
+            elif upcoming_only:
+                events = events.filter(status='Upcoming')
+            elif ongoing_only:
+                events = events.filter(status='In Progress')
+            
+            # For authenticated hosts, include their draft events
+            if request.user.is_authenticated and request.user.isHost:
+                # No additional filtering needed for hosts to see drafts
+                pass
+            else:
+                # For non-hosts, exclude Draft events
+                events = events.exclude(status='Draft')
+            
+            # Create a Q object for complex OR queries
+            from django.db.models import Q
+            
+            # Search in event fields (name, description, location)
+            event_q = (
+                Q(event_name__icontains=query) |
+                Q(overview__icontains=query) |
+                Q(description__icontains=query) |
+                Q(location__icontains=query)
+            )
+            
+            # Get events matching the basic event fields
+            matching_events = events.filter(event_q)
+            
+            # Also search in tasks to find events that have tasks matching the query
+            # First, find tasks with matching skills or descriptions
+            matching_tasks = TaskInfo.objects.filter(
+                Q(task_name__icontains=query) |
+                Q(description__icontains=query) |
+                Q(required_skills__icontains=query)
+            )
+            
+            # Get the events associated with these tasks
+            events_with_matching_tasks = EventInfo.objects.filter(
+                tasks__in=matching_tasks
+            )
+            
+            # Combine both querysets and remove duplicates
+            matching_events = (matching_events | events_with_matching_tasks).distinct()
+            
+            # Apply sorting
+            matching_events = matching_events.order_by('status', 'start_time')
+            
+            # Prepare response with event details
+            event_list = []
+            for event in matching_events:
+                # Find why this event matched the search query
+                match_reasons = []
+                
+                # Check event fields
+                if query.lower() in event.event_name.lower():
+                    match_reasons.append("name")
+                if query.lower() in event.description.lower():
+                    match_reasons.append("description")
+                if event.location and query.lower() in event.location.lower():
+                    match_reasons.append("location")
+                
+                # Check if any tasks in this event match the query
+                matching_task_count = event.tasks.filter(
+                    Q(task_name__icontains=query) |
+                    Q(description__icontains=query) |
+                    Q(required_skills__icontains=query)
+                ).count()
+                
+                if matching_task_count > 0:
+                    match_reasons.append(f"tasks ({matching_task_count} matching)")
+                
+                # All skills in the event's tasks
+                event_skills = set()
+                for task in event.tasks.all():
+                    task_skills = task.get_skills_list()
+                    event_skills.update(task_skills)
+                
+                # Check if the query matches any of the event's task skills
+                matching_skills = [skill for skill in event_skills if query.lower() in skill.lower()]
+                if matching_skills:
+                    match_reasons.append(f"skills ({', '.join(matching_skills)})")
+                
+                # Event data to include in the response
+                event_data = {
+                    'id': event.id,
+                    'name': event.event_name,
+                    'overview': event.overview,
+                    'location': event.location,
+                    'status': event.status,
+                    'start_time': event.start_time.isoformat(),
+                    'end_time': event.end_time.isoformat(),
+                    'host_name': event.host.name,
+                    'volunteer_count': event.volunteer_enrolled.count(),
+                    'required_volunteers': event.required_volunteers,
+                    'match_reasons': match_reasons,
+                    'has_image': bool(event.image),
+                    'task_count': event.tasks.count(),
+                    'skills': list(event_skills)
+                }
+                
+                if event.image:
+                    event_data['image_url'] = request.build_absolute_uri(event.image.url)
+                
+                event_list.append(event_data)
+            
+            return JsonResponse({
+                'status': 'success',
+                'query': query,
+                'count': len(event_list),
+                'events': event_list
+            })
+            
+        except Exception as e:
+            print(f"Error in SearchEventsView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    
+    def post(self, request):
+        """Support POST method with request body"""
+        try:
+            # Get data from request body
+            data = request.POST if request.POST else json.loads(request.body)
+            
+            # Extract the search query
+            query = data.get('q', '').strip()
+            
+            if not query:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Search query is required'
+                }, status=400)
+            
+            # Add query to request.GET for the get() method to use
+            request.GET = request.GET.copy()
+            request.GET['q'] = query
+            
+            # Optional filters
+            if 'status' in data:
+                request.GET['status'] = data['status']
+            if 'upcoming_only' in data:
+                request.GET['upcoming_only'] = data['upcoming_only']
+            if 'ongoing_only' in data:
+                request.GET['ongoing_only'] = data['ongoing_only']
+            
+            # Delegate to get method
+            return self.get(request)
+            
+        except Exception as e:
+            print(f"Error in SearchEventsView POST: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)

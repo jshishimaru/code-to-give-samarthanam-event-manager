@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getTaskWithSubtasks, markSubtaskComplete, deleteSubtask } from '../../../apiservice/task';
+import { 
+  getTaskWithSubtasks, 
+  markSubtaskComplete, 
+  deleteSubtask,
+  notifySubtaskCompletion 
+} from '../../../apiservice/task';
+import { checkAuth } from '../../../apiservice/auth';
 import SubtaskForm from './SubtaskForm';
 import '../../../styles/host/taskdetail/SubtaskList.css';
 
-/**
- * Component to display a list of subtasks for a given task
- * @param {Object} props 
- * @param {number} props.taskId - ID of the parent task
- * @param {Function} props.onSubtaskAdded - Optional callback when subtask is added
- * @param {Function} props.onSubtaskEdited - Optional callback when subtask is edited
- * @param {Function} props.onSubtaskStatusChange - Optional callback when subtask status changes
- * @param {boolean} props.readOnly - Optional flag to disable editing functionality
- */
 const SubtaskList = ({ 
   taskId, 
   onSubtaskAdded, 
@@ -32,13 +29,45 @@ const SubtaskList = ({
   const [expandedNotifications, setExpandedNotifications] = useState([]);
   const [markingComplete, setMarkingComplete] = useState(null);
   const [deletingSubtask, setDeletingSubtask] = useState(null);
+  const [notifyingSubtask, setNotifyingSubtask] = useState(null);
   const [taskInfo, setTaskInfo] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [showNotificationForm, setShowNotificationForm] = useState(null);
+
+  // Fetch user on component mount
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      try {
+        const authResponse = await checkAuth();
+        if (authResponse.success && authResponse.data.authenticated) {
+          setCurrentUser(authResponse.data.user);
+        }
+      } catch (err) {
+        console.error('Error getting current user:', err);
+      }
+    };
+    
+    getCurrentUser();
+  }, []);
 
   // Fetch subtasks on component mount or when taskId changes
   useEffect(() => {
     fetchSubtasks();
   }, [taskId]);
 
+  // Check if the current user is a host
+  const isHost = () => {
+    return currentUser && (
+      currentUser.is_host === true || 
+      currentUser.is_event_host === true || 
+      currentUser.host === true ||
+      currentUser.role === 'host' ||
+      currentUser.isHost === true
+    );
+  };
+
+  
   // Fetch subtasks from API
   const fetchSubtasks = async () => {
     if (!taskId) {
@@ -171,6 +200,35 @@ const SubtaskList = ({
     }
   };
 
+  // Handle notify completion for a subtask
+  const handleNotifyCompletion = async (subtaskId) => {
+    try {
+      setNotifyingSubtask(subtaskId);
+      
+      const response = await notifySubtaskCompletion(
+        subtaskId, 
+        notificationMessage || t('subtaskList.defaultNotification', { defaultValue: 'Task has been completed.' })
+      );
+      
+      if (response.success) {
+        setShowNotificationForm(null);
+        setNotificationMessage('');
+        fetchSubtasks();
+        
+        if (onSubtaskStatusChange) {
+          onSubtaskStatusChange();
+        }
+      } else {
+        setError(response.error || t('subtaskList.errors.notificationFailed', { defaultValue: 'Failed to send completion notification' }));
+      }
+    } catch (err) {
+      console.error('Error notifying subtask completion:', err);
+      setError(t('subtaskList.errors.notificationFailed', { defaultValue: 'Failed to send completion notification' }));
+    } finally {
+      setNotifyingSubtask(null);
+    }
+  };
+
   // Get status badge class based on status
   const getStatusBadgeClass = (status) => {
     if (!status) return 'status-badge status-pending';
@@ -210,6 +268,17 @@ const SubtaskList = ({
     }
   };
 
+  const canNotifyCompletion = (subtask) => {
+	  const val = subtask && 
+      !subtask.completion_notified && 
+      subtask.status !== 'Completed' && 
+      !isHost() && 
+      readOnly
+	//   console.log( isHost() );
+	//   console.log( readOnly );
+	  return val;
+  };
+
   // Render subtask items
   const renderSubtasks = () => {
     if (subtasks.length === 0) {
@@ -238,8 +307,9 @@ const SubtaskList = ({
                 </span>
               </div>
               
-              {!readOnly && (
-                <div className="subtask-actions">
+              <div className="subtask-actions">
+                {/* Edit button - only for hosts */}
+                {!readOnly && (
                   <button 
                     className="edit-button"
                     onClick={() => handleEditSubtask(subtask)}
@@ -250,25 +320,49 @@ const SubtaskList = ({
                       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                     </svg>
                   </button>
-                  
-                  {subtask.status !== 'Completed' && (
-                    <button 
-                      className={`complete-button ${markingComplete === subtask.id ? 'loading' : ''}`}
-                      onClick={() => handleMarkComplete(subtask.id)}
-                      disabled={markingComplete === subtask.id}
-                      aria-label={t('subtaskList.markComplete', { defaultValue: 'Mark complete' })}
-                    >
-                      {markingComplete === subtask.id ? (
-                        <span className="spinner"></span>
-                      ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                          <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                        </svg>
-                      )}
-                    </button>
-                  )}
+                )}
+                
+                {/* Mark complete button - only for hosts */}
+                {!readOnly && subtask.status !== 'Completed' && (
+                  <button 
+                    className={`complete-button ${markingComplete === subtask.id ? 'loading' : ''}`}
+                    onClick={() => handleMarkComplete(subtask.id)}
+                    disabled={markingComplete === subtask.id}
+                    aria-label={t('subtaskList.markComplete', { defaultValue: 'Mark complete' })}
+                  >
+                    {markingComplete === subtask.id ? (
+                      <span className="spinner"></span>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                      </svg>
+                    )}
+                  </button>
+                )}
 
+                {/* Notify completion button - only for volunteers */}
+                {canNotifyCompletion(subtask) && (
+                  <button 
+                    className={`notify-completion-button ${notifyingSubtask === subtask.id ? 'loading' : ''}`}
+                    onClick={() => setShowNotificationForm(subtask.id)}
+                    disabled={notifyingSubtask === subtask.id}
+                    aria-label={t('subtaskList.notifyCompletion', { defaultValue: 'Notify completion' })}
+                  >
+                    {notifyingSubtask === subtask.id ? (
+                      <span className="spinner"></span>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                      </svg>
+                    )}
+                    <span>{t('subtaskList.notifyCompletion', { defaultValue: 'Notify' })}</span>
+                  </button>
+                )}
+                
+                {/* Delete button - only for hosts */}
+                {!readOnly && (
                   <button 
                     className={`delete-subtask-button ${deletingSubtask === subtask.id ? 'loading' : ''}`}
                     onClick={(e) => {
@@ -292,9 +386,49 @@ const SubtaskList = ({
                       </svg>
                     )}
                   </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
+            
+            {/* Notification form for volunteers to notify completion */}
+            {showNotificationForm === subtask.id && (
+              <div className="notification-form">
+                <h4>{t('subtaskList.notificationFormTitle', { defaultValue: 'Notify task completion' })}</h4>
+                <p>{t('subtaskList.notificationFormDescription', { defaultValue: 'Add a message for the host about this task completion' })}</p>
+                <textarea
+                  value={notificationMessage}
+                  onChange={(e) => setNotificationMessage(e.target.value)}
+                  placeholder={t('subtaskList.notificationPlaceholder', { defaultValue: 'Add details about the completion (optional)' })}
+                  rows="3"
+                  className="notification-textarea"
+                />
+                <div className="notification-form-actions">
+                  <button 
+                    className="cancel-button"
+                    onClick={() => {
+                      setShowNotificationForm(null);
+                      setNotificationMessage('');
+                    }}
+                  >
+                    {t('subtaskList.cancel', { defaultValue: 'Cancel' })}
+                  </button>
+                  <button 
+                    className="submit-button"
+                    onClick={() => handleNotifyCompletion(subtask.id)}
+                    disabled={notifyingSubtask !== null}
+                  >
+                    {notifyingSubtask === subtask.id ? (
+                      <>
+                        <span className="spinner"></span>
+                        {t('subtaskList.sending', { defaultValue: 'Sending...' })}
+                      </>
+                    ) : (
+                      t('subtaskList.sendNotification', { defaultValue: 'Send notification' })
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
             
             {subtask.description && (
               <div className="subtask-description">
@@ -326,6 +460,7 @@ const SubtaskList = ({
               )}
             </div>
             
+            {/* Show notification info for host (or anyone if notification exists) */}
             {subtask.completion_notified && (
               <div className="subtask-notification">
                 <div 
@@ -354,9 +489,13 @@ const SubtaskList = ({
                   </div>
                 </div>
                 
-                {expandedNotifications.includes(subtask.id) && subtask.notification_message && (
+                {expandedNotifications.includes(subtask.id) && (
                   <div className="notification-message">
-                    <p>{subtask.notification_message}</p>
+                    {subtask.notification_message ? (
+                      <p>{subtask.notification_message}</p>
+                    ) : (
+                      <p className="no-message">{t('subtaskList.noMessage', { defaultValue: 'No additional message was provided.' })}</p>
+                    )}
                   </div>
                 )}
               </div>
@@ -375,7 +514,7 @@ const SubtaskList = ({
           <span className="subtask-count">{subtasks.length}</span>
         </h2>
         
-        {/* Only show add button for non-read-only mode */}
+        {/* Only show add button for hosts */}
         {!readOnly && (
           <button 
             className="add-subtask-button"

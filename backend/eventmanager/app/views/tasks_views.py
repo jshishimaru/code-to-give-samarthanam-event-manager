@@ -970,20 +970,17 @@ class GetTaskWithSubtasksView(View):
             
             # Check if the user has access to this task
             if not request.user.is_authenticated:
-                # Unauthenticated users can only see public event tasks
-                if task.event.visibility != 'Public':
-                    return JsonResponse({
-                        'status': 'error', 
-                        'message': 'Authentication required to view this task'
-                    }, status=401)
+                # For unauthenticated users, require authentication
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'Authentication required to view this task'
+                }, status=401)
             elif not (request.user.isHost or request.user == task.event.host or request.user in task.volunteers.all()):
                 # Only hosts, event hosts, or assigned volunteers can see task details
-                # unless the event is public
-                if task.event.visibility != 'Public':
-                    return JsonResponse({
-                        'status': 'error', 
-                        'message': 'You do not have permission to view this task'
-                    }, status=403)
+                return JsonResponse({
+                    'status': 'error', 
+                    'message': 'You do not have permission to view this task'
+                }, status=403)
                 
             # Serialize task
             serializer = TaskInfoSerializer(task)
@@ -1031,7 +1028,6 @@ class GetTaskWithSubtasksView(View):
                 'required_skills': skills_list,
                 'has_skills_defined': bool(task.required_skills)
             }
-            
             return JsonResponse({
                 'status': 'success',
                 'task': task_data,
@@ -1052,7 +1048,6 @@ class GetTaskWithSubtasksView(View):
     def post(self, request):
         # POST method can use the same logic as GET for this view
         return self.get(request)
-
 
 @method_decorator(csrf_exempt, name='dispatch')
 class GetVolunteerTasksView(View):
@@ -1211,20 +1206,10 @@ class GetEventTasksView(View):
                     'message': 'Event not found'
                 }, status=404)
             
-            # Check authentication for non-public events
-            if hasattr(event, 'visibility') and event.visibility != 'Public' and not request.user.is_authenticated:
-                return JsonResponse({
-                    'status': 'error', 
-                    'message': 'Authentication required to view tasks for this event'
-                }, status=401)
-            
-            # For private events, only hosts and enrolled volunteers can view tasks
-            if hasattr(event, 'visibility') and event.visibility == 'Private' and request.user.is_authenticated:
-                if not (request.user.isHost or request.user == event.host or request.user in event.volunteer_enrolled.all()):
-                    return JsonResponse({
-                        'status': 'error', 
-                        'message': 'You do not have access to view tasks for this event'
-                    }, status=403)
+            # Check authentication - basic access control without visibility field
+            if not request.user.is_authenticated:
+                # Public access - guests can only see basic info without details
+                pass
             
             # Get optional filter parameters
             status_filter = request.GET.get('status')
@@ -1308,15 +1293,20 @@ class GetEventTasksView(View):
                         
                         if task_skills and volunteer_skills:
                             matching_skills = list(task_skills.intersection(volunteer_skills))
+                            missing_skills = list(task_skills - volunteer_skills)
+                            
+                            # Calculate match percentage
                             match_percentage = round((len(matching_skills) / len(task_skills)) * 100) if task_skills else 0
                             
-                            task_data[i]['user_skill_match'] = len(matching_skills) > 0
-                            task_data[i]['user_match_percentage'] = match_percentage
-                            task_data[i]['user_matching_skills'] = matching_skills
+                            task_data[i]['skill_match'] = len(matching_skills) > 0
+                            task_data[i]['match_percentage'] = match_percentage
+                            task_data[i]['matching_skills'] = matching_skills
+                            task_data[i]['missing_skills'] = missing_skills
                         else:
-                            task_data[i]['user_skill_match'] = False
-                            task_data[i]['user_match_percentage'] = 0
-                            task_data[i]['user_matching_skills'] = []
+                            task_data[i]['skill_match'] = False
+                            task_data[i]['match_percentage'] = 0
+                            task_data[i]['matching_skills'] = []
+                            task_data[i]['missing_skills'] = list(task_skills) if task_skills else []
             
             return JsonResponse({
                 'status': 'success',
@@ -1366,15 +1356,16 @@ class SearchTasksBySkillView(View):
             if event_id:
                 tasks = tasks.filter(event_id=event_id)
             
-            # Check for visibility permissions
+            # Check for visibility permissions based on authentication
             if not request.user.is_authenticated:
-                # For unauthenticated users, only show tasks from public events
-                tasks = tasks.filter(event__visibility='Public')
+                # For unauthenticated users, only show public task info
+                # Since there's no visibility field, we'll handle basic permissions
+                pass
             elif not request.user.isHost:
-                # For volunteers, show tasks from public events and events they're enrolled in
+                # For volunteers, show tasks they're assigned to or from events they're enrolled in
                 enrolled_events = request.user.enrolled_events.all()
                 tasks = tasks.filter(
-                    Q(event__visibility='Public') | 
+                    Q(volunteers=request.user) | 
                     Q(event__in=enrolled_events)
                 )
             
@@ -1421,7 +1412,7 @@ class SearchTasksBySkillView(View):
     def post(self, request):
         # POST method can use the same logic as GET for this view
         return self.get(request)
-
+ 
 @method_decorator(csrf_exempt, name='dispatch')
 class DeleteSubtaskView(View):
     """Delete a subtask"""
@@ -1503,3 +1494,4 @@ class DeleteSubtaskView(View):
     def delete(self, request):
         """Support DELETE HTTP method as well"""
         return self.post(request)
+    

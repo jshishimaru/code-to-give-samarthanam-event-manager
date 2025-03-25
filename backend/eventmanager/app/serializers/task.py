@@ -13,7 +13,6 @@ class TaskInfoSerializer(serializers.ModelSerializer):
         fields = '__all__'
     
     def get_volunteer_names(self, obj):
-        """Get names of all assigned volunteers"""
         return [volunteer.name for volunteer in obj.volunteers.all()]
     
     def get_event_name(self, obj):

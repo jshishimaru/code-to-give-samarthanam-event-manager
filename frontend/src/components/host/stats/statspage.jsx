@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { getEventDetails } from '../../../apiservice/event';
 import ExportData from './exportdata';
 import EventAnalytics from './charts';
+import FeedbackReportSummary from './feedbackreport';
 import '../../../styles/host/stats/statspage.css';
 
 /**
@@ -13,6 +15,7 @@ import '../../../styles/host/stats/statspage.css';
  */
 const StatsPage = ({ eventId }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,6 +48,11 @@ const StatsPage = ({ eventId }) => {
 
     fetchEventDetails();
   }, [eventId]);
+
+  const handleViewFeedbackDetails = () => {
+    // Navigate to a detailed feedback report page
+    navigate(`/host/events/${eventId}/feedback-report`);
+  };
 
   if (loading) {
     return (
@@ -91,6 +99,25 @@ const StatsPage = ({ eventId }) => {
       </div>
 
       <div className="stats-page-content">
+        {/* Feedback Report Section */}
+        <section className="stats-section">
+          <h3 className="section-title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            {t('statsPage.feedbackSection', 'Feedback Report')}
+          </h3>
+          <FeedbackReportSummary
+            eventId={eventId}
+            eventName={eventName}
+            onViewDetails={handleViewFeedbackDetails}
+          />
+        </section>
+
         {/* Export data section */}
         <section className="stats-section">
           <h3 className="section-title">

@@ -9,6 +9,7 @@ from .views import ml_views
 from .views import user_views
 from .views import user_data
 from .views import event_data
+from .views import feedback_report
 # router = DefaultRouter()
 # router.register(r'events', event_views.EventViewSet, basename='events')
 
@@ -93,5 +94,9 @@ urlpatterns = [
 	path('tasks/available-volunteers/', user_views.AvailableVolunteersForTaskView.as_view(), name='available_volunteers_for_task'),
 	path('volunteers/search/', user_views.SearchVolunteersView.as_view(), name='search_volunteers'),
 	path('events/export-volunteers/', user_data.ExportVolunteersToExcelView.as_view(), name='export_volunteers_to_excel'),
+
+	# Add these to urlpatterns
+	path('events/report/', feedback_report.GenerateEventReportView.as_view(), name='generate_event_report'),
+	path('events/feedback/analytics/', feedback_report.EventFeedbackAnalyticsView.as_view(), name='event_feedback_analytics'),
 
 ]

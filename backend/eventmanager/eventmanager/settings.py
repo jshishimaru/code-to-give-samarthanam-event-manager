@@ -58,7 +58,9 @@ ROOT_URLCONF = 'eventmanager.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+			os.path.join(BASE_DIR, 'app' , 'templates'),
+		],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -155,3 +157,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+FRONTEND_URL = 'http://localhost:5173'  
+
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Or your SMTP server
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'samarthanamorganization@gmail.com'
+EMAIL_HOST_PASSWORD = 'ydjo roks zbzu yyoz'  # Use app password for Gmail
+DEFAULT_FROM_EMAIL = 'Event Manager samarthanamorganization@gmail.com'

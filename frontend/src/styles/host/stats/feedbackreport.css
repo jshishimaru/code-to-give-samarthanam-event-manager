@@ -1,0 +1,231 @@
+.feedback-report-summary {
+	background-color: var(--bg-light, white);
+	border-radius: 8px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	border: 1px solid var(--border-color, #e5e7eb);
+	padding: 1.25rem;
+	margin-bottom: 1.5rem;
+  }
+  
+  .feedback-report-summary.minimal {
+	padding: 1rem;
+	margin-bottom: 1rem;
+  }
+  
+  .report-summary-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+  }
+  
+  .report-summary-title {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 1.1rem;
+	margin: 0;
+	color: var(--text-color, #111827);
+  }
+  
+  .view-details-button {
+	background-color: transparent;
+	color: var(--primary-color, #4f46e5);
+	border: none;
+	font-size: 0.9rem;
+	cursor: pointer;
+	padding: 0.25rem 0.5rem;
+	border-radius: 4px;
+  }
+  
+  .view-details-button:hover {
+	background-color: var(--primary-color-light, #e8e6ff);
+	text-decoration: underline;
+  }
+  
+  .no-feedback-message {
+	color: var(--text-color-light, #6b7280);
+	text-align: center;
+	padding: 1rem 0;
+  }
+  
+  .report-summary-metrics {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+	gap: 1rem;
+	margin-bottom: 1.25rem;
+  }
+  
+  .minimal .report-summary-metrics {
+	grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+	gap: 0.75rem;
+	margin-bottom: 0;
+  }
+  
+  .metric-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+  }
+  
+  .metric-value {
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: var(--text-color, #111827);
+  }
+  
+  .minimal .metric-value {
+	font-size: 1.25rem;
+  }
+  
+  .metric-value.rating {
+	padding: 0.25rem 0.5rem;
+	border-radius: 4px;
+	min-width: 2.5rem;
+	text-align: center;
+  }
+  
+  .metric-value.rating.excellent {
+	background-color: var(--success-light, #d1fae5);
+	color: var(--success, #047857);
+  }
+  
+  .metric-value.rating.good {
+	background-color: var(--info-light, #dbeafe);
+	color: var(--info, #1d4ed8);
+  }
+  
+  .metric-value.rating.average {
+	background-color: var(--warning-light, #fef3c7);
+	color: var(--warning, #b45309);
+  }
+  
+  .metric-value.rating.poor {
+	background-color: var(--danger-light, #fee2e2);
+	color: var(--danger, #b91c1c);
+  }
+  
+  .metric-label {
+	font-size: 0.9rem;
+	color: var(--text-color-light, #6b7280);
+	margin-top: 0.25rem;
+  }
+  
+  .minimal .metric-label {
+	font-size: 0.8rem;
+  }
+  
+  .rating-breakdown {
+	margin-top: 1.25rem;
+	border-top: 1px solid var(--border-color, #e5e7eb);
+	padding-top: 1rem;
+  }
+  
+  .rating-breakdown h5 {
+	font-size: 0.95rem;
+	margin: 0 0 0.75rem 0;
+	color: var(--text-color, #111827);
+  }
+  
+  .rating-items {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+  }
+  
+  .rating-item {
+	display: grid;
+	grid-template-columns: 2fr 3fr 0.5fr;
+	align-items: center;
+	gap: 0.75rem;
+	font-size: 0.875rem;
+  }
+  
+  .rating-label {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: var(--text-color, #111827);
+  }
+  
+  .rating-bar-container {
+	height: 8px;
+	background-color: var(--bg-secondary, #f3f4f6);
+	border-radius: 4px;
+	overflow: hidden;
+  }
+  
+  .rating-bar {
+	height: 100%;
+	border-radius: 4px;
+  }
+  
+  .rating-bar.excellent {
+	background-color: var(--success, #047857);
+  }
+  
+  .rating-bar.good {
+	background-color: var(--info, #1d4ed8);
+  }
+  
+  .rating-bar.average {
+	background-color: var(--warning, #b45309);
+  }
+  
+  .rating-bar.poor {
+	background-color: var(--danger, #b91c1c);
+  }
+  
+  .rating-value {
+	text-align: right;
+	font-weight: 500;
+	color: var(--text-color, #111827);
+  }
+  
+  /* Loading, error and empty states */
+  .feedback-report-loading,
+  .feedback-report-error,
+  .feedback-report-empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1.5rem;
+	color: var(--text-color-light, #6b7280);
+	gap: 0.5rem;
+  }
+  
+  .loading-spinner {
+	width: 16px;
+	height: 16px;
+	border: 2px solid rgba(0, 0, 0, 0.1);
+	border-top-color: var(--primary-color, #4f46e5);
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+	to { transform: rotate(360deg); }
+  }
+  
+  .error-icon,
+  .empty-icon {
+	font-size: 1.25rem;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+	.report-summary-metrics {
+	  grid-template-columns: repeat(2, 1fr);
+	}
+	
+	.minimal .report-summary-metrics {
+	  grid-template-columns: repeat(2, 1fr);
+	}
+  }
+  
+  @media (max-width: 480px) {
+	.rating-item {
+	  grid-template-columns: 1fr 2fr 0.5fr;
+	}
+  }

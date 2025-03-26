@@ -57,23 +57,21 @@
 	border-bottom: 1px solid var(--border-color, #e5e7eb);
   }
   
-  .stats-coming-soon {
-	padding: 2rem;
-	text-align: center;
-	color: var(--text-muted, #6b7280);
+  /* Make charts section span full width */
+  .stats-section.charts-section {
+	grid-column: 1 / -1;
   }
   
-  .stats-coming-soon p {
-	margin: 0;
-	font-style: italic;
-  }
-  
-  .stats-page-loading {
+  /* Loading and error states */
+  .stats-page-loading,
+  .stats-page-error {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	min-height: 300px;
+	text-align: center;
+	padding: 2rem;
   }
   
   .stats-page-loading .spinner {
@@ -93,14 +91,7 @@
   }
   
   .stats-page-error {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	min-height: 300px;
 	color: var(--error-color, #ef4444);
-	text-align: center;
-	padding: 2rem;
   }
   
   .stats-page-error svg {
@@ -112,14 +103,22 @@
 	font-size: 1rem;
   }
   
-  /* Make ExportData component take full width */
+  /* Component container styles */
+  .stats-section .feedback-report-summary,
   .stats-section .export-data-container {
 	border: none;
 	border-radius: 0;
 	box-shadow: none;
 	margin-bottom: 0;
   }
-
-  .charts-section {
-	margin:0;
- }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+	.stats-page-content {
+	  grid-template-columns: 1fr;
+	}
+	
+	.stats-section.charts-section {
+	  grid-column: auto;
+	}
+  }

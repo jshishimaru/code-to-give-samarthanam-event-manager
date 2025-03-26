@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Event: {{ event.event_name }}</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .event-card {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .header {
+            color: #2c5282;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .detail-row {
+            margin: 10px 0;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #4a5568;
+        }
+        .accessibility-info {
+            background: #e6ffed;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background: #2c5282;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="header">New Event Announcement!</h1>
+        
+        <div class="event-card">
+            <h2>{{ event.event_name }}</h2>
+            
+            <div class="detail-row">
+                <span class="detail-label">Date:</span> 
+                {{ event.start_time|date:"F d, Y" }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Time:</span>
+                {{ event.start_time|time:"g:i A" }} - {{ event.end_time|time:"g:i A" }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Location:</span>
+                {{ event.location }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Host:</span>
+                {{ event.host.name }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Volunteers Needed:</span>
+                {{ event.required_volunteers }}
+            </div>
+        </div>
+
+        <div class="overview">
+            <h3>Event Overview</h3>
+            <p>{{ event.overview }}</p>
+        </div>
+
+        {% if event.accessibility_features %}
+        <div class="accessibility-info">
+            <h3>Accessibility Features</h3>
+            <ul>
+                {% if event.wheelchair_accessible %}
+                    <li>Wheelchair Accessible</li>
+                {% endif %}
+                {% if event.sign_language_available %}
+                    <li>Sign Language Interpreter Available</li>
+                {% endif %}
+                {% if event.assistance_available %}
+                    <li>Personal Assistance Available</li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <a href="{{ base_url }}/events/{{ event.id }}" class="cta-button">
+            View Event Details
+        </a>
+
+        <p style="margin-top: 30px; font-size: 0.9em; color: #666;">
+            You're receiving this because you're registered on our platform. 
+            Your engagement makes our community stronger!
+        </p>
+    </div>
+</body>
+</html>

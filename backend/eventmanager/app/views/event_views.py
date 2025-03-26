@@ -11,6 +11,7 @@ from django.utils.dateparse import parse_datetime
 from datetime import datetime
 from django.utils import timezone
 import traceback
+from ..services.emailservice import EmailService
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = EventInfo.objects.all()
@@ -607,6 +608,8 @@ class CreateEventView(View):
                     'message': 'Authentication required'
                 }, status=401)
             
+            if event.status != 'Draft':
+                EmailService.notify_new_event(event)
             # Check if user is a host
             if not user.isHost:
                 return JsonResponse({

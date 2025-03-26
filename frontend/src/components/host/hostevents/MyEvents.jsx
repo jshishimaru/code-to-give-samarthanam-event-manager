@@ -506,7 +506,7 @@ const MyEvents = () => {
                 <span className="tab-count">{upcomingEvents.length}</span>
               </button>
               
-              <button 
+              {/* <button 
                 role="tab"
                 className={`event-tab-button ${activeTab === 'past' ? 'active' : ''}`}
                 id="past-tab"
@@ -516,7 +516,7 @@ const MyEvents = () => {
               >
                 <span>{t('events.pastEvents', 'Past Events')}</span>
                 <span className="tab-count">{pastEvents.length}</span>
-              </button>
+              </button> */}
               
             </div>
           </div>

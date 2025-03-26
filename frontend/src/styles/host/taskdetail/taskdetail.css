@@ -6,8 +6,8 @@
 	color: var(--text-color);
 	background-color: var(--bg-color);
 	/* Ensure the container starts at the top */
-	scroll-behavior: auto;
-	overflow-anchor: none;
+	/* scroll-behavior: auto;
+	overflow-anchor: none; */
 }
 
 /* Notification */
@@ -78,7 +78,7 @@
 	display: flex;
 	gap: 2rem;
 	overflow: visible;
-	scroll-behavior: auto;
+	/* scroll-behavior: auto; */
 }
 
 .task-detail-main {
@@ -407,7 +407,7 @@
 	border: 1px solid var(--input-border, #e0e0e0);
 	overflow: hidden;
 	box-shadow: 0 1px 3px var(--shadow-color, rgba(0, 0, 0, 0.1));
-	scroll-behavior: auto;
+	/* scroll-behavior: auto; */
 }
 
 /* Loading state */

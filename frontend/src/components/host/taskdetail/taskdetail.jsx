@@ -118,16 +118,6 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
 	fetchTaskData();
   }, [effectiveTaskId, t]);
 
-  // Scroll to top when component mounts
-  useEffect(() => {
-    // Reset scroll position
-    window.scrollTo(0, 0);
-    
-    // Also reset scroll position of the container if it exists
-    if (detailContainerRef.current) {
-      detailContainerRef.current.scrollTop = 0;
-    }
-  }, [effectiveTaskId]); // Re-run when task ID changes
 
   // Handle task completion notification
   const handleNotifyCompletion = async () => {
@@ -359,6 +349,7 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
 
   return (
     <div className="task-detail-container" ref={detailContainerRef}>
+      
       {notification.show && (
         <div className={`task-notification ${notification.type}`} role="alert">
           <span>{notification.message}</span>
@@ -391,7 +382,7 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
 
       <div className="task-detail-content">
         {/* Left side - Task details and subtasks */}
-        <main className="task-detail-main">
+        <div className="task-detail-main">
 		<div className="task-progress-container">
 			  <div className="task-progress-info">
 			    <span className="progress-label">{t('taskDetail.progress')}</span>
@@ -487,7 +478,7 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
                   className="notification-textarea"
                 />
                 <div className="notification-form-actions">
-                  <button 
+                  <button
                     className="cancel-button"
                     onClick={() => {
                       setShowNotificationForm(false);
@@ -626,7 +617,7 @@ const TaskDetail = ({ taskId: propTaskId, eventId: propEventId, onBack }) => {
               readOnly={!isHost()}
             />
           </div>
-        </main>
+        </div>
 
         {/* Right side - Required skills and task chat */}
         <aside className="task-detail-sidebar">

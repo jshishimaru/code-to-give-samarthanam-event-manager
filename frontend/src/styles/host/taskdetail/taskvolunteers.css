@@ -388,11 +388,11 @@
   /* Add these styles to prevent forced scrolling and simplify volunteer items */
 
 /* Prevent auto-scrolling */
-.task-volunteers-container {
+/* .task-volunteers-container {
 	scroll-behavior: auto;
 	overflow: visible;
 	position: relative;
-  }
+  } */
   
   /* Simplified volunteer list */
   .volunteers-list.simplified {

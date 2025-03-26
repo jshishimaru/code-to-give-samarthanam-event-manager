@@ -10,9 +10,10 @@
   
   /* Compact mode for embedding */
   .task-chat.compact {
-	height: 350px;
+	height: auto;
+
 	min-height: 200px;
-	max-height: 80vh;
+	max-height: auto;
   }
   
   /* Chat header */
@@ -93,7 +94,7 @@
   
   /* Host message styling */
   .host-message .message-content {
-	background-color: var(--accent-color, #e0f0ff);
+	background-color: var(--accent-color, #f74848);
   }
   
   .host-message:not(.own-message) .message-content {

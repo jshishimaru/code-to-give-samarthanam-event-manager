@@ -62,9 +62,9 @@ const TaskChat = ({
   }, [t]);
   
   // Scrolls to the bottom of the message list
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // };
   
   // Fetch messages
   const fetchMessages = async () => {
@@ -116,9 +116,9 @@ const TaskChat = ({
   }, [taskId]);
   
   // Scroll to bottom when messages change
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  // useEffect(() => {
+  //   scrollToBottom();
+  // }, [messages]);
   
   // Handle input change
   const handleInputChange = (e) => {

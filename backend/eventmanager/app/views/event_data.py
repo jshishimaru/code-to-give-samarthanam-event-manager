@@ -526,3 +526,165 @@ class HostAnalyticsView(View):
                 'status': 'error',
                 'message': str(e)
             }, status=500)
+
+# Add these imports at the top of the file
+import zipfile
+from django.conf import settings
+import os
+from datetime import datetime
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ExportChartsPNGView(View):
+    """Export all charts for an event as PNG files in a zip archive"""
+    
+    def get(self, request):
+        try:
+            # Check if user is authenticated and is a host
+            if not request.user.is_authenticated:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Authentication required'
+                }, status=401)
+            
+            if not request.user.isHost:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Only hosts can export charts'
+                }, status=403)
+            
+            # Get event_id from query parameters
+            event_id = request.GET.get('event_id')
+            if not event_id:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Event ID is required'
+                }, status=400)
+            
+            # Get the event
+            try:
+                event = EventInfo.objects.get(id=event_id)
+            except EventInfo.DoesNotExist:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Event not found'
+                }, status=404)
+            
+            # Verify user is the host of this event
+            if event.host_id != request.user.id:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'You can only export charts for events you are hosting'
+                }, status=403)
+
+            # Create a temporary directory for PNG files
+            temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp_charts')
+            os.makedirs(temp_dir, exist_ok=True)
+            
+            # Get feedback data
+            feedbacks = Feedback.objects.filter(event=event)
+            tasks = TaskInfo.objects.filter(event=event)
+            
+            # Create zip file
+            zip_filename = f"event_{event_id}_charts_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
+            zip_path = os.path.join(temp_dir, zip_filename)
+            
+            with zipfile.ZipFile(zip_path, 'w') as zip_file:
+                # Generate each chart type and save as PNG
+                if feedbacks.exists():
+                    # Feedback ratings chart
+                    metrics = ['overall_experience', 'organization_quality', 'communication', 
+                             'host_interaction', 'volunteer_support', 'task_clarity',
+                             'impact_awareness', 'inclusivity', 'time_management', 'recognition']
+                    
+                    avg_values = []
+                    for metric in metrics:
+                        avg = feedbacks.aggregate(avg=Avg(metric))['avg'] or 0
+                        avg_values.append(avg)
+                    
+                    plt.figure(figsize=(12, 6))
+                    plt.bar(metrics, avg_values, color='skyblue')
+                    plt.xlabel("Feedback Criteria")
+                    plt.ylabel("Average Rating (0-10)")
+                    plt.title(f"Average Volunteer Ratings for {event.event_name}")
+                    plt.xticks(rotation=45)
+                    plt.grid(axis='y', linestyle='--', alpha=0.7)
+                    plt.tight_layout()
+                    
+                    # Save to PNG
+                    ratings_path = os.path.join(temp_dir, 'ratings.png')
+                    plt.savefig(ratings_path, dpi=300, bbox_inches='tight')
+                    plt.close()
+                    zip_file.write(ratings_path, 'average_ratings.png')
+                    
+                    # Volunteer willingness pie chart
+                    would_volunteer = feedbacks.filter(would_volunteer_again=True).count()
+                    would_not_volunteer = feedbacks.filter(would_volunteer_again=False).count()
+                    
+                    plt.figure(figsize=(8, 8))
+                    plt.pie([would_volunteer, would_not_volunteer], 
+                           labels=['Would Volunteer Again', 'Would Not Volunteer'],
+                           autopct='%1.1f%%',
+                           colors=['lightgreen', 'lightcoral'])
+                    plt.title(f"Volunteer Willingness - {event.event_name}")
+                    plt.tight_layout()
+                    
+                    willingness_path = os.path.join(temp_dir, 'willingness.png')
+                    plt.savefig(willingness_path, dpi=300, bbox_inches='tight')
+                    plt.close()
+                    zip_file.write(willingness_path, 'volunteer_willingness.png')
+                
+                if tasks.exists():
+                    # Task status distribution
+                    status_counts = tasks.values('status').annotate(count=Count('status'))
+                    statuses = [item['status'] for item in status_counts]
+                    counts = [item['count'] for item in status_counts]
+                    
+                    plt.figure(figsize=(8, 8))
+                    plt.pie(counts, labels=statuses, autopct='%1.1f%%')
+                    plt.title(f"Task Status Distribution - {event.event_name}")
+                    plt.tight_layout()
+                    
+                    status_path = os.path.join(temp_dir, 'task_status.png')
+                    plt.savefig(status_path, dpi=300, bbox_inches='tight')
+                    plt.close()
+                    zip_file.write(status_path, 'task_status.png')
+                    
+                    # Task completion timeline
+                    completed_tasks = tasks.filter(status='Completed')
+                    if completed_tasks.exists():
+                        task_dates = [(task.task_name, task.updated_at) 
+                                    for task in completed_tasks]
+                        task_names, completion_dates = zip(*task_dates)
+                        
+                        plt.figure(figsize=(12, 6))
+                        plt.plot_date(completion_dates, range(len(task_names)), '-o')
+                        plt.yticks(range(len(task_names)), task_names)
+                        plt.xlabel("Completion Date")
+                        plt.title(f"Task Completion Timeline - {event.event_name}")
+                        plt.grid(True)
+                        plt.tight_layout()
+                        
+                        timeline_path = os.path.join(temp_dir, 'completion_timeline.png')
+                        plt.savefig(timeline_path, dpi=300, bbox_inches='tight')
+                        plt.close()
+                        zip_file.write(timeline_path, 'completion_timeline.png')
+            
+            # Read the zip file
+            with open(zip_path, 'rb') as zip_file:
+                response = HttpResponse(zip_file.read(), content_type='application/zip')
+                response['Content-Disposition'] = f'attachment; filename="{zip_filename}"'
+            
+            # Clean up temporary files
+            for file in os.listdir(temp_dir):
+                os.remove(os.path.join(temp_dir, file))
+            os.rmdir(temp_dir)
+            
+            return response
+            
+        except Exception as e:
+            print(f"Error in ExportChartsPNGView: {str(e)}")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)

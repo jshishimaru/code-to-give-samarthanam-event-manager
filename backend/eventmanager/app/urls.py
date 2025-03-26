@@ -84,8 +84,9 @@ urlpatterns = [
 
 	path('events/charts/', event_data.EventFeedbackChartsView.as_view(), name='event_feedback_charts'),
 	path('events/chart/', event_data.SingleChartView.as_view(), name='single_chart'),
+	path('events/export-charts/', event_data.ExportChartsPNGView.as_view(), name='export_charts_png'),
 	path('host/analytics/', event_data.HostAnalyticsView.as_view(), name='host_analytics'),	
-	
+
 	# User management endpoints
 	path('events/volunteers/', user_views.EventVolunteersView.as_view(), name='event_volunteers'),
 	path('tasks/volunteers/', user_views.TaskVolunteersView.as_view(), name='task_volunteers'),

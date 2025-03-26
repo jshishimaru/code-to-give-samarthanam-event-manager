@@ -165,90 +165,47 @@ export const convertSvgToPngAndDownload = (svgContent, fileName, width = 800, he
   img.src = svgDataUrl;
 };
 
+
+// Add this function after the convertSvgToPngAndDownload function
+
 /**
- * Download all charts for an event as PNG files in a ZIP archive
+ * Download all event charts as PNG files in a ZIP archive
  * 
  * @param {number} eventId - ID of the event
- * @param {string} eventName - Name of the event for the filename
+ * @returns {Promise<Object>} Response indicating success or failure
  */
-export const downloadAllChartsAsPng = async (eventId, eventName) => {
-  try {
-    // Fetch all charts
-    const result = await getEventFeedbackCharts(eventId);
-    
-    if (!result.success) {
-      throw new Error(result.error);
-    }
-    
-    const { charts } = result.data;
-    
-    // If using a ZIP library like JSZip
-    // Note: You'd need to add JSZip to your dependencies with: npm install jszip
-    // This is just an example of how it would work
-    
-    /* 
-    // This requires the JSZip library - add it if you want this functionality
-    import JSZip from 'jszip';
-    
-    const zip = new JSZip();
-    
-    // Add each chart to the ZIP
-    Object.entries(charts).forEach(([chartName, svgContent]) => {
-      // Convert SVG to data URL
-      const dataUrl = svgToDataUrl(svgContent);
-      
-      // Fetch the image data
-      fetch(dataUrl)
-        .then(res => res.blob())
-        .then(blob => {
-          // Add to zip
-          zip.file(`${chartName}.png`, blob);
-          
-          // If all added, generate and download the ZIP
-          if (Object.keys(zip.files).length === Object.keys(charts).length) {
-            zip.generateAsync({ type: 'blob' }).then(content => {
-              const url = URL.createObjectURL(content);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = `${eventName || `event_${eventId}`}_charts.zip`;
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-              URL.revokeObjectURL(url);
-            });
-          }
-        });
-    });
-    */
-    
-    // If not using ZIP, download each chart individually
-    Object.entries(charts).forEach(([chartName, svgContent]) => {
-      // Use setTimeout to prevent browser throttling multiple downloads
-      setTimeout(() => {
-        convertSvgToPngAndDownload(
-          svgContent, 
-          `${eventName || `event_${eventId}`}_${chartName}.png`
-        );
-      }, 300); // Add small delay between downloads
-    });
-    
-    return { success: true };
-  } catch (error) {
-    console.error('Error downloading charts as PNG:', error);
-    return {
-      success: false,
-      error: error.message || 'Failed to download charts'
-    };
-  }
-};
-
-export default {
-  getEventFeedbackCharts,
-  getSingleEventChart,
-  svgToDataUrl,
-  downloadSvgChart,
-  getChartTypes,
-  getSingleChartTypes,
-  convertSvgToPngAndDownload,
-  downloadAllChartsAsPng
-};
+export const downloadEventChartsZip = async (eventId) => {
+	try {
+	  // Create a link element to trigger the download
+	  const link = document.createElement('a');
+	  link.href = `${API_URL}events/export-charts/?event_id=${eventId}`;
+	  link.setAttribute('download', `event_${eventId}_charts.zip`);
+	  
+	  // Temporarily add to document and trigger click
+	  document.body.appendChild(link);
+	  link.click();
+	  
+	  // Clean up
+	  document.body.removeChild(link);
+	  
+	  return { success: true };
+	} catch (error) {
+	  console.error('Error downloading charts ZIP:', error);
+	  return {
+		success: false,
+		error: error.message || 'Failed to download charts'
+	  };
+	}
+  };
+  
+  // Also add it to the default export
+  export default {
+	getEventFeedbackCharts,
+	getSingleEventChart,
+	svgToDataUrl,
+	downloadSvgChart,
+	getChartTypes,
+	getSingleChartTypes,
+	convertSvgToPngAndDownload,
+	downloadEventChartsZip
+  };

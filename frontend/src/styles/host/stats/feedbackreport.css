@@ -154,11 +154,17 @@
 	background-color: var(--bg-secondary, #f3f4f6);
 	border-radius: 4px;
 	overflow: hidden;
+	width: 100%; /* Ensure the container takes full width */
+	position: relative; /* Add this for proper children positioning */
   }
   
   .rating-bar {
 	height: 100%;
 	border-radius: 4px;
+	position: absolute; /* Make the bar position absolute */
+	left: 0; /* Start from the left */
+	top: 0; /* Align to the top */
+	min-width: 4px; /* Ensure a minimum visible width even for very low ratings */
   }
   
   .rating-bar.excellent {

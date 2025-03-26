@@ -166,32 +166,32 @@ const FeedbackReportSummary = ({ eventId, eventName, minimal = false, onViewDeta
             </div>
           </div>
 
-          {!minimal && analytics.average_ratings && (
-            <div className="rating-breakdown">
-              <h5>{t('feedbackReport.ratingBreakdown', 'Rating Breakdown')}</h5>
-              <div className="rating-items">
-                {Object.entries(analytics.average_ratings)
-                  .filter(([key]) => key !== 'overall')
-                  .sort(([,a], [,b]) => b - a)
-                  .slice(0, 3)
-                  .map(([key, value]) => (
-                    <div key={key} className="rating-item">
-                      <div className="rating-label">
-                        {t(`feedbackReport.ratings.${key}`, formatRatingKey(key))}
-                      </div>
-                      <div className="rating-bar-container">
-                        <div 
-                          className={`rating-bar ${getRatingClass(value)}`}
-                          style={{width: `${(value / 5) * 100}%`}}
-                        ></div>
-                      </div>
-                      <div className="rating-value">{value.toFixed(1)}</div>
-                    </div>
-                  ))
-                }
-              </div>
-            </div>
-          )}
+		  {!minimal && analytics.average_ratings && (
+		  <div className="rating-breakdown">
+		    <h5>{t('feedbackReport.ratingBreakdown', 'Rating Breakdown')}</h5>
+		    <div className="rating-items">
+		      {Object.entries(analytics.average_ratings)
+		        .filter(([key]) => key !== 'overall')
+		        .sort(([,a], [,b]) => b - a)
+		        .slice(0, 3)
+		        .map(([key, value]) => (
+		          <div key={key} className="rating-item">
+		            <div className="rating-label">
+		              {t(`feedbackReport.ratings.${key}`, formatRatingKey(key))}
+		            </div>
+		            <div className="rating-bar-container">
+		              <div 
+		                className={`rating-bar ${getRatingClass(value)}`}
+		                style={{width: `${Math.max(0, Math.min(100, ((value / 5) * 100)))}%`}}
+		              ></div>
+		            </div>
+		            <div className="rating-value">{value.toFixed(1)}</div>
+		          </div>
+		        ))
+		      }
+		    </div>
+		  </div>
+		)}
         </>
       )}
     </div>

@@ -30,6 +30,10 @@ class TaskInfoSerializer(serializers.ModelSerializer):
 
 class SubTaskSerializer(serializers.ModelSerializer):
     parent_task_name = serializers.SerializerMethodField()
+    is_blocked = serializers.BooleanField(read_only=True)
+    can_start = serializers.BooleanField(read_only=True)
+    is_overdue = serializers.BooleanField(read_only=True)
+    dependencies_list = serializers.SerializerMethodField()
     
     class Meta:
         model = SubTask
@@ -37,6 +41,15 @@ class SubTaskSerializer(serializers.ModelSerializer):
     
     def get_parent_task_name(self, obj):
         return obj.parent_task.task_name if obj.parent_task else None
+    
+    def get_dependencies_list(self, obj):
+        return [
+            {
+                'id': dep.id,
+                'title': dep.title,
+                'status': dep.status
+            } for dep in obj.dependencies.all()
+        ]
 
 
 class SubTaskDetailSerializer(serializers.ModelSerializer):

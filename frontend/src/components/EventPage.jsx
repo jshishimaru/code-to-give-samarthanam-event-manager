@@ -210,7 +210,7 @@ const EventPage = () => {
     const fetchOngoingEvents = async () => {
       try {
         // Use the appropriate API function based on authentication status
-        const fetchFunction = isAuthenticated ? getUserOngoingEvents : getAllOngoingEvents;
+        const fetchFunction = getAllOngoingEvents;
         const response = await fetchFunction();
         
         if (response.success) {

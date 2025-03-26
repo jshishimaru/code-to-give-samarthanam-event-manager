@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Custom User Manager that uses email instead of username
 class CustomUserManager(BaseUserManager):
@@ -148,8 +149,32 @@ class TaskInfo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # ...existing methods...
+    @property
+    def all_subtasks_complete(self):
+        """Check if all subtasks are completed"""
+        total_subtasks = self.subtasks.count()
+        if total_subtasks == 0:
+            return False
+        completed_subtasks = self.subtasks.filter(status='Completed').count()
+        return total_subtasks == completed_subtasks
     
+    def update_status(self):
+        """Update task status based on subtask completion"""
+        if not self.subtasks.exists():
+            return
+            
+        all_complete = self.all_subtasks_complete
+        any_in_progress = self.subtasks.filter(status='In Progress').exists()
+        
+        if all_complete:
+            self.status = 'Completed'
+        elif any_in_progress:
+            self.status = 'In Progress'
+        else:
+            self.status = 'Pending'
+        
+        self.save()
+            
     def get_skills_list(self):
         """Return the skills as a list"""
         if not self.required_skills:
@@ -175,16 +200,40 @@ class SubTask(models.Model):
     end_time = models.DateTimeField()
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Pending')
     
-    # Notification field (for volunteers to notify host)
-    completion_notified = models.BooleanField(default=False, 
-                                           help_text="Indicates if volunteers have notified that the subtask is completed")
-    notification_message = models.TextField(blank=True, 
-                                         help_text="Message from volunteers about subtask completion")
+    # Add priority field
+    priority = models.IntegerField(default=0, help_text="Priority level of the subtask (higher number = higher priority)")
+    
+    # Add completion percentage
+    completion_percentage = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        help_text="Percentage of subtask completion"
+    )
+    
+    # Notification fields
+    completion_notified = models.BooleanField(
+        default=False, 
+        help_text="Indicates if volunteers have notified that the subtask is completed"
+    )
+    notification_message = models.TextField(
+        blank=True, 
+        help_text="Message from volunteers about subtask completion"
+    )
     notification_time = models.DateTimeField(null=True, blank=True)
+    
+    # Dependencies
+    dependencies = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        related_name='dependent_tasks',
+        blank=True,
+        help_text="Subtasks that must be completed before this one can start"
+    )
     
     # Tracking
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         try:
@@ -193,19 +242,59 @@ class SubTask(models.Model):
         except (TaskInfo.DoesNotExist, AttributeError):
             return f"SubTask: {self.title or 'New SubTask'}"
     
+    @property
+    def is_blocked(self):
+        """Check if this subtask is blocked by incomplete dependencies"""
+        return self.dependencies.exclude(status='Completed').exists()
+    
+    @property
+    def can_start(self):
+        """Check if this subtask can be started"""
+        return not self.is_blocked and self.status == 'Pending'
+    
+    @property
+    def is_overdue(self):
+        """Check if subtask is overdue"""
+        return self.end_time < timezone.now() and self.status != 'Completed'
+    
+    def complete(self):
+        """Mark the subtask as complete"""
+        self.status = 'Completed'
+        self.completed_at = timezone.now()
+        self.completion_percentage = 100
+        self.save()
+        
+        # Check if parent task should be marked complete
+        if self.parent_task.all_subtasks_complete:
+            self.parent_task.status = 'Completed'
+            self.parent_task.save()
+    
     def save(self, *args, **kwargs):
+        # Auto-update status based on completion percentage
+        if self.completion_percentage == 100 and self.status != 'Completed':
+            self.status = 'Completed'
+            self.completed_at = timezone.now()
+        elif self.completion_percentage > 0 and self.status == 'Pending':
+            self.status = 'In Progress'
+        
         super().save(*args, **kwargs)
         
-        # After saving a subtask, check if we need to update the parent task
-        if self.status == 'Completed' and self.parent_task_id:
+        # Update parent task status
+        if self.parent_task_id:
             try:
-                self.parent_task.save()  # This will trigger the parent task's save method
+                self.parent_task.update_status()
             except TaskInfo.DoesNotExist:
-                pass    # This will trigger the parent task's save method
+                pass
     
     class Meta:
-        ordering = ['start_time']
-
+        ordering = ['-priority', 'start_time']
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(completion_percentage__gte=0) & models.Q(completion_percentage__lte=100),
+                name='valid_completion_percentage'
+            )
+        ]
+        
 class Feedback(models.Model):
     RATING_CHOICES = [(i, i) for i in range(1, 11)]  # 1-10 rating scale
     

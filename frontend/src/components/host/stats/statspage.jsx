@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getEventDetails } from '../../../apiservice/event';
 import ExportData from './exportdata';
+import EventAnalytics from './charts';
 import '../../../styles/host/stats/statspage.css';
 
 /**
@@ -107,44 +108,9 @@ const StatsPage = ({ eventId }) => {
           />
         </section>
 
-        <section className="stats-section">
-          <h3 className="section-title">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-            </svg>
-            {t('statsPage.summarySection', 'Event Summary')}
-          </h3>
-          <div className="stats-coming-soon">
-            <p>{t('statsPage.comingSoon', 'Event summary statistics will be available soon.')}</p>
-          </div>
-        </section>
-
-        <section className="stats-section">
-          <h3 className="section-title">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-            {t('statsPage.volunteersSection', 'Volunteer Analytics')}
-          </h3>
-          <div className="stats-coming-soon">
-            <p>{t('statsPage.comingSoon', 'Volunteer analytics will be available soon.')}</p>
-          </div>
-        </section>
-
-        <section className="stats-section">
-          <h3 className="section-title">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 11l3 3L22 4"></path>
-              <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
-            </svg>
-            {t('statsPage.tasksSection', 'Task Completion Analytics')}
-          </h3>
-          <div className="stats-coming-soon">
-            <p>{t('statsPage.comingSoon', 'Task completion analytics will be available soon.')}</p>
-          </div>
+        {/* Charts Section */}
+        <section className="stats-section charts-section">
+          <EventAnalytics eventId={eventId} eventName={eventName} />
         </section>
       </div>
     </div>

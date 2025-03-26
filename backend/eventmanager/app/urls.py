@@ -8,6 +8,7 @@ from .views import taskchat_views
 from .views import ml_views
 from .views import user_views
 from .views import user_data
+from .views import event_data
 # router = DefaultRouter()
 # router.register(r'events', event_views.EventViewSet, basename='events')
 
@@ -81,6 +82,10 @@ urlpatterns = [
     path('events/analyze-skills/', ml_views.AnalyzeEventSkillsView.as_view(), name='analyze_event_skills'),
 	path('events/sorted-by-relevance/', ml_views.GetSortedEventsByRelevanceView.as_view(), name='events_sorted_by_relevance'),
 
+	path('events/charts/', event_data.EventFeedbackChartsView.as_view(), name='event_feedback_charts'),
+	path('events/chart/', event_data.SingleChartView.as_view(), name='single_chart'),
+	path('host/analytics/', event_data.HostAnalyticsView.as_view(), name='host_analytics'),	
+	
 	# User management endpoints
 	path('events/volunteers/', user_views.EventVolunteersView.as_view(), name='event_volunteers'),
 	path('tasks/volunteers/', user_views.TaskVolunteersView.as_view(), name='task_volunteers'),

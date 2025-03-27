@@ -12,7 +12,6 @@ from datetime import datetime
 from django.utils import timezone
 import traceback
 from ..services.emailservice import EmailService
-
 class EventViewSet(viewsets.ModelViewSet):
     queryset = EventInfo.objects.all()
     serializer_class = EventInfoSerializer
@@ -608,8 +607,7 @@ class CreateEventView(View):
                     'message': 'Authentication required'
                 }, status=401)
             
-            if event.status != 'Draft':
-                EmailService.notify_new_event(event)
+
             # Check if user is a host
             if not user.isHost:
                 return JsonResponse({
@@ -711,6 +709,9 @@ class CreateEventView(View):
             if 'image' in request.FILES:
                 event.image = request.FILES['image']
                 event.save()
+            
+            if event.status != 'Draft':
+                EmailService.notify_new_event(event)
             
             # Return the created event
             serializer = EventInfoSerializer(event, context={'request': request})
